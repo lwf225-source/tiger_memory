@@ -23,7 +23,8 @@ ROOT = Path(__file__).resolve().parent.parent
 NOTICES = ("THIRD_PARTY.md", "LICENSE", "LICENSE.md", "LICENSE.txt", "NOTICE")
 SDIST_PUBLIC_FILES = (
     "pyproject.toml", "README.md", "docs/CODEGRAPH.md", "docs/AML_SUBMISSION.md", *NOTICES,
-    "repro/model-requirements.lock", "repro/bge-small-en-v1.5.json",
+    "repro/model-requirements.lock", "repro/linux-cpu-requirements.lock",
+    "repro/bge-small-en-v1.5.json",
     "scripts/tiger_memory.py", "scripts/verify_install.py", "scripts/verify_codegraph.py",
     "scripts/evaluate_code_memory.py", "examples/code_memory/README.md",
     "examples/code_memory/before.py", "examples/code_memory/after.py",

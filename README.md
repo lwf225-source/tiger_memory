@@ -2,7 +2,7 @@
 
 Local-first project memory for agent workflows. Immutable Markdown events are
 source records; SQLite, FTS5, facts and retrieval indexes are rebuildable.
-Current source version: **2.2.0a3 (preview)**. The core requires Python 3.9+ and
+Current source version: **2.2.0a4 (preview)**. The core requires Python 3.9+ and
 has no third-party Python runtime dependencies.
 
 ## AML open-source track
@@ -14,9 +14,17 @@ source baseline, Add/Search API, model disclosure, pinned optional dependencies,
 and the changes included in this upload. The repository is licensed under
 [Apache-2.0](LICENSE).
 
+For the tested Ubuntu CPU environment, use
+[`repro/linux-cpu-requirements.lock`](repro/linux-cpu-requirements.lock) and the
+installation order in the AML notes. The macOS model lock is a separate
+measured environment.
+
 The public repository supports review and reproduction. An externally reachable
 Add/Search service must be deployed separately for participation; this source
 upload does not establish that such a service is online or accepted by AML.
+The self-hosted service's [public Health endpoint](https://www.aigcpro.cn/aml/health)
+is available separately. Its Add/Search endpoints require a private Memory
+System Key; local contract checks are not an AML platform Smoke or Full result.
 
 ## Standalone installation
 

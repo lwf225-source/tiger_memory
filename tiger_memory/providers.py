@@ -7,12 +7,14 @@ Caches contain numeric outputs and hashes, never plaintext input.
 """
 from __future__ import annotations
 
+from collections import OrderedDict
 import hashlib
 import importlib
 import json
 import math
 import os
 import tempfile
+import threading
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Sequence, Tuple
 
@@ -21,6 +23,9 @@ from .security import ensure_private_dir
 
 class ProviderUnavailable(RuntimeError):
     """A safe, machine-readable reason to fall back to the lexical profile."""
+
+
+_MAX_HOT_CACHE_ENTRIES = 4096
 
 
 def _digest(value: Any) -> str:
@@ -67,22 +72,32 @@ class _NumericCache:
         # symlink substituted for the explicitly selected cache directory.
         self.root = Path(root).resolve() if root is not None and not Path(root).is_symlink() else None
         self.fingerprint = fingerprint
-        # Disk cache makes embeddings reusable across launches.  A single
-        # Search process, however, consults the same document embeddings for
-        # every query; keep validated numeric values hot so it does not parse
-        # thousands of JSON files on every request.
-        self._memory: Dict[str, Tuple[float, ...]] = {}
+        # Keep recently used vectors hot without allowing a long-running
+        # evaluation to retain every user's vectors in Python objects.
+        # The disk cache remains available after an entry leaves memory.
+        self._memory: OrderedDict[str, Tuple[float, ...]] = OrderedDict()
+        self._lock = threading.RLock()
+
+    def _remember(self, key: str, values: Sequence[float]) -> None:
+        with self._lock:
+            self._memory[key] = tuple(float(value) for value in values)
+            self._memory.move_to_end(key)
+            if len(self._memory) > _MAX_HOT_CACHE_ENTRIES:
+                self._memory.popitem(last=False)
 
     def _path(self, key: str) -> Optional[Path]:
         return self.root / self.fingerprint / (key + ".json") if self.root is not None else None
 
     def get(self, key: str, dimensions: int) -> Optional[List[float]]:
-        hot = self._memory.get(key)
-        if hot is not None:
-            try:
-                return _finite_vector(hot, dimensions)
-            except ProviderUnavailable:
-                self._memory.pop(key, None)
+        with self._lock:
+            hot = self._memory.get(key)
+            if hot is not None:
+                try:
+                    values = _finite_vector(hot, dimensions)
+                    self._memory.move_to_end(key)
+                    return values
+                except ProviderUnavailable:
+                    self._memory.pop(key, None)
         path = self._path(key)
         if path is None:
             return None
@@ -93,7 +108,7 @@ class _NumericCache:
             if payload.get("fingerprint") != self.fingerprint:
                 return None
             values = _finite_vector(payload.get("values"), dimensions)
-            self._memory[key] = tuple(values)
+            self._remember(key, values)
             return values
         except (OSError, ValueError, TypeError, AttributeError, ProviderUnavailable):
             return None
@@ -102,7 +117,7 @@ class _NumericCache:
         # Preserve a valid fresh model output even if the optional disk cache
         # is unavailable.  The caller has already validated dimensions and
         # finiteness before reaching this method.
-        self._memory[key] = tuple(float(value) for value in values)
+        self._remember(key, values)
         path = self._path(key)
         if path is None:
             return

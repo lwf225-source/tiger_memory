@@ -7,7 +7,7 @@ from types import SimpleNamespace
 from unittest.mock import patch
 
 from tiger_memory.database import connect
-from tiger_memory.providers import LocalCrossEncoderReranker, LocalSentenceTransformerEmbedding, ProviderUnavailable
+from tiger_memory.providers import _NumericCache, LocalCrossEncoderReranker, LocalSentenceTransformerEmbedding, ProviderUnavailable
 from tiger_memory.search import _search_legacy, search
 from tiger_memory.service import forget, write_event, write_fact
 from tests.common import MemoryTestCase
@@ -183,6 +183,18 @@ class RetrievalTests(MemoryTestCase):
 
 
 class ProviderTests(MemoryTestCase):
+    def test_numeric_hot_cache_is_bounded_and_disk_values_survive_eviction(self):
+        cache = _NumericCache(Path(self.temp.name) / "bounded-cache", "fixture")
+        with patch("tiger_memory.providers._MAX_HOT_CACHE_ENTRIES", 2):
+            cache.put("first", [1.0, 0.0])
+            cache.put("second", [0.0, 1.0])
+            self.assertEqual(cache.get("first", 2), [1.0, 0.0])
+            cache.put("third", [0.5, 0.5])
+            self.assertEqual(len(cache._memory), 2)
+            self.assertNotIn("second", cache._memory)
+            self.assertEqual(cache.get("second", 2), [0.0, 1.0])
+            self.assertEqual(len(cache._memory), 2)
+
     def _local_model(self):
         directory = Path(self.temp.name) / "local-model"
         directory.mkdir()

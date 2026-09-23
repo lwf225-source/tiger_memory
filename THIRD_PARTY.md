@@ -25,8 +25,10 @@ See `docs/CODEGRAPH.md` for the supported invocation and validation commands.
 
 ## Optional models and evaluation data
 
-The optional embedding environment is pinned in `repro/model-requirements.lock`
-(measured with Python 3.12.14 on macOS arm64). The BGE model identifier, fixed
+The optional embedding environments are pinned in `repro/model-requirements.lock`
+(Python 3.12.14, macOS arm64) and `repro/linux-cpu-requirements.lock`
+(Python 3.12.3, Ubuntu 24.04 x86_64, PyTorch 2.8.0+cpu from the official CPU index).
+The BGE model identifier, fixed
 revision and nine file hashes are recorded in `repro/bge-small-en-v1.5.json`.
 These dependencies and models retain their own licenses. Model weights and
 external evaluation datasets are not included in the Python distribution.

@@ -2,12 +2,15 @@
 
 本仓库提供公开源码、依赖、运行说明、来源和改动记录，用于复现与审核。
 AML 参赛仍需要参赛方自行提供可访问、稳定的 Add/Search 在线服务。
-本次 GitHub 上传完成的是源码交付；本文不宣称线上服务已部署、已获平台验收或已有官方完整成绩。
+源码交付与在线服务各自验证。当前自托管的 Health 地址为
+`https://www.aigcpro.cn/aml/health`；Add 和 Search 分别为同域的 `/aml/add`、`/aml/search`，
+需要参赛专用 Memory System Key。在线服务已通过本地与公网可达性检查，
+尚未取得 AML 平台的 Smoke、Full 或公榜验收。
 
 ## 固定源码版本
 
 - 项目：`tiger_memory`，原名称 Project Long Memory / PLM。
-- 核心版本：`2.2.0a3`（preview）；AML 适配器版本：`1.3.4`。
+- 核心版本：`2.2.0a4`（preview）；AML 适配器版本：`1.3.4`。
 - 原始工作基线 Commit：`cc346f685764a769de3dfb2eb32ba78ae08dbcbc`。
 - 复现时使用本次提交给评测方的 **40 位 Commit SHA**，不要用可移动的 `main` 作为版本标识。
   GitHub 的 Commit permalink 与 `git rev-parse HEAD` 可用于核对同一个版本。
@@ -45,6 +48,24 @@ python3 -m venv .venv
 | 模型 | `BAAI/bge-small-en-v1.5` |
 | 模型 revision | `5c38ec7c405ec4b44b94cc5a9bb96e735b38267a` |
 | 模型文件校验 | [`repro/bge-small-en-v1.5.json`](../repro/bge-small-en-v1.5.json)，9 个文件的 SHA-256 |
+
+实际参赛服务器为 Ubuntu 24.04、x86_64、Python 3.12.3。服务器安装了官方
+`torch==2.8.0+cpu` wheel，其他 30 项依赖与
+[`repro/linux-cpu-requirements.lock`](../repro/linux-cpu-requirements.lock)
+一致；`pip check` 已通过。这个锁文件与 macOS 锁文件分开，避免 Linux 默认
+PyTorch wheel 拉取 NVIDIA/CUDA 依赖。腾讯云服务器安装其余固定包时使用了
+[腾讯云官方 PyPI 镜像](https://cloud.tencent.com/document/product/213/8623)；
+任何兼容的 PyPI 镜像均应得到同一组声明的版本。
+
+Linux x86_64 环境的安装顺序：
+
+```sh
+python3.12 -m venv .venv-model
+.venv-model/bin/python -m pip install --no-deps --index-url https://download.pytorch.org/whl/cpu 'torch==2.8.0+cpu'
+.venv-model/bin/python -m pip install -r repro/linux-cpu-requirements.lock
+.venv-model/bin/python -m pip install --no-index --no-deps .
+.venv-model/bin/python -m pip check
+```
 
 该锁文件是实测环境记录，不代表所有操作系统与硬件已验证。模型文件由使用者另外下载；仓库不包含权重。
 
@@ -98,6 +119,12 @@ export TIGER_MEMORY_DIR="$PWD/aml_data_store"
 `Authorization: Token <token>` 或 `X-Api-Key`。未设置 `AML_API_KEY` 时不鉴权；
 `/health` 始终可匿名访问。外部地址、TLS、认证方式与平台连通性另行验收。
 
+当前自托管实例使用独立的 `tigermem` 系统账号和持久化目录，服务只监听
+`127.0.0.1:18190`，由现有 Nginx 通过 HTTPS 转发。公网 Add/Search 共用并发上限 1，
+服务进程限制为 850 MiB 内存和 1 个 CPU 核；超出入口并发上限返回 429 与
+`Retry-After`。数值向量的内存热缓存最多保留 4,096 项，磁盘缓存仍供复用。
+这些是当前部署参数，最终容量仍须由平台 Smoke 和正式数据验证。
+
 ## API 与本地验证示例
 
 在另一个终端执行以下无认证的 localhost 示例。启用服务认证后，各 POST 请求需附带认证头。
@@ -149,6 +176,8 @@ Fact 生命周期、项目与用户隔离、AML 1.3.4 适配器、BGE 混合检�
 2. 补齐公开 README、测试、合成/历史项目文档 fixtures、运行和验证脚本、Skill 参考资料。
 3. 修复 wheel/sdist 支持资源、已安装包的资源定位、隔离验收及 `verify` 的退出码。
 4. 增补本说明、实测依赖锁、模型 revision/校验清单和公开上传的排除规则。
+5. 将已部署的 Linux CPU 依赖锁及安装顺序作为可复现资料加入仓库；Add/Search 算法保持原样。
+6. 为共享服务器的长期运行给数值向量热缓存设置 4,096 项上限；缓存淘汰后仍可从同一磁盘缓存读取，不改变检索证据的排序规则。
 
 本次上传没有把 BGE、RRF 或已有检索算法列为新增算法贡献。
 代码保留对 FlowGrid、ReFind、Chronicle 等思路的注释归因；外部库、模型与 CodeGraph
@@ -170,6 +199,11 @@ git diff --find-renames cc346f685764a769de3dfb2eb32ba78ae08dbcbc HEAD
 测试使用本地临时目录、合成数据和 localhost HTTP，不需要真实记忆、付费模型或外部评测数据。
 发布验证涵盖离线 wheel/sdist 安装、重建字节一致性、真实验收退出码及临时 Skill 安装。
 它不检查公网服务可用性，不代表平台接入或官方评测通过。
+
+自托管实例另通过 10 个隔离合成用户的本地 HTTPS Add/Search 检查：每人一次写入
+20 条消息，并以 `top_k=100` 检索；这组请求的 Add 中位耗时约 0.71 秒、Search
+中位耗时约 1.99 秒，没有接口错误，服务内存峰值约 492 MiB。该小样本不能推算正式
+Full 评测成绩或吞吐量。
 
 已安装的个人 Codex Skill 可能与公开仓库具有不同能力；复现和参评应使用这里固定 Commit 的源码，
 不依赖任何个人全局 Skill。真实记忆、模型权重、私有运行报告、环境文件与本机工作区不随仓库提供。
