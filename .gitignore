@@ -11,3 +11,9 @@ dist/
 *.sqlite3-wal
 .DS_Store
 output/
+.venv/
+.venv-model/
+.env
+.env.*
+aml_data_store/
+models/

@@ -1,0 +1,1042 @@
+[
+  {
+    "source_id": "dev_library-a",
+    "project": "dev_library",
+    "split": "dev",
+    "title": "馆藏盘点抽样",
+    "body": "合成青槐图书室：藏书盘点不做全量扫码，每个书架抽取七本检查，样本位置由轮转表确定。",
+    "scope": "project",
+    "scope_id": "",
+    "observed_at": "2025-06-01T00:00:00Z",
+    "tags": [
+      "合成评测"
+    ]
+  },
+  {
+    "source_id": "dev_library-b",
+    "project": "dev_library",
+    "split": "dev",
+    "title": "扫描前置准备",
+    "body": "开始扫描借阅册之前，值班员先关闭自动续借，然后导出当天的借阅清单。",
+    "scope": "project",
+    "scope_id": "",
+    "observed_at": "2025-06-01T00:00:00Z",
+    "tags": [
+      "合成评测"
+    ]
+  },
+  {
+    "source_id": "dev_library-c",
+    "project": "dev_library",
+    "split": "dev",
+    "title": "扫描后的对账",
+    "body": "导出的借阅清单与实际书架逐项对照。全部对照完成以后，才重新打开自动续借。",
+    "scope": "project",
+    "scope_id": "",
+    "observed_at": "2025-06-01T00:00:00Z",
+    "tags": [
+      "合成评测"
+    ]
+  },
+  {
+    "source_id": "dev_library-d",
+    "project": "dev_library",
+    "split": "dev",
+    "title": "旧标签约定",
+    "body": "2025年2月3日的标签约定：破损书籍贴蓝色圆点，等待修补。",
+    "scope": "project",
+    "scope_id": "",
+    "observed_at": "2025-02-03T00:00:00Z",
+    "tags": [
+      "合成评测"
+    ]
+  },
+  {
+    "source_id": "dev_library-e",
+    "project": "dev_library",
+    "split": "dev",
+    "title": "标签修订",
+    "body": "2025年3月8日改用橙色三角标记破损书籍；蓝色圆点从当天起只表示待归还，不再表示破损。",
+    "scope": "project",
+    "scope_id": "",
+    "observed_at": "2025-03-08T00:00:00Z",
+    "tags": [
+      "合成评测"
+    ]
+  },
+  {
+    "source_id": "dev_library-f",
+    "project": "dev_library",
+    "split": "dev",
+    "title": "禁止自动处置",
+    "body": "发现连续两次未被借出的书，也不能自动下架；必须保留馆员逐本判断。",
+    "scope": "project",
+    "scope_id": "",
+    "observed_at": "2025-06-01T00:00:00Z",
+    "tags": [
+      "合成评测"
+    ]
+  },
+  {
+    "source_id": "dev_library-g",
+    "project": "dev_library",
+    "split": "dev",
+    "title": "抽样原因",
+    "body": "七本抽样方案是因为周末只有两位志愿者值班，全面盘点会导致借阅窗口无人接待。",
+    "scope": "project",
+    "scope_id": "",
+    "observed_at": "2025-06-01T00:00:00Z",
+    "tags": [
+      "合成评测"
+    ]
+  },
+  {
+    "source_id": "dev_library-h",
+    "project": "dev_library",
+    "split": "dev",
+    "title": "夜班盘点临时参数",
+    "body": "夜班盘点试验把扫描间隔设成四秒，这只对夜班试验有效。",
+    "scope": "session",
+    "scope_id": "night",
+    "observed_at": "2025-06-01T00:00:00Z",
+    "tags": [
+      "合成评测"
+    ]
+  },
+  {
+    "source_id": "dev_library-i",
+    "project": "dev_library",
+    "split": "dev",
+    "title": "晨班盘点临时参数",
+    "body": "晨班试验扫描间隔为两秒，不能替代夜班试验设置。",
+    "scope": "session",
+    "scope_id": "morning",
+    "observed_at": "2025-06-01T00:00:00Z",
+    "tags": [
+      "合成评测"
+    ]
+  },
+  {
+    "source_id": "dev_library-j",
+    "project": "dev_library",
+    "split": "dev",
+    "title": "园艺角活动",
+    "body": "图书室园艺角每周三更换花盆，活动由社群轮值负责。",
+    "scope": "project",
+    "scope_id": "",
+    "observed_at": "2025-06-01T00:00:00Z",
+    "tags": [
+      "合成评测"
+    ]
+  },
+  {
+    "source_id": "dev_orchard-a",
+    "project": "dev_orchard",
+    "split": "dev",
+    "title": "土壤触发线",
+    "body": "合成赤梨果园：地表下十五厘米的探头含水读数低于百分之二十四时才启动滴灌。",
+    "scope": "project",
+    "scope_id": "",
+    "observed_at": "2025-06-01T00:00:00Z",
+    "tags": [
+      "合成评测"
+    ]
+  },
+  {
+    "source_id": "dev_orchard-b",
+    "project": "dev_orchard",
+    "split": "dev",
+    "title": "灌溉准备步骤",
+    "body": "滴灌之前先检查支管末端是否堵塞，随后打开东侧蓄水阀。",
+    "scope": "project",
+    "scope_id": "",
+    "observed_at": "2025-06-01T00:00:00Z",
+    "tags": [
+      "合成评测"
+    ]
+  },
+  {
+    "source_id": "dev_orchard-c",
+    "project": "dev_orchard",
+    "split": "dev",
+    "title": "灌溉收尾步骤",
+    "body": "东侧蓄水阀打开后保持滴灌十二分钟；结束时先关闭水阀，再登记流量表读数。",
+    "scope": "project",
+    "scope_id": "",
+    "observed_at": "2025-06-01T00:00:00Z",
+    "tags": [
+      "合成评测"
+    ]
+  },
+  {
+    "source_id": "dev_orchard-d",
+    "project": "dev_orchard",
+    "split": "dev",
+    "title": "早期巡查时段",
+    "body": "2025年1月10日，果园的固定巡查安排在每日十五点。",
+    "scope": "project",
+    "scope_id": "",
+    "observed_at": "2025-01-10T00:00:00Z",
+    "tags": [
+      "合成评测"
+    ]
+  },
+  {
+    "source_id": "dev_orchard-e",
+    "project": "dev_orchard",
+    "split": "dev",
+    "title": "高温季巡查调整",
+    "body": "2025年4月2日起改为每日六点巡查，取消十五点的固定巡查，避免高温影响探头读数。",
+    "scope": "project",
+    "scope_id": "",
+    "observed_at": "2025-04-02T00:00:00Z",
+    "tags": [
+      "合成评测"
+    ]
+  },
+  {
+    "source_id": "dev_orchard-f",
+    "project": "dev_orchard",
+    "split": "dev",
+    "title": "降雨约束",
+    "body": "即使探头低于阈值，只要未来六小时有降雨提示就暂停自动滴灌，交人工检查。",
+    "scope": "project",
+    "scope_id": "",
+    "observed_at": "2025-06-01T00:00:00Z",
+    "tags": [
+      "合成评测"
+    ]
+  },
+  {
+    "source_id": "dev_orchard-g",
+    "project": "dev_orchard",
+    "split": "dev",
+    "title": "探头安装原因",
+    "body": "探头必须埋在地表下十五厘米，因为根系吸水主要发生在这一层，表土读数波动太大。",
+    "scope": "project",
+    "scope_id": "",
+    "observed_at": "2025-06-01T00:00:00Z",
+    "tags": [
+      "合成评测"
+    ]
+  },
+  {
+    "source_id": "dev_orchard-h",
+    "project": "dev_orchard",
+    "split": "dev",
+    "title": "北坡试验参数",
+    "body": "北坡独立试验区把单次滴灌时长设成八分钟。",
+    "scope": "session",
+    "scope_id": "north",
+    "observed_at": "2025-06-01T00:00:00Z",
+    "tags": [
+      "合成评测"
+    ]
+  },
+  {
+    "source_id": "dev_orchard-i",
+    "project": "dev_orchard",
+    "split": "dev",
+    "title": "南坡试验参数",
+    "body": "南坡试验区单次滴灌二十分钟，与北坡试验互不通用。",
+    "scope": "session",
+    "scope_id": "south",
+    "observed_at": "2025-06-01T00:00:00Z",
+    "tags": [
+      "合成评测"
+    ]
+  },
+  {
+    "source_id": "dev_orchard-j",
+    "project": "dev_orchard",
+    "split": "dev",
+    "title": "收果筐管理",
+    "body": "空收果筐放在仓棚西侧，绿色筐不能盛放修枝废料。",
+    "scope": "project",
+    "scope_id": "",
+    "observed_at": "2025-06-01T00:00:00Z",
+    "tags": [
+      "合成评测"
+    ]
+  },
+  {
+    "source_id": "dev_museum-a",
+    "project": "dev_museum",
+    "split": "dev",
+    "title": "导览离线范围",
+    "body": "合成琉璃馆的语音导览在入馆时缓存前六件展品的音频，后续展品需要到下一热点继续缓存。",
+    "scope": "project",
+    "scope_id": "",
+    "observed_at": "2025-06-01T00:00:00Z",
+    "tags": [
+      "合成评测"
+    ]
+  },
+  {
+    "source_id": "dev_museum-b",
+    "project": "dev_museum",
+    "split": "dev",
+    "title": "展品切换规则",
+    "body": "观众跨入下一展区后，导览先淡出当前讲解，再检测新的展品编号。",
+    "scope": "project",
+    "scope_id": "",
+    "observed_at": "2025-06-01T00:00:00Z",
+    "tags": [
+      "合成评测"
+    ]
+  },
+  {
+    "source_id": "dev_museum-c",
+    "project": "dev_museum",
+    "split": "dev",
+    "title": "播放确认规则",
+    "body": "检测到新展品编号后显示标题卡片；只有观众点确认，才播放下一段讲解。",
+    "scope": "project",
+    "scope_id": "",
+    "observed_at": "2025-06-01T00:00:00Z",
+    "tags": [
+      "合成评测"
+    ]
+  },
+  {
+    "source_id": "dev_museum-d",
+    "project": "dev_museum",
+    "split": "dev",
+    "title": "旧字幕字号",
+    "body": "2025年2月1日，导览字幕固定使用十八像素字号。",
+    "scope": "project",
+    "scope_id": "",
+    "observed_at": "2025-02-01T00:00:00Z",
+    "tags": [
+      "合成评测"
+    ]
+  },
+  {
+    "source_id": "dev_museum-e",
+    "project": "dev_museum",
+    "split": "dev",
+    "title": "新版字幕字号",
+    "body": "2025年5月6日把默认字幕调到二十四像素；十八像素只留在旧版演示中。",
+    "scope": "project",
+    "scope_id": "",
+    "observed_at": "2025-05-06T00:00:00Z",
+    "tags": [
+      "合成评测"
+    ]
+  },
+  {
+    "source_id": "dev_museum-f",
+    "project": "dev_museum",
+    "split": "dev",
+    "title": "人脸识别约束",
+    "body": "语音导览不得采集人脸照片，不根据人脸判断观众是否驻足。",
+    "scope": "project",
+    "scope_id": "",
+    "observed_at": "2025-06-01T00:00:00Z",
+    "tags": [
+      "合成评测"
+    ]
+  },
+  {
+    "source_id": "dev_museum-g",
+    "project": "dev_museum",
+    "split": "dev",
+    "title": "点击确认原因",
+    "body": "相邻玻璃展柜反射会让编号识别来回跳变，因此讲解不能随识别结果自动切换，必须让观众确认。",
+    "scope": "project",
+    "scope_id": "",
+    "observed_at": "2025-06-01T00:00:00Z",
+    "tags": [
+      "合成评测"
+    ]
+  },
+  {
+    "source_id": "dev_museum-h",
+    "project": "dev_museum",
+    "split": "dev",
+    "title": "儿童场试听参数",
+    "body": "儿童场试听版本的单段讲解上限为九十秒。",
+    "scope": "session",
+    "scope_id": "children",
+    "observed_at": "2025-06-01T00:00:00Z",
+    "tags": [
+      "合成评测"
+    ]
+  },
+  {
+    "source_id": "dev_museum-i",
+    "project": "dev_museum",
+    "split": "dev",
+    "title": "研究员场试听参数",
+    "body": "研究员场试听版本允许四分钟长讲解，不适用于儿童场。",
+    "scope": "session",
+    "scope_id": "research",
+    "observed_at": "2025-06-01T00:00:00Z",
+    "tags": [
+      "合成评测"
+    ]
+  },
+  {
+    "source_id": "dev_museum-j",
+    "project": "dev_museum",
+    "split": "dev",
+    "title": "闭馆灯光安排",
+    "body": "馆内保洁从西厅开始，闭馆后大厅灯光保留半小时。",
+    "scope": "project",
+    "scope_id": "",
+    "observed_at": "2025-06-01T00:00:00Z",
+    "tags": [
+      "合成评测"
+    ]
+  },
+  {
+    "source_id": "dev_workshop-a",
+    "project": "dev_workshop",
+    "split": "dev",
+    "title": "设备预约限制",
+    "body": "合成榫卯工坊的激光切割机一次预约最多四十五分钟，相邻两个预约之间保留十分钟清洁间隔。",
+    "scope": "project",
+    "scope_id": "",
+    "observed_at": "2025-06-01T00:00:00Z",
+    "tags": [
+      "合成评测"
+    ]
+  },
+  {
+    "source_id": "dev_workshop-b",
+    "project": "dev_workshop",
+    "split": "dev",
+    "title": "开机前准备",
+    "body": "使用切割机前先开启抽风，检查集尘袋余量，再在控制面板选择材料类型。",
+    "scope": "project",
+    "scope_id": "",
+    "observed_at": "2025-06-01T00:00:00Z",
+    "tags": [
+      "合成评测"
+    ]
+  },
+  {
+    "source_id": "dev_workshop-c",
+    "project": "dev_workshop",
+    "split": "dev",
+    "title": "结束后的顺序",
+    "body": "切割完成后等待两分钟烟尘排净，再关闭抽风；最后拍照记录工作台清洁状态。",
+    "scope": "project",
+    "scope_id": "",
+    "observed_at": "2025-06-01T00:00:00Z",
+    "tags": [
+      "合成评测"
+    ]
+  },
+  {
+    "source_id": "dev_workshop-d",
+    "project": "dev_workshop",
+    "split": "dev",
+    "title": "旧值班交接",
+    "body": "2025年1月5日开始，工坊每日十九点交接值班。",
+    "scope": "project",
+    "scope_id": "",
+    "observed_at": "2025-01-05T00:00:00Z",
+    "tags": [
+      "合成评测"
+    ]
+  },
+  {
+    "source_id": "dev_workshop-e",
+    "project": "dev_workshop",
+    "split": "dev",
+    "title": "交接时间变更",
+    "body": "2025年3月15日起值班交接提前到十八点三十分，十九点交接停止使用。",
+    "scope": "project",
+    "scope_id": "",
+    "observed_at": "2025-03-15T00:00:00Z",
+    "tags": [
+      "合成评测"
+    ]
+  },
+  {
+    "source_id": "dev_workshop-f",
+    "project": "dev_workshop",
+    "split": "dev",
+    "title": "无人值守限制",
+    "body": "预约人临时离开时必须暂停设备；不能让另一位未培训访客代看，也不能保持机器无人运行。",
+    "scope": "project",
+    "scope_id": "",
+    "observed_at": "2025-06-01T00:00:00Z",
+    "tags": [
+      "合成评测"
+    ]
+  },
+  {
+    "source_id": "dev_workshop-g",
+    "project": "dev_workshop",
+    "split": "dev",
+    "title": "间隔安排原因",
+    "body": "预约之间的十分钟用于检查透镜和清理边角料，目的是防止残料引起焦痕。",
+    "scope": "project",
+    "scope_id": "",
+    "observed_at": "2025-06-01T00:00:00Z",
+    "tags": [
+      "合成评测"
+    ]
+  },
+  {
+    "source_id": "dev_workshop-h",
+    "project": "dev_workshop",
+    "split": "dev",
+    "title": "周末教学试验",
+    "body": "周末教学试验的预约上限缩短为三十分钟。",
+    "scope": "session",
+    "scope_id": "teaching",
+    "observed_at": "2025-06-01T00:00:00Z",
+    "tags": [
+      "合成评测"
+    ]
+  },
+  {
+    "source_id": "dev_workshop-i",
+    "project": "dev_workshop",
+    "split": "dev",
+    "title": "夜间维修试验",
+    "body": "夜间维修试验的连续占用时间为六十分钟，不能当作教学预约时长。",
+    "scope": "session",
+    "scope_id": "repair",
+    "observed_at": "2025-06-01T00:00:00Z",
+    "tags": [
+      "合成评测"
+    ]
+  },
+  {
+    "source_id": "dev_workshop-j",
+    "project": "dev_workshop",
+    "split": "dev",
+    "title": "休息区用品",
+    "body": "工坊休息区使用可重复清洗的杯子，纸杯只在停水时备用。",
+    "scope": "project",
+    "scope_id": "",
+    "observed_at": "2025-06-01T00:00:00Z",
+    "tags": [
+      "合成评测"
+    ]
+  },
+  {
+    "source_id": "hold_observatory-a",
+    "project": "hold_observatory",
+    "split": "heldout",
+    "title": "观测帧筛选",
+    "body": "合成北辰观测站把星点半高全宽超过三点二像素的帧排除出叠加序列，原始帧仍留档。",
+    "scope": "project",
+    "scope_id": "",
+    "observed_at": "2025-06-01T00:00:00Z",
+    "tags": [
+      "合成评测"
+    ]
+  },
+  {
+    "source_id": "hold_observatory-b",
+    "project": "hold_observatory",
+    "split": "heldout",
+    "title": "观测开始流程",
+    "body": "开夜场观测前先记录镜面温度，再采集十张暗场帧，随后开始目标曝光。",
+    "scope": "project",
+    "scope_id": "",
+    "observed_at": "2025-06-01T00:00:00Z",
+    "tags": [
+      "合成评测"
+    ]
+  },
+  {
+    "source_id": "hold_observatory-c",
+    "project": "hold_observatory",
+    "split": "heldout",
+    "title": "观测结束流程",
+    "body": "最后一组目标曝光完成后采集平场，检查序列编号连续，然后关闭赤道仪跟踪。",
+    "scope": "project",
+    "scope_id": "",
+    "observed_at": "2025-06-01T00:00:00Z",
+    "tags": [
+      "合成评测"
+    ]
+  },
+  {
+    "source_id": "hold_observatory-d",
+    "project": "hold_observatory",
+    "split": "heldout",
+    "title": "旧目录命名",
+    "body": "2025年1月7日夜场目录使用目标名称作为前缀。",
+    "scope": "project",
+    "scope_id": "",
+    "observed_at": "2025-01-07T00:00:00Z",
+    "tags": [
+      "合成评测"
+    ]
+  },
+  {
+    "source_id": "hold_observatory-e",
+    "project": "hold_observatory",
+    "split": "heldout",
+    "title": "目录规则变更",
+    "body": "2025年6月3日起，夜场目录前缀改成观测日期，目标名称移到第二段，旧命名只适用于历史归档。",
+    "scope": "project",
+    "scope_id": "",
+    "observed_at": "2025-06-03T00:00:00Z",
+    "tags": [
+      "合成评测"
+    ]
+  },
+  {
+    "source_id": "hold_observatory-f",
+    "project": "hold_observatory",
+    "split": "heldout",
+    "title": "筛帧留档约束",
+    "body": "低质量帧可以不参与叠加，但不能删除原始曝光文件；异常观测仍须保留以便复核。",
+    "scope": "project",
+    "scope_id": "",
+    "observed_at": "2025-06-01T00:00:00Z",
+    "tags": [
+      "合成评测"
+    ]
+  },
+  {
+    "source_id": "hold_observatory-g",
+    "project": "hold_observatory",
+    "split": "heldout",
+    "title": "筛帧规则依据",
+    "body": "叠加前的星点宽度限制用于排除跟踪抖动，单靠背景亮度不能区分抖动和薄云。",
+    "scope": "project",
+    "scope_id": "",
+    "observed_at": "2025-06-01T00:00:00Z",
+    "tags": [
+      "合成评测"
+    ]
+  },
+  {
+    "source_id": "hold_observatory-h",
+    "project": "hold_observatory",
+    "split": "heldout",
+    "title": "彗星跟踪试验",
+    "body": "彗星跟踪试验的单帧曝光为二十五秒。",
+    "scope": "session",
+    "scope_id": "comet",
+    "observed_at": "2025-06-01T00:00:00Z",
+    "tags": [
+      "合成评测"
+    ]
+  },
+  {
+    "source_id": "hold_observatory-i",
+    "project": "hold_observatory",
+    "split": "heldout",
+    "title": "深空长曝试验",
+    "body": "深空长曝试验每帧曝光一百八十秒，不沿用到彗星跟踪。",
+    "scope": "session",
+    "scope_id": "deep",
+    "observed_at": "2025-06-01T00:00:00Z",
+    "tags": [
+      "合成评测"
+    ]
+  },
+  {
+    "source_id": "hold_observatory-j",
+    "project": "hold_observatory",
+    "split": "heldout",
+    "title": "器材保管",
+    "body": "目镜盒放在防潮柜第二层，开盖记录需写入器材本。",
+    "scope": "project",
+    "scope_id": "",
+    "observed_at": "2025-06-01T00:00:00Z",
+    "tags": [
+      "合成评测"
+    ]
+  },
+  {
+    "source_id": "hold_buoy-a",
+    "project": "hold_buoy",
+    "split": "heldout",
+    "title": "浮标异常判断",
+    "body": "合成月湾浮标连续四次水温读数相差超过一点五摄氏度时生成波动提示，单次突变只记录。",
+    "scope": "project",
+    "scope_id": "",
+    "observed_at": "2025-06-01T00:00:00Z",
+    "tags": [
+      "合成评测"
+    ]
+  },
+  {
+    "source_id": "hold_buoy-b",
+    "project": "hold_buoy",
+    "split": "heldout",
+    "title": "回收前安排",
+    "body": "回收浮标前先发送暂停采样指令，确认本地日志落盘，再解除锚链固定。",
+    "scope": "project",
+    "scope_id": "",
+    "observed_at": "2025-06-01T00:00:00Z",
+    "tags": [
+      "合成评测"
+    ]
+  },
+  {
+    "source_id": "hold_buoy-c",
+    "project": "hold_buoy",
+    "split": "heldout",
+    "title": "回收后检查",
+    "body": "锚链解除并吊上甲板后，先检查外壳渗水，再拷贝日志，最后拆下电池。",
+    "scope": "project",
+    "scope_id": "",
+    "observed_at": "2025-06-01T00:00:00Z",
+    "tags": [
+      "合成评测"
+    ]
+  },
+  {
+    "source_id": "hold_buoy-d",
+    "project": "hold_buoy",
+    "split": "heldout",
+    "title": "旧传输窗口",
+    "body": "2025年2月10日的海湾浮标每四小时回传一次数据。",
+    "scope": "project",
+    "scope_id": "",
+    "observed_at": "2025-02-10T00:00:00Z",
+    "tags": [
+      "合成评测"
+    ]
+  },
+  {
+    "source_id": "hold_buoy-e",
+    "project": "hold_buoy",
+    "split": "heldout",
+    "title": "传输窗口调整",
+    "body": "2025年5月18日起改为每两小时回传；四小时间隔只用于旧版离线回放。",
+    "scope": "project",
+    "scope_id": "",
+    "observed_at": "2025-05-18T00:00:00Z",
+    "tags": [
+      "合成评测"
+    ]
+  },
+  {
+    "source_id": "hold_buoy-f",
+    "project": "hold_buoy",
+    "split": "heldout",
+    "title": "漂移处置限制",
+    "body": "定位偏移不能直接判定浮标损坏，也不能自动清除过去的采样轨迹；需要先核对潮汐。",
+    "scope": "project",
+    "scope_id": "",
+    "observed_at": "2025-06-01T00:00:00Z",
+    "tags": [
+      "合成评测"
+    ]
+  },
+  {
+    "source_id": "hold_buoy-g",
+    "project": "hold_buoy",
+    "split": "heldout",
+    "title": "波动判定原因",
+    "body": "连续四次比较可以过滤海浪翻转导致的瞬时探头露出，避免把一次空气接触当成水温变化。",
+    "scope": "project",
+    "scope_id": "",
+    "observed_at": "2025-06-01T00:00:00Z",
+    "tags": [
+      "合成评测"
+    ]
+  },
+  {
+    "source_id": "hold_buoy-h",
+    "project": "hold_buoy",
+    "split": "heldout",
+    "title": "浅水湾试验设置",
+    "body": "浅水湾试验每次采样间隔为七十秒。",
+    "scope": "session",
+    "scope_id": "shallow",
+    "observed_at": "2025-06-01T00:00:00Z",
+    "tags": [
+      "合成评测"
+    ]
+  },
+  {
+    "source_id": "hold_buoy-i",
+    "project": "hold_buoy",
+    "split": "heldout",
+    "title": "外海试验设置",
+    "body": "外海试验每三分钟采样一次，和浅水湾试验分开记录。",
+    "scope": "session",
+    "scope_id": "offshore",
+    "observed_at": "2025-06-01T00:00:00Z",
+    "tags": [
+      "合成评测"
+    ]
+  },
+  {
+    "source_id": "hold_buoy-j",
+    "project": "hold_buoy",
+    "split": "heldout",
+    "title": "船上物料",
+    "body": "回收船备用绳放在甲板前箱，反光背心挂在舱门左侧。",
+    "scope": "project",
+    "scope_id": "",
+    "observed_at": "2025-06-01T00:00:00Z",
+    "tags": [
+      "合成评测"
+    ]
+  },
+  {
+    "source_id": "hold_theater-a",
+    "project": "hold_theater",
+    "split": "heldout",
+    "title": "字幕行宽要求",
+    "body": "合成听潮剧场的侧屏字幕每行最多十四个汉字，超长句在停顿处拆成两行。",
+    "scope": "project",
+    "scope_id": "",
+    "observed_at": "2025-06-01T00:00:00Z",
+    "tags": [
+      "合成评测"
+    ]
+  },
+  {
+    "source_id": "hold_theater-b",
+    "project": "hold_theater",
+    "split": "heldout",
+    "title": "开演前联调",
+    "body": "开演前先同步字幕机与调音台时钟，再播放测试对白，确认演员返听正常。",
+    "scope": "project",
+    "scope_id": "",
+    "observed_at": "2025-06-01T00:00:00Z",
+    "tags": [
+      "合成评测"
+    ]
+  },
+  {
+    "source_id": "hold_theater-c",
+    "project": "hold_theater",
+    "split": "heldout",
+    "title": "开演后的追帧",
+    "body": "正式对白开始后由操作员确认首句落点，再允许自动追帧；演出结束后导出时间偏移记录。",
+    "scope": "project",
+    "scope_id": "",
+    "observed_at": "2025-06-01T00:00:00Z",
+    "tags": [
+      "合成评测"
+    ]
+  },
+  {
+    "source_id": "hold_theater-d",
+    "project": "hold_theater",
+    "split": "heldout",
+    "title": "旧字幕配色",
+    "body": "2025年1月12日，侧屏字幕使用浅绿色文字。",
+    "scope": "project",
+    "scope_id": "",
+    "observed_at": "2025-01-12T00:00:00Z",
+    "tags": [
+      "合成评测"
+    ]
+  },
+  {
+    "source_id": "hold_theater-e",
+    "project": "hold_theater",
+    "split": "heldout",
+    "title": "配色调整记录",
+    "body": "2025年4月9日换成暖白色文字以改善远排可读性；浅绿色只保留在舞台美术预览里。",
+    "scope": "project",
+    "scope_id": "",
+    "observed_at": "2025-04-09T00:00:00Z",
+    "tags": [
+      "合成评测"
+    ]
+  },
+  {
+    "source_id": "hold_theater-f",
+    "project": "hold_theater",
+    "split": "heldout",
+    "title": "剧透显示限制",
+    "body": "演员还没说出的台词不能预先显示在观众屏幕；排练预览也不得接到观众屏幕。",
+    "scope": "project",
+    "scope_id": "",
+    "observed_at": "2025-06-01T00:00:00Z",
+    "tags": [
+      "合成评测"
+    ]
+  },
+  {
+    "source_id": "hold_theater-g",
+    "project": "hold_theater",
+    "split": "heldout",
+    "title": "断行依据",
+    "body": "按对白停顿断行可以让观众跟上呼吸节奏，机械地按字数切开会把否定词和结论分离。",
+    "scope": "project",
+    "scope_id": "",
+    "observed_at": "2025-06-01T00:00:00Z",
+    "tags": [
+      "合成评测"
+    ]
+  },
+  {
+    "source_id": "hold_theater-h",
+    "project": "hold_theater",
+    "split": "heldout",
+    "title": "小剧场排练参数",
+    "body": "小剧场排练的字幕延迟补偿是三百毫秒。",
+    "scope": "session",
+    "scope_id": "small",
+    "observed_at": "2025-06-01T00:00:00Z",
+    "tags": [
+      "合成评测"
+    ]
+  },
+  {
+    "source_id": "hold_theater-i",
+    "project": "hold_theater",
+    "split": "heldout",
+    "title": "露天排练参数",
+    "body": "露天排练补偿七百毫秒，只适用于露天音响链路。",
+    "scope": "session",
+    "scope_id": "open",
+    "observed_at": "2025-06-01T00:00:00Z",
+    "tags": [
+      "合成评测"
+    ]
+  },
+  {
+    "source_id": "hold_theater-j",
+    "project": "hold_theater",
+    "split": "heldout",
+    "title": "道具寄存",
+    "body": "侧台雨伞道具每次演出后登记数量，破损伞单独挂起。",
+    "scope": "project",
+    "scope_id": "",
+    "observed_at": "2025-06-01T00:00:00Z",
+    "tags": [
+      "合成评测"
+    ]
+  },
+  {
+    "source_id": "hold_seedbank-a",
+    "project": "hold_seedbank",
+    "split": "heldout",
+    "title": "种子复检阈值",
+    "body": "合成云杉种子库：同批样本发芽率低于百分之八十二时安排复检，复检前不调整批次评级。",
+    "scope": "project",
+    "scope_id": "",
+    "observed_at": "2025-06-01T00:00:00Z",
+    "tags": [
+      "合成评测"
+    ]
+  },
+  {
+    "source_id": "hold_seedbank-b",
+    "project": "hold_seedbank",
+    "split": "heldout",
+    "title": "冷藏取样流程",
+    "body": "从冷藏柜取样后先让密封袋在室温下放置四十分钟，然后称量样本。",
+    "scope": "project",
+    "scope_id": "",
+    "observed_at": "2025-06-01T00:00:00Z",
+    "tags": [
+      "合成评测"
+    ]
+  },
+  {
+    "source_id": "hold_seedbank-c",
+    "project": "hold_seedbank",
+    "split": "heldout",
+    "title": "称量后处理",
+    "body": "称量结束才开袋分装，封口后写入样本流转表，再把余样送回冷藏柜。",
+    "scope": "project",
+    "scope_id": "",
+    "observed_at": "2025-06-01T00:00:00Z",
+    "tags": [
+      "合成评测"
+    ]
+  },
+  {
+    "source_id": "hold_seedbank-d",
+    "project": "hold_seedbank",
+    "split": "heldout",
+    "title": "旧标签格式",
+    "body": "2025年2月6日的样本标签只写采集地和年份。",
+    "scope": "project",
+    "scope_id": "",
+    "observed_at": "2025-02-06T00:00:00Z",
+    "tags": [
+      "合成评测"
+    ]
+  },
+  {
+    "source_id": "hold_seedbank-e",
+    "project": "hold_seedbank",
+    "split": "heldout",
+    "title": "标签内容变更",
+    "body": "2025年6月12日起标签新增批次序号；历史标签不直接改写，另贴关联条码。",
+    "scope": "project",
+    "scope_id": "",
+    "observed_at": "2025-06-12T00:00:00Z",
+    "tags": [
+      "合成评测"
+    ]
+  },
+  {
+    "source_id": "hold_seedbank-f",
+    "project": "hold_seedbank",
+    "split": "heldout",
+    "title": "检测结果限制",
+    "body": "第一次发芽试验不合格不能直接销毁整批种子；复检结果出来之前也不能标成报废。",
+    "scope": "project",
+    "scope_id": "",
+    "observed_at": "2025-06-01T00:00:00Z",
+    "tags": [
+      "合成评测"
+    ]
+  },
+  {
+    "source_id": "hold_seedbank-g",
+    "project": "hold_seedbank",
+    "split": "heldout",
+    "title": "回温原因",
+    "body": "密封袋保持关闭并回温四十分钟，是为了避免冷种子接触室内湿空气时表面结露。",
+    "scope": "project",
+    "scope_id": "",
+    "observed_at": "2025-06-01T00:00:00Z",
+    "tags": [
+      "合成评测"
+    ]
+  },
+  {
+    "source_id": "hold_seedbank-h",
+    "project": "hold_seedbank",
+    "split": "heldout",
+    "title": "高山草种试验",
+    "body": "高山草种试验的发芽观察持续十一天。",
+    "scope": "session",
+    "scope_id": "alpine",
+    "observed_at": "2025-06-01T00:00:00Z",
+    "tags": [
+      "合成评测"
+    ]
+  },
+  {
+    "source_id": "hold_seedbank-i",
+    "project": "hold_seedbank",
+    "split": "heldout",
+    "title": "水生草种试验",
+    "body": "水生草种试验观察十六天，不能替代高山草种周期。",
+    "scope": "session",
+    "scope_id": "aquatic",
+    "observed_at": "2025-06-01T00:00:00Z",
+    "tags": [
+      "合成评测"
+    ]
+  },
+  {
+    "source_id": "hold_seedbank-j",
+    "project": "hold_seedbank",
+    "split": "heldout",
+    "title": "资料借阅",
+    "body": "纸质采集手册放在资料室东柜，借阅必须保留原页顺序。",
+    "scope": "project",
+    "scope_id": "",
+    "observed_at": "2025-06-01T00:00:00Z",
+    "tags": [
+      "合成评测"
+    ]
+  }
+]

@@ -1,0 +1,594 @@
+[
+  {
+    "question_id": "dev_library-q01",
+    "project": "dev_library",
+    "split": "dev",
+    "category": "paraphrase",
+    "question": "清点书架时，每架只查多少本？",
+    "answer": "七本",
+    "required_source_ids": [
+      "dev_library-a"
+    ],
+    "unanswerable": false,
+    "scope": "project",
+    "scope_id": "",
+    "view": "current"
+  },
+  {
+    "question_id": "dev_library-q02",
+    "project": "dev_library",
+    "split": "dev",
+    "category": "cross_event",
+    "question": "从借阅册扫描前到全部核对后，自动续借应该怎样处理？",
+    "answer": "先关闭自动续借，导出借阅清单；对照书架完成后再开启。",
+    "required_source_ids": [
+      "dev_library-b",
+      "dev_library-c"
+    ],
+    "unanswerable": false,
+    "scope": "project",
+    "scope_id": "",
+    "view": "current"
+  },
+  {
+    "question_id": "dev_library-q03",
+    "project": "dev_library",
+    "split": "dev",
+    "category": "cross_event",
+    "question": "盘点为什么没有把所有书都扫一遍，采用了什么数量的抽查？",
+    "answer": "每架七本；周末只有两位志愿者，全面盘点会影响借阅窗口。",
+    "required_source_ids": [
+      "dev_library-a",
+      "dev_library-g"
+    ],
+    "unanswerable": false,
+    "scope": "project",
+    "scope_id": "",
+    "view": "current"
+  },
+  {
+    "question_id": "dev_library-q04",
+    "project": "dev_library",
+    "split": "dev",
+    "category": "temporal",
+    "question": "三月八日调整之后，哪种标记代表图书破损？",
+    "answer": "橙色三角",
+    "required_source_ids": [
+      "dev_library-e"
+    ],
+    "unanswerable": false,
+    "scope": "project",
+    "scope_id": "",
+    "view": "current"
+  },
+  {
+    "question_id": "dev_library-q05",
+    "project": "dev_library",
+    "split": "dev",
+    "category": "temporal",
+    "question": "二月初还没改标签时，损坏的书用什么标记？",
+    "answer": "蓝色圆点",
+    "required_source_ids": [
+      "dev_library-d"
+    ],
+    "unanswerable": false,
+    "scope": "project",
+    "scope_id": "",
+    "view": "history"
+  },
+  {
+    "question_id": "dev_library-q06",
+    "project": "dev_library",
+    "split": "dev",
+    "category": "negation",
+    "question": "一本书连续两个周期无人借阅，可以直接从馆藏撤下吗？",
+    "answer": "不可以，必须由馆员逐本判断。",
+    "required_source_ids": [
+      "dev_library-f"
+    ],
+    "unanswerable": false,
+    "scope": "project",
+    "scope_id": "",
+    "view": "current"
+  },
+  {
+    "question_id": "dev_library-q07",
+    "project": "dev_library",
+    "split": "dev",
+    "category": "procedure_reason",
+    "question": "为什么七本抽样优先于全面检查？",
+    "answer": "周末只有两位志愿者，全面盘点会使借阅窗口无人接待。",
+    "required_source_ids": [
+      "dev_library-g"
+    ],
+    "unanswerable": false,
+    "scope": "project",
+    "scope_id": "",
+    "view": "current"
+  },
+  {
+    "question_id": "dev_library-q08",
+    "project": "dev_library",
+    "split": "dev",
+    "category": "unanswerable",
+    "question": "馆藏盘点设备每台的采购金额是多少？",
+    "answer": "",
+    "required_source_ids": [],
+    "unanswerable": true,
+    "scope": "project",
+    "scope_id": "",
+    "view": "current"
+  },
+  {
+    "question_id": "dev_library-q09",
+    "project": "dev_library",
+    "split": "dev",
+    "category": "scope",
+    "question": "夜班盘点试验里，扫描间隔要留多久？",
+    "answer": "四秒",
+    "required_source_ids": [
+      "dev_library-h"
+    ],
+    "unanswerable": false,
+    "scope": "session",
+    "scope_id": "night",
+    "view": "current"
+  },
+  {
+    "question_id": "dev_library-q10",
+    "project": "dev_library",
+    "split": "dev",
+    "category": "unanswerable",
+    "question": "这套盘点办法已经获得哪家协会的认证？",
+    "answer": "",
+    "required_source_ids": [],
+    "unanswerable": true,
+    "scope": "project",
+    "scope_id": "",
+    "view": "current"
+  },
+  {
+    "question_id": "dev_orchard-q01",
+    "project": "dev_orchard",
+    "split": "dev",
+    "category": "paraphrase",
+    "question": "土壤水分到什么程度，系统才会给梨树浇水？",
+    "answer": "含水读数低于百分之二十四",
+    "required_source_ids": [
+      "dev_orchard-a"
+    ],
+    "unanswerable": false,
+    "scope": "project",
+    "scope_id": "",
+    "view": "current"
+  },
+  {
+    "question_id": "dev_orchard-q02",
+    "project": "dev_orchard",
+    "split": "dev",
+    "category": "cross_event",
+    "question": "从检查管道到滴灌完成，操作顺序是什么？",
+    "answer": "检查末端堵塞，开东侧阀，滴灌十二分钟，关阀，登记流量读数。",
+    "required_source_ids": [
+      "dev_orchard-b",
+      "dev_orchard-c"
+    ],
+    "unanswerable": false,
+    "scope": "project",
+    "scope_id": "",
+    "view": "current"
+  },
+  {
+    "question_id": "dev_orchard-q03",
+    "project": "dev_orchard",
+    "split": "dev",
+    "category": "cross_event",
+    "question": "水分探头埋多深，为什么选这个深度？",
+    "answer": "十五厘米；根系主要在这一层吸水，表土读数波动太大。",
+    "required_source_ids": [
+      "dev_orchard-a",
+      "dev_orchard-g"
+    ],
+    "unanswerable": false,
+    "scope": "project",
+    "scope_id": "",
+    "view": "current"
+  },
+  {
+    "question_id": "dev_orchard-q04",
+    "project": "dev_orchard",
+    "split": "dev",
+    "category": "temporal",
+    "question": "四月调整之后，固定查园安排在几点？",
+    "answer": "六点",
+    "required_source_ids": [
+      "dev_orchard-e"
+    ],
+    "unanswerable": false,
+    "scope": "project",
+    "scope_id": "",
+    "view": "current"
+  },
+  {
+    "question_id": "dev_orchard-q05",
+    "project": "dev_orchard",
+    "split": "dev",
+    "category": "temporal",
+    "question": "一月份的日常巡园安排是什么时间？",
+    "answer": "十五点",
+    "required_source_ids": [
+      "dev_orchard-d"
+    ],
+    "unanswerable": false,
+    "scope": "project",
+    "scope_id": "",
+    "view": "history"
+  },
+  {
+    "question_id": "dev_orchard-q06",
+    "project": "dev_orchard",
+    "split": "dev",
+    "category": "negation",
+    "question": "探头已经显示缺水，但六小时内预报有雨，仍会自动开阀吗？",
+    "answer": "不会，暂停自动滴灌并交人工检查。",
+    "required_source_ids": [
+      "dev_orchard-f"
+    ],
+    "unanswerable": false,
+    "scope": "project",
+    "scope_id": "",
+    "view": "current"
+  },
+  {
+    "question_id": "dev_orchard-q07",
+    "project": "dev_orchard",
+    "split": "dev",
+    "category": "procedure_reason",
+    "question": "为什么不用表土的湿度控制滴灌？",
+    "answer": "表土读数波动太大，根系主要在十五厘米深处吸水。",
+    "required_source_ids": [
+      "dev_orchard-g"
+    ],
+    "unanswerable": false,
+    "scope": "project",
+    "scope_id": "",
+    "view": "current"
+  },
+  {
+    "question_id": "dev_orchard-q08",
+    "project": "dev_orchard",
+    "split": "dev",
+    "category": "unanswerable",
+    "question": "滴灌带的制造商是哪一家？",
+    "answer": "",
+    "required_source_ids": [],
+    "unanswerable": true,
+    "scope": "project",
+    "scope_id": "",
+    "view": "current"
+  },
+  {
+    "question_id": "dev_orchard-q09",
+    "project": "dev_orchard",
+    "split": "dev",
+    "category": "scope",
+    "question": "只看北坡独立试验，滴一次水要持续多长时间？",
+    "answer": "八分钟",
+    "required_source_ids": [
+      "dev_orchard-h"
+    ],
+    "unanswerable": false,
+    "scope": "session",
+    "scope_id": "north",
+    "view": "current"
+  },
+  {
+    "question_id": "dev_orchard-q10",
+    "project": "dev_orchard",
+    "split": "dev",
+    "category": "unanswerable",
+    "question": "本月已经节省了多少吨水？",
+    "answer": "",
+    "required_source_ids": [],
+    "unanswerable": true,
+    "scope": "project",
+    "scope_id": "",
+    "view": "current"
+  },
+  {
+    "question_id": "dev_museum-q01",
+    "project": "dev_museum",
+    "split": "dev",
+    "category": "paraphrase",
+    "question": "刚进馆没连上网时，已经存下来的讲解能覆盖多少件展品？",
+    "answer": "前六件展品",
+    "required_source_ids": [
+      "dev_museum-a"
+    ],
+    "unanswerable": false,
+    "scope": "project",
+    "scope_id": "",
+    "view": "current"
+  },
+  {
+    "question_id": "dev_museum-q02",
+    "project": "dev_museum",
+    "split": "dev",
+    "category": "cross_event",
+    "question": "从进入下一个展区到听到新讲解，系统和观众分别要做什么？",
+    "answer": "淡出旧讲解、识别新编号、显示标题卡片，观众确认后播放。",
+    "required_source_ids": [
+      "dev_museum-b",
+      "dev_museum-c"
+    ],
+    "unanswerable": false,
+    "scope": "project",
+    "scope_id": "",
+    "view": "current"
+  },
+  {
+    "question_id": "dev_museum-q03",
+    "project": "dev_museum",
+    "split": "dev",
+    "category": "cross_event",
+    "question": "新讲解为什么需要点一下确认，这一步出现在什么环节？",
+    "answer": "编号识别后显示标题卡片并确认；玻璃反射会使识别跳变。",
+    "required_source_ids": [
+      "dev_museum-c",
+      "dev_museum-g"
+    ],
+    "unanswerable": false,
+    "scope": "project",
+    "scope_id": "",
+    "view": "current"
+  },
+  {
+    "question_id": "dev_museum-q04",
+    "project": "dev_museum",
+    "split": "dev",
+    "category": "temporal",
+    "question": "五月六日之后默认字幕多大？",
+    "answer": "二十四像素",
+    "required_source_ids": [
+      "dev_museum-e"
+    ],
+    "unanswerable": false,
+    "scope": "project",
+    "scope_id": "",
+    "view": "current"
+  },
+  {
+    "question_id": "dev_museum-q05",
+    "project": "dev_museum",
+    "split": "dev",
+    "category": "temporal",
+    "question": "二月初的导览字幕使用多大字号？",
+    "answer": "十八像素",
+    "required_source_ids": [
+      "dev_museum-d"
+    ],
+    "unanswerable": false,
+    "scope": "project",
+    "scope_id": "",
+    "view": "history"
+  },
+  {
+    "question_id": "dev_museum-q06",
+    "project": "dev_museum",
+    "split": "dev",
+    "category": "negation",
+    "question": "为了判断观众有没有停留，导览可以拍摄人脸吗？",
+    "answer": "不可以，不得采集人脸照片。",
+    "required_source_ids": [
+      "dev_museum-f"
+    ],
+    "unanswerable": false,
+    "scope": "project",
+    "scope_id": "",
+    "view": "current"
+  },
+  {
+    "question_id": "dev_museum-q07",
+    "project": "dev_museum",
+    "split": "dev",
+    "category": "procedure_reason",
+    "question": "为什么不能识别到展品编号就直接切到那段音频？",
+    "answer": "玻璃展柜反射会导致编号识别来回跳变。",
+    "required_source_ids": [
+      "dev_museum-g"
+    ],
+    "unanswerable": false,
+    "scope": "project",
+    "scope_id": "",
+    "view": "current"
+  },
+  {
+    "question_id": "dev_museum-q08",
+    "project": "dev_museum",
+    "split": "dev",
+    "category": "unanswerable",
+    "question": "已经有多少位观众给语音导览打了五星？",
+    "answer": "",
+    "required_source_ids": [],
+    "unanswerable": true,
+    "scope": "project",
+    "scope_id": "",
+    "view": "current"
+  },
+  {
+    "question_id": "dev_museum-q09",
+    "project": "dev_museum",
+    "split": "dev",
+    "category": "scope",
+    "question": "儿童场试听中，一段解说最多持续多久？",
+    "answer": "九十秒",
+    "required_source_ids": [
+      "dev_museum-h"
+    ],
+    "unanswerable": false,
+    "scope": "session",
+    "scope_id": "children",
+    "view": "current"
+  },
+  {
+    "question_id": "dev_museum-q10",
+    "project": "dev_museum",
+    "split": "dev",
+    "category": "unanswerable",
+    "question": "本馆门票的网上预售价是多少？",
+    "answer": "",
+    "required_source_ids": [],
+    "unanswerable": true,
+    "scope": "project",
+    "scope_id": "",
+    "view": "current"
+  },
+  {
+    "question_id": "dev_workshop-q01",
+    "project": "dev_workshop",
+    "split": "dev",
+    "category": "paraphrase",
+    "question": "正常预约激光设备，一次可以占用多久，后面还要空多久？",
+    "answer": "四十五分钟，之后留十分钟清洁间隔。",
+    "required_source_ids": [
+      "dev_workshop-a"
+    ],
+    "unanswerable": false,
+    "scope": "project",
+    "scope_id": "",
+    "view": "current"
+  },
+  {
+    "question_id": "dev_workshop-q02",
+    "project": "dev_workshop",
+    "split": "dev",
+    "category": "cross_event",
+    "question": "从开工到结束，抽风设施分别在什么时候启停？",
+    "answer": "开工前先开抽风；切割结束等两分钟排烟后关闭。",
+    "required_source_ids": [
+      "dev_workshop-b",
+      "dev_workshop-c"
+    ],
+    "unanswerable": false,
+    "scope": "project",
+    "scope_id": "",
+    "view": "current"
+  },
+  {
+    "question_id": "dev_workshop-q03",
+    "project": "dev_workshop",
+    "split": "dev",
+    "category": "cross_event",
+    "question": "为什么两个预约不能紧挨着排，需要空出多少时间？",
+    "answer": "留十分钟检查透镜并清理边角料，防止残料引起焦痕。",
+    "required_source_ids": [
+      "dev_workshop-a",
+      "dev_workshop-g"
+    ],
+    "unanswerable": false,
+    "scope": "project",
+    "scope_id": "",
+    "view": "current"
+  },
+  {
+    "question_id": "dev_workshop-q04",
+    "project": "dev_workshop",
+    "split": "dev",
+    "category": "temporal",
+    "question": "三月十五日以后几点交接值班？",
+    "answer": "十八点三十分",
+    "required_source_ids": [
+      "dev_workshop-e"
+    ],
+    "unanswerable": false,
+    "scope": "project",
+    "scope_id": "",
+    "view": "current"
+  },
+  {
+    "question_id": "dev_workshop-q05",
+    "project": "dev_workshop",
+    "split": "dev",
+    "category": "temporal",
+    "question": "一月开始实行的交班时间是几点？",
+    "answer": "十九点",
+    "required_source_ids": [
+      "dev_workshop-d"
+    ],
+    "unanswerable": false,
+    "scope": "project",
+    "scope_id": "",
+    "view": "history"
+  },
+  {
+    "question_id": "dev_workshop-q06",
+    "project": "dev_workshop",
+    "split": "dev",
+    "category": "negation",
+    "question": "操作者有事离开，可以让没培训的朋友看着机器继续切割吗？",
+    "answer": "不可以，必须暂停设备，不能交未培训访客代看。",
+    "required_source_ids": [
+      "dev_workshop-f"
+    ],
+    "unanswerable": false,
+    "scope": "project",
+    "scope_id": "",
+    "view": "current"
+  },
+  {
+    "question_id": "dev_workshop-q07",
+    "project": "dev_workshop",
+    "split": "dev",
+    "category": "procedure_reason",
+    "question": "清洁空档为什么还要检查透镜和边角料？",
+    "answer": "防止残料引起焦痕。",
+    "required_source_ids": [
+      "dev_workshop-g"
+    ],
+    "unanswerable": false,
+    "scope": "project",
+    "scope_id": "",
+    "view": "current"
+  },
+  {
+    "question_id": "dev_workshop-q08",
+    "project": "dev_workshop",
+    "split": "dev",
+    "category": "unanswerable",
+    "question": "切割机的剩余折旧年限是多少？",
+    "answer": "",
+    "required_source_ids": [],
+    "unanswerable": true,
+    "scope": "project",
+    "scope_id": "",
+    "view": "current"
+  },
+  {
+    "question_id": "dev_workshop-q09",
+    "project": "dev_workshop",
+    "split": "dev",
+    "category": "scope",
+    "question": "周末教学试验里，每次能预约多长时间？",
+    "answer": "三十分钟",
+    "required_source_ids": [
+      "dev_workshop-h"
+    ],
+    "unanswerable": false,
+    "scope": "session",
+    "scope_id": "teaching",
+    "view": "current"
+  },
+  {
+    "question_id": "dev_workshop-q10",
+    "project": "dev_workshop",
+    "split": "dev",
+    "category": "unanswerable",
+    "question": "工坊今年获得了多少经营收入？",
+    "answer": "",
+    "required_source_ids": [],
+    "unanswerable": true,
+    "scope": "project",
+    "scope_id": "",
+    "view": "current"
+  }
+]

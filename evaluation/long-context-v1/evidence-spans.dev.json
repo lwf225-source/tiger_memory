@@ -1,0 +1,258 @@
+{
+  "dataset_id": "plm-long-context-synthetic-v1-24",
+  "offset_unit": "Unicode code points; start inclusive/end exclusive; hash of quote.encode(utf-8)",
+  "questions": [
+    {
+      "absence_check_source_ids": [],
+      "absence_policy": null,
+      "question_id": "lcv1-harbor-q1",
+      "spans": [
+        {
+          "end": 1972,
+          "evidence_id": "h-old",
+          "quote_sha256": "079872a5f72be97b7cee7425f4f6a44d12be7834e0b71530bd42428c5109e76c",
+          "source_id": "lcv1-harbor-1",
+          "start": 1929
+        },
+        {
+          "end": 5103,
+          "evidence_id": "h-new",
+          "quote_sha256": "0c609651948e46db55b230c4a7776025f280de451e1fbfe81fc16de023ccc8bf",
+          "source_id": "lcv1-harbor-1",
+          "start": 5055
+        }
+      ],
+      "unanswerable": false
+    },
+    {
+      "absence_check_source_ids": [],
+      "absence_policy": null,
+      "question_id": "lcv1-harbor-q2",
+      "spans": [
+        {
+          "end": 2019,
+          "evidence_id": "h-ref",
+          "quote_sha256": "057e31fe8e8f3281a7ff2f711a4719dfdf8d660ecc3fd373f6002b0e9e86d4bb",
+          "source_id": "lcv1-harbor-1",
+          "start": 1974
+        },
+        {
+          "end": 2057,
+          "evidence_id": "h-pro",
+          "quote_sha256": "6f713dac6d2d88f8b097b89ad13da9b16cc2e0930ee739931851d8983b5b23f2",
+          "source_id": "lcv1-harbor-1",
+          "start": 2021
+        }
+      ],
+      "unanswerable": false
+    },
+    {
+      "absence_check_source_ids": [],
+      "absence_policy": null,
+      "question_id": "lcv1-harbor-q3",
+      "spans": [
+        {
+          "end": 5155,
+          "evidence_id": "h-rule",
+          "quote_sha256": "7bb2ce39fbaee2f655a51245d93b4b5b9253603f8d05a7d12bcfe8ed489ca345",
+          "source_id": "lcv1-harbor-1",
+          "start": 5105
+        },
+        {
+          "end": 1869,
+          "evidence_id": "h-test",
+          "quote_sha256": "e3e09e70ff219716e51a3af9e92417216bc3b75a0df6be3eb9d5abc669df5d69",
+          "source_id": "lcv1-harbor-2",
+          "start": 1828
+        },
+        {
+          "end": 4940,
+          "evidence_id": "h-clock",
+          "quote_sha256": "ea689866df220fc829538773d2c2132e48f40fd175a38b6178ca28e4b33c6efa",
+          "source_id": "lcv1-harbor-2",
+          "start": 4900
+        }
+      ],
+      "unanswerable": false
+    },
+    {
+      "absence_check_source_ids": [],
+      "absence_policy": null,
+      "question_id": "lcv1-harbor-q4",
+      "spans": [
+        {
+          "end": 1869,
+          "evidence_id": "h-test",
+          "quote_sha256": "e3e09e70ff219716e51a3af9e92417216bc3b75a0df6be3eb9d5abc669df5d69",
+          "source_id": "lcv1-harbor-2",
+          "start": 1828
+        },
+        {
+          "end": 4940,
+          "evidence_id": "h-clock",
+          "quote_sha256": "ea689866df220fc829538773d2c2132e48f40fd175a38b6178ca28e4b33c6efa",
+          "source_id": "lcv1-harbor-2",
+          "start": 4900
+        }
+      ],
+      "unanswerable": false
+    },
+    {
+      "absence_check_source_ids": [
+        "lcv1-harbor-1",
+        "lcv1-harbor-2"
+      ],
+      "absence_policy": "exhaustive authored in-scope record contains no requested value; no fabricated positive evidence span",
+      "question_id": "lcv1-harbor-q5",
+      "spans": [],
+      "unanswerable": true
+    },
+    {
+      "absence_check_source_ids": [],
+      "absence_policy": null,
+      "question_id": "lcv1-harbor-q6",
+      "spans": [
+        {
+          "end": 1875,
+          "evidence_id": "h-lab",
+          "quote_sha256": "5ca0111d9ad8cc499e85931bbe1257fd0b378ab87f0c9731945b9a7cbe0fe626",
+          "source_id": "lcv1-harbor-3",
+          "start": 1835
+        },
+        {
+          "end": 4922,
+          "evidence_id": "h-labscope",
+          "quote_sha256": "f1d2791285141be8882451f644d91e162d60f9f8c1f33b367297c8506bbf3277",
+          "source_id": "lcv1-harbor-3",
+          "start": 4885
+        }
+      ],
+      "unanswerable": false
+    },
+    {
+      "absence_check_source_ids": [],
+      "absence_policy": null,
+      "question_id": "lcv1-museum-q1",
+      "spans": [
+        {
+          "end": 2066,
+          "evidence_id": "m-ref",
+          "quote_sha256": "c6af7324eedf32f3e6fa3a815b0a565012efdb88bf74fde67847326d566b54dc",
+          "source_id": "lcv1-museum-1",
+          "start": 2001
+        },
+        {
+          "end": 2162,
+          "evidence_id": "m-pro",
+          "quote_sha256": "34ed439f4181b2c4a961427f3362d5045cad8c6f158641a974d581d935bbf21b",
+          "source_id": "lcv1-museum-1",
+          "start": 2068
+        }
+      ],
+      "unanswerable": false
+    },
+    {
+      "absence_check_source_ids": [],
+      "absence_policy": null,
+      "question_id": "lcv1-museum-q2",
+      "spans": [
+        {
+          "end": 1999,
+          "evidence_id": "m-old",
+          "quote_sha256": "42310e095fd8378ff543e9ddf51d499c340c1a184068cf9560b29b5137a6a7b6",
+          "source_id": "lcv1-museum-1",
+          "start": 1918
+        },
+        {
+          "end": 5185,
+          "evidence_id": "m-new",
+          "quote_sha256": "b4d5d86026e63d1a22544c877d19e752d1817992347262362a0ac5bde7921816",
+          "source_id": "lcv1-museum-1",
+          "start": 5084
+        }
+      ],
+      "unanswerable": false
+    },
+    {
+      "absence_check_source_ids": [],
+      "absence_policy": null,
+      "question_id": "lcv1-museum-q3",
+      "spans": [
+        {
+          "end": 5352,
+          "evidence_id": "m-rule",
+          "quote_sha256": "5b9b0be6545b93307a41be1c206634b25ad6371240b34e9adbada49776ecf1f2",
+          "source_id": "lcv1-museum-1",
+          "start": 5187
+        },
+        {
+          "end": 5064,
+          "evidence_id": "m-credit",
+          "quote_sha256": "7cd8942807b7d1f41f1024ac952bf107e9239d8a99097af4153b57ce21fb8758",
+          "source_id": "lcv1-museum-2",
+          "start": 4908
+        }
+      ],
+      "unanswerable": false
+    },
+    {
+      "absence_check_source_ids": [],
+      "absence_policy": null,
+      "question_id": "lcv1-museum-q4",
+      "spans": [
+        {
+          "end": 1895,
+          "evidence_id": "m-east",
+          "quote_sha256": "bc8b6ce5374c148fed1fb6df5ec90f8ae7286133a8ae177004a315729545a10a",
+          "source_id": "lcv1-museum-2",
+          "start": 1808
+        },
+        {
+          "end": 1986,
+          "evidence_id": "m-west",
+          "quote_sha256": "40635ea8fdf3d3e2eeb2af9ee875ffc41645048667433eeb474b356b8c001d58",
+          "source_id": "lcv1-museum-2",
+          "start": 1897
+        }
+      ],
+      "unanswerable": false
+    },
+    {
+      "absence_check_source_ids": [
+        "lcv1-museum-1",
+        "lcv1-museum-2"
+      ],
+      "absence_policy": "exhaustive authored in-scope record contains no requested value; no fabricated positive evidence span",
+      "question_id": "lcv1-museum-q5",
+      "spans": [],
+      "unanswerable": true
+    },
+    {
+      "absence_check_source_ids": [],
+      "absence_policy": null,
+      "question_id": "lcv1-museum-q6",
+      "spans": [
+        {
+          "end": 1944,
+          "evidence_id": "m-lab",
+          "quote_sha256": "ea09f154a501161329f9abb32cf4fd2b3a47f28566cfa1b2666a2e28d65ea6d3",
+          "source_id": "lcv1-museum-3",
+          "start": 1834
+        },
+        {
+          "end": 4957,
+          "evidence_id": "m-labscope",
+          "quote_sha256": "e3291307dc199afbf56a3d48eff7846b9faa4689b48f61075a450d1ed71e0dc3",
+          "source_id": "lcv1-museum-3",
+          "start": 4839
+        }
+      ],
+      "unanswerable": false
+    }
+  ],
+  "questions_sha256": "3c2f59e1c79b3b33829092fbc0dac948b2c3d1015bd7c1df28a5003019a9103b",
+  "retrieval_use_forbidden": true,
+  "schema_version": 1,
+  "sources_sha256": "8b98205b6edae74ef4bd4e93516a1b4102d658b26f76a6f3a5509b429d92dfff",
+  "split": "dev"
+}

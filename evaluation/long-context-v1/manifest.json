@@ -1,0 +1,45 @@
+{
+  "body_length_unit": "Unicode code points",
+  "builder_sha256": "904ccb40ef36bc48071e988f73eb6bb514249081985166714c2314cadfc8f9a5",
+  "dataset_id": "plm-long-context-synthetic-v1-24",
+  "evidence_span_usage": "evaluator only, never supplied to ingestion/retrieval/reader",
+  "official_benchmark_score": false,
+  "origin": "authored_synthetic_long_context_not_real_user_tasks",
+  "parent_event_groups": [
+    {
+      "parent_event_group": "harbor",
+      "project": "long-context-harbor",
+      "split": "dev"
+    },
+    {
+      "parent_event_group": "museum",
+      "project": "long-context-museum",
+      "split": "dev"
+    },
+    {
+      "parent_event_group": "rail",
+      "project": "long-context-rail",
+      "split": "heldout"
+    },
+    {
+      "parent_event_group": "festival",
+      "project": "long-context-festival",
+      "split": "heldout"
+    }
+  ],
+  "questions": 24,
+  "real_user_query_sample": false,
+  "selected_using_predictions": false,
+  "sha256": {
+    "questions.dev.json": "3c2f59e1c79b3b33829092fbc0dac948b2c3d1015bd7c1df28a5003019a9103b",
+    "questions.heldout.json": "f16674e62736f27d1291457a0984ead89ba7872a4620eca375fd2de95e98f258",
+    "sources.json": "8b98205b6edae74ef4bd4e93516a1b4102d658b26f76a6f3a5509b429d92dfff"
+  },
+  "shared_appendix": "same-theme handbook context repeated within one parent-event group only; no cross-split theme sharing",
+  "source_count": 12,
+  "splits": [
+    "dev",
+    "heldout"
+  ],
+  "synthetic": true
+}

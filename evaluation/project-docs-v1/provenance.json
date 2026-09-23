@@ -1,0 +1,247 @@
+{
+  "dataset_id": "plm-project-docs-zh-v1-40",
+  "documents": [
+    {
+      "line_count": 51,
+      "original_path": "docs/ARCHITECTURE.md",
+      "sha256": "06e931348c96728dfef0effd84dfd2d45df972f859fe797ad0e19f9c98b78808",
+      "snapshot_path": "source-snapshots/ARCHITECTURE.md"
+    },
+    {
+      "line_count": 88,
+      "original_path": "docs/BATCH1_REPORT.md",
+      "sha256": "01f6de1a72d17f6f304bb9d1bb9575bc7eeeafad99dec418cf46f615c62587d6",
+      "snapshot_path": "source-snapshots/BATCH1_REPORT.md"
+    },
+    {
+      "line_count": 81,
+      "original_path": "docs/RUNBOOK.md",
+      "sha256": "79f8a2c6a85aa387d9a4548527ef5b5592be0e4f31cadae3a798a68fd595fcfd",
+      "snapshot_path": "source-snapshots/RUNBOOK.md"
+    }
+  ],
+  "observed_at": "2026-09-11T00:00:00Z",
+  "schema_version": 1,
+  "sources": [
+    {
+      "body_sha256": "4ea52eaa3baef69e10869f2bd5641f7300e5f022ae6bab0ac466f75c98c6e069",
+      "document_sha256": "06e931348c96728dfef0effd84dfd2d45df972f859fe797ad0e19f9c98b78808",
+      "extraction": "contiguous original lines joined with LF, outer whitespace stripped",
+      "line_end": 7,
+      "line_start": 5,
+      "original_path": "docs/ARCHITECTURE.md",
+      "snapshot_path": "source-snapshots/ARCHITECTURE.md",
+      "source_id": "pdv1-s01"
+    },
+    {
+      "body_sha256": "b2d2fdeb5b043f0a2b0d1cec4ffb379068e2ffc8dd68723e5104f16f6f047c53",
+      "document_sha256": "06e931348c96728dfef0effd84dfd2d45df972f859fe797ad0e19f9c98b78808",
+      "extraction": "contiguous original lines joined with LF, outer whitespace stripped",
+      "line_end": 20,
+      "line_start": 11,
+      "original_path": "docs/ARCHITECTURE.md",
+      "snapshot_path": "source-snapshots/ARCHITECTURE.md",
+      "source_id": "pdv1-s02"
+    },
+    {
+      "body_sha256": "16ba89e3d390066cbf03b49d8f3f011dc1a700cfbfa9cc3daec74f827ab6d861",
+      "document_sha256": "06e931348c96728dfef0effd84dfd2d45df972f859fe797ad0e19f9c98b78808",
+      "extraction": "contiguous original lines joined with LF, outer whitespace stripped",
+      "line_end": 25,
+      "line_start": 22,
+      "original_path": "docs/ARCHITECTURE.md",
+      "snapshot_path": "source-snapshots/ARCHITECTURE.md",
+      "source_id": "pdv1-s03"
+    },
+    {
+      "body_sha256": "da1a5f6969f1b731899df85ed84cee8dfd1a1e080a86043ea560a2bb304b1c26",
+      "document_sha256": "06e931348c96728dfef0effd84dfd2d45df972f859fe797ad0e19f9c98b78808",
+      "extraction": "contiguous original lines joined with LF, outer whitespace stripped",
+      "line_end": 47,
+      "line_start": 45,
+      "original_path": "docs/ARCHITECTURE.md",
+      "snapshot_path": "source-snapshots/ARCHITECTURE.md",
+      "source_id": "pdv1-s04"
+    },
+    {
+      "body_sha256": "450e9c6e1a608f366c5a8c274f8fc17e27352eb4e0c47fcc0f0bb889e8d0ea50",
+      "document_sha256": "01f6de1a72d17f6f304bb9d1bb9575bc7eeeafad99dec418cf46f615c62587d6",
+      "extraction": "contiguous original lines joined with LF, outer whitespace stripped",
+      "line_end": 14,
+      "line_start": 13,
+      "original_path": "docs/BATCH1_REPORT.md",
+      "snapshot_path": "source-snapshots/BATCH1_REPORT.md",
+      "source_id": "pdv1-s05"
+    },
+    {
+      "body_sha256": "dbc899999b9596f8e2e713505590c3c490aafc7dc28df4b1cbca424a4e6bfd20",
+      "document_sha256": "01f6de1a72d17f6f304bb9d1bb9575bc7eeeafad99dec418cf46f615c62587d6",
+      "extraction": "contiguous original lines joined with LF, outer whitespace stripped",
+      "line_end": 15,
+      "line_start": 15,
+      "original_path": "docs/BATCH1_REPORT.md",
+      "snapshot_path": "source-snapshots/BATCH1_REPORT.md",
+      "source_id": "pdv1-s06"
+    },
+    {
+      "body_sha256": "14b9ad1ba49e04b50bf60c88925bbe11fda6b2d31c34095d128dba1c85465885",
+      "document_sha256": "01f6de1a72d17f6f304bb9d1bb9575bc7eeeafad99dec418cf46f615c62587d6",
+      "extraction": "contiguous original lines joined with LF, outer whitespace stripped",
+      "line_end": 16,
+      "line_start": 16,
+      "original_path": "docs/BATCH1_REPORT.md",
+      "snapshot_path": "source-snapshots/BATCH1_REPORT.md",
+      "source_id": "pdv1-s07"
+    },
+    {
+      "body_sha256": "64fff94046e5ff8e03ba487a665ad75a0ce7d04065cc3bea25b7c59780821991",
+      "document_sha256": "01f6de1a72d17f6f304bb9d1bb9575bc7eeeafad99dec418cf46f615c62587d6",
+      "extraction": "contiguous original lines joined with LF, outer whitespace stripped",
+      "line_end": 17,
+      "line_start": 17,
+      "original_path": "docs/BATCH1_REPORT.md",
+      "snapshot_path": "source-snapshots/BATCH1_REPORT.md",
+      "source_id": "pdv1-s08"
+    },
+    {
+      "body_sha256": "2ac03b4eac75ad06b73bdee8d412ed78ce89e15b286630480b5b7c3ef096c771",
+      "document_sha256": "01f6de1a72d17f6f304bb9d1bb9575bc7eeeafad99dec418cf46f615c62587d6",
+      "extraction": "contiguous original lines joined with LF, outer whitespace stripped",
+      "line_end": 18,
+      "line_start": 18,
+      "original_path": "docs/BATCH1_REPORT.md",
+      "snapshot_path": "source-snapshots/BATCH1_REPORT.md",
+      "source_id": "pdv1-s09"
+    },
+    {
+      "body_sha256": "b1924541b1a7d91bea6e56c85538134d7d830fa477fbe8b635907a0b1cf67159",
+      "document_sha256": "06e931348c96728dfef0effd84dfd2d45df972f859fe797ad0e19f9c98b78808",
+      "extraction": "contiguous original lines joined with LF, outer whitespace stripped",
+      "line_end": 36,
+      "line_start": 29,
+      "original_path": "docs/ARCHITECTURE.md",
+      "snapshot_path": "source-snapshots/ARCHITECTURE.md",
+      "source_id": "pdv1-s10"
+    },
+    {
+      "body_sha256": "e8260ac10899d33f655ed67048bacb985f1e567d9ccabaee981c3a4656a759ff",
+      "document_sha256": "01f6de1a72d17f6f304bb9d1bb9575bc7eeeafad99dec418cf46f615c62587d6",
+      "extraction": "contiguous original lines joined with LF, outer whitespace stripped",
+      "line_end": 20,
+      "line_start": 20,
+      "original_path": "docs/BATCH1_REPORT.md",
+      "snapshot_path": "source-snapshots/BATCH1_REPORT.md",
+      "source_id": "pdv1-s11"
+    },
+    {
+      "body_sha256": "49828a22a2cc87cee24bd8db4c9c8d3be2334bf5fe1cf29b699057f815aff6f6",
+      "document_sha256": "01f6de1a72d17f6f304bb9d1bb9575bc7eeeafad99dec418cf46f615c62587d6",
+      "extraction": "contiguous original lines joined with LF, outer whitespace stripped",
+      "line_end": 21,
+      "line_start": 21,
+      "original_path": "docs/BATCH1_REPORT.md",
+      "snapshot_path": "source-snapshots/BATCH1_REPORT.md",
+      "source_id": "pdv1-s12"
+    },
+    {
+      "body_sha256": "20c94fd6ddacf765060d15153c82bae8d807b41b0fde5f3e76b0daf0ebf4efbe",
+      "document_sha256": "79f8a2c6a85aa387d9a4548527ef5b5592be0e4f31cadae3a798a68fd595fcfd",
+      "extraction": "contiguous original lines joined with LF, outer whitespace stripped",
+      "line_end": 36,
+      "line_start": 35,
+      "original_path": "docs/RUNBOOK.md",
+      "snapshot_path": "source-snapshots/RUNBOOK.md",
+      "source_id": "pdv1-s13"
+    },
+    {
+      "body_sha256": "47d1795fddcd5810a15061539a7bf490d5fab42b035227b6c949a626ba1636cd",
+      "document_sha256": "79f8a2c6a85aa387d9a4548527ef5b5592be0e4f31cadae3a798a68fd595fcfd",
+      "extraction": "contiguous original lines joined with LF, outer whitespace stripped",
+      "line_end": 52,
+      "line_start": 47,
+      "original_path": "docs/RUNBOOK.md",
+      "snapshot_path": "source-snapshots/RUNBOOK.md",
+      "source_id": "pdv1-s14"
+    },
+    {
+      "body_sha256": "5b015e717491ff7b02c1b788996aa8e3b94a36524bd3e87fd809c0ee08ecada3",
+      "document_sha256": "79f8a2c6a85aa387d9a4548527ef5b5592be0e4f31cadae3a798a68fd595fcfd",
+      "extraction": "contiguous original lines joined with LF, outer whitespace stripped",
+      "line_end": 62,
+      "line_start": 60,
+      "original_path": "docs/RUNBOOK.md",
+      "snapshot_path": "source-snapshots/RUNBOOK.md",
+      "source_id": "pdv1-s15"
+    },
+    {
+      "body_sha256": "2492d9c9011cada13a4348cb653f429916f6567f99d868d4831f27e9c32346cc",
+      "document_sha256": "79f8a2c6a85aa387d9a4548527ef5b5592be0e4f31cadae3a798a68fd595fcfd",
+      "extraction": "contiguous original lines joined with LF, outer whitespace stripped",
+      "line_end": 72,
+      "line_start": 66,
+      "original_path": "docs/RUNBOOK.md",
+      "snapshot_path": "source-snapshots/RUNBOOK.md",
+      "source_id": "pdv1-s16"
+    },
+    {
+      "body_sha256": "f36f734abfb312f26bbc02d343771f7b9094fa013a8723bb69db27da9bae6638",
+      "document_sha256": "01f6de1a72d17f6f304bb9d1bb9575bc7eeeafad99dec418cf46f615c62587d6",
+      "extraction": "contiguous original lines joined with LF, outer whitespace stripped",
+      "line_end": 19,
+      "line_start": 19,
+      "original_path": "docs/BATCH1_REPORT.md",
+      "snapshot_path": "source-snapshots/BATCH1_REPORT.md",
+      "source_id": "pdv1-s17"
+    },
+    {
+      "body_sha256": "f0350d487be763382f1b10da6b23549c5a91630d771aabeb51384fdbb376a291",
+      "document_sha256": "01f6de1a72d17f6f304bb9d1bb9575bc7eeeafad99dec418cf46f615c62587d6",
+      "extraction": "contiguous original lines joined with LF, outer whitespace stripped",
+      "line_end": 28,
+      "line_start": 26,
+      "original_path": "docs/BATCH1_REPORT.md",
+      "snapshot_path": "source-snapshots/BATCH1_REPORT.md",
+      "source_id": "pdv1-s18"
+    },
+    {
+      "body_sha256": "6754db4d0ce6ba0f1c0acd071577802272ae7f0a6efcf7225b2e43f181187970",
+      "document_sha256": "01f6de1a72d17f6f304bb9d1bb9575bc7eeeafad99dec418cf46f615c62587d6",
+      "extraction": "contiguous original lines joined with LF, outer whitespace stripped",
+      "line_end": 40,
+      "line_start": 30,
+      "original_path": "docs/BATCH1_REPORT.md",
+      "snapshot_path": "source-snapshots/BATCH1_REPORT.md",
+      "source_id": "pdv1-s19"
+    },
+    {
+      "body_sha256": "f2e360c99c7a28c18fff2fbde935e6775c6567c6f3db943c10d14be888949db1",
+      "document_sha256": "01f6de1a72d17f6f304bb9d1bb9575bc7eeeafad99dec418cf46f615c62587d6",
+      "extraction": "contiguous original lines joined with LF, outer whitespace stripped",
+      "line_end": 44,
+      "line_start": 42,
+      "original_path": "docs/BATCH1_REPORT.md",
+      "snapshot_path": "source-snapshots/BATCH1_REPORT.md",
+      "source_id": "pdv1-s20"
+    },
+    {
+      "body_sha256": "a8479a38219b3e1916b5915799939119f5ecc9cde798fc48dbe07f4b7f60ac7b",
+      "document_sha256": "01f6de1a72d17f6f304bb9d1bb9575bc7eeeafad99dec418cf46f615c62587d6",
+      "extraction": "contiguous original lines joined with LF, outer whitespace stripped",
+      "line_end": 53,
+      "line_start": 48,
+      "original_path": "docs/BATCH1_REPORT.md",
+      "snapshot_path": "source-snapshots/BATCH1_REPORT.md",
+      "source_id": "pdv1-s21"
+    },
+    {
+      "body_sha256": "26cf17c3bf84ac80a4dbe689e9b8a22c9962da37a61094d4fd69a571490330a7",
+      "document_sha256": "01f6de1a72d17f6f304bb9d1bb9575bc7eeeafad99dec418cf46f615c62587d6",
+      "extraction": "contiguous original lines joined with LF, outer whitespace stripped",
+      "line_end": 88,
+      "line_start": 84,
+      "original_path": "docs/BATCH1_REPORT.md",
+      "snapshot_path": "source-snapshots/BATCH1_REPORT.md",
+      "source_id": "pdv1-s22"
+    }
+  ]
+}

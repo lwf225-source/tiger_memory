@@ -1,0 +1,6 @@
+{
+  "dataset_manifest_sha256": "07290d5d3a916d3377a3659be67cc17739f05e2d8f4525fc3fb4c0ef94995322",
+  "provenance_sha256": "6e5e7ab6388785e8c29d937296e03ce3c3c362d194392998b58062324b587075",
+  "schema_version": 1,
+  "scope": "Document provenance sidecar is not ingested as memory; main manifest remains loader-compatible."
+}

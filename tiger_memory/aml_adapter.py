@@ -16,7 +16,7 @@ Isolation model
 ---------------
 ``user_id`` is the only retrieval scope used by the platform. The adapter maps
 each ``user_id`` to its own on-disk storage directory
-``<PROJECT_LONG_MEMORY_DIR>/aml_users/<slug>--<hash>/`` carrying a
+``<TIGER_MEMORY_DIR>/aml_users/<slug>--<hash>/`` carrying a
 ``pyproject.toml`` marker, so ``find_project_root`` resolves it as a distinct
 PLM project root (deterministic ``project_id`` per user) without requiring
 git. As a second, independent isolation layer every event is written with

@@ -1,0 +1,17 @@
+{
+  "dataset_id": "plm-synthetic-zh-v1-80",
+  "origin": "manually_authored_synthetic_chinese_not_real_project_data_not_official_qa",
+  "splits": [
+    "dev",
+    "heldout"
+  ],
+  "split_policy": "8 independent project topics; 4 projects / 40 questions per partition; no source shared between partitions",
+  "question_count": 80,
+  "source_count": 80,
+  "freeze_date": "2026-09-10",
+  "sha256": {
+    "sources.json": "af02bba2dbf7cdbf6f47a5a9fa9a6267d9bb2551bd4659562373885439f94bde",
+    "questions.dev.json": "993f02200c434c10a66427de211c49a5baa465bf6dc36c1d5ea1e1cba0ebe756",
+    "questions.heldout.json": "9373573d7c6216c9cce10267fe9ce1090d1d620d978d156ead2b15955ca17fed"
+  }
+}

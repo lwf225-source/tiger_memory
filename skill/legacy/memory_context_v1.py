@@ -10,7 +10,7 @@ from pathlib import Path
 
 
 HOME = Path.home()
-BASE = Path(os.environ.get("PROJECT_LONG_MEMORY_DIR", str(HOME / ".codex" / "project-memory"))).expanduser().resolve()
+BASE = Path(os.environ.get("TIGER_MEMORY_DIR", str(HOME / ".codex" / "project-memory"))).expanduser().resolve()
 MARKERS = ("AGENTS.md", "package.json", "pyproject.toml", "Cargo.toml", "go.mod", "pnpm-workspace.yaml", "yarn.lock", "vite.config.js", "vite.config.ts")
 
 

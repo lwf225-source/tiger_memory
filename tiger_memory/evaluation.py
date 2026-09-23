@@ -106,17 +106,17 @@ def isolated_memory():
     Process-global environment makes this context intentionally non-thread-safe.
     Run concurrent evaluations in separate processes.
     """
-    previous = os.environ.get("PROJECT_LONG_MEMORY_DIR")
+    previous = os.environ.get("TIGER_MEMORY_DIR")
     with tempfile.TemporaryDirectory(prefix="plm-evaluation-") as directory:
         root = Path(directory)
-        os.environ["PROJECT_LONG_MEMORY_DIR"] = str(root / "memory")
+        os.environ["TIGER_MEMORY_DIR"] = str(root / "memory")
         try:
             yield root
         finally:
             if previous is None:
-                os.environ.pop("PROJECT_LONG_MEMORY_DIR", None)
+                os.environ.pop("TIGER_MEMORY_DIR", None)
             else:
-                os.environ["PROJECT_LONG_MEMORY_DIR"] = previous
+                os.environ["TIGER_MEMORY_DIR"] = previous
 
 
 def ingest_sources(root: Path, sources: Sequence[Dict[str, Any]]) -> Dict[str, Any]:

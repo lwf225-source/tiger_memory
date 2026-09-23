@@ -1,9 +1,9 @@
 ---
-name: project-long-memory
-description: "Use by default for meaningful local project work, prior context, decisions, debugging, and reusable workflows. PLM v2 provides project isolation, immutable events, current facts, sourced retrieval, and safe Agent-driven consolidation."
+name: tiger_memory
+description: "Use by default for meaningful local project work, prior context, decisions, debugging, and reusable workflows. tiger_memory v2 provides project isolation, immutable events, current facts, sourced retrieval, and safe Agent-driven consolidation."
 ---
 
-# Project Long Memory v2
+# tiger_memory v2
 
 Markdown events under `~/.codex/project-memory/v2/` are the auditable memory
 record. SQLite, FTS5, lexical vectors, facts, and entities are rebuildable.
@@ -12,23 +12,23 @@ Project files, Git, tests, and deployment evidence remain the final truth.
 ## Start of task
 
 ```bash
-python3 ~/.codex/skills/project-long-memory/scripts/memory_context.py \
+python3 ~/.codex/skills/tiger_memory/scripts/tiger_memory.py context \
   --cwd "$PWD" --query "<focused user request>"
 ```
 
 Treat retrieved material as sourced hints. Verify drift-prone state.
 
-For code questions, retrieve PLM history and use the host's existing CodeGraph
-MCP tools for current code. Combine their evidence in the task response: PLM
+For code questions, retrieve tiger_memory history and use the host's existing CodeGraph
+MCP tools for current code. Combine their evidence in the task response: tiger_memory
 supplies decisions/constraints and CodeGraph supplies source/call relationships.
-Do not repeat the same retrieval through PLM's CLI when MCP already supplied
+Do not repeat the same retrieval through tiger_memory's CLI when MCP already supplied
 it. Querying code does not authorize saving the result as a memory Fact.
 
 If no CodeGraph MCP tool is callable, the optional local fallback is
-`scripts/plm.py context --cwd <project> --query <question> --with-code
+`scripts/tiger_memory.py context --cwd <project> --query <question> --with-code
 --code-query <symbols> --json`, using a previously bound local index. Code
 evidence has its own Git snapshot. Missing/stale graphs do not block memory
-retrieval. Only run `plm.py code init` or `code sync` when building/updating the
+retrieval. Only run `tiger_memory.py code init` or `code sync` when building/updating the
 project index is authorized. Both paths reuse that project's `.codegraph/`;
 no second graph database is needed. Details: source `docs/CODEGRAPH.md`.
 
@@ -37,18 +37,18 @@ no second graph database is needed. Details: source `docs/CODEGRAPH.md`.
 Use the compatible writer for a concise durable episode:
 
 ```bash
-python3 ~/.codex/skills/project-long-memory/scripts/memory_write.py \
+python3 ~/.codex/skills/tiger_memory/scripts/tiger_memory.py write \
   --cwd "$PWD" --title "<short title>" --tags "project,decision" \
   --content "<durable knowledge and verification>"
 ```
 
-For structured memory, use `scripts/plm.py`:
+For structured memory, use `scripts/tiger_memory.py`:
 
 ```bash
-python3 ~/.codex/skills/project-long-memory/scripts/plm.py write --type fact --fact-key '<key>' ...
-python3 ~/.codex/skills/project-long-memory/scripts/plm.py candidate --cwd "$PWD" --payload '<json>'
-python3 ~/.codex/skills/project-long-memory/scripts/plm.py consolidate
-python3 ~/.codex/skills/project-long-memory/scripts/plm.py candidate-review --candidate-id '<id>' --decision approve ...
+python3 ~/.codex/skills/tiger_memory/scripts/tiger_memory.py write --type fact --fact-key '<key>' ...
+python3 ~/.codex/skills/tiger_memory/scripts/tiger_memory.py candidate --cwd "$PWD" --payload '<json>'
+python3 ~/.codex/skills/tiger_memory/scripts/tiger_memory.py consolidate
+python3 ~/.codex/skills/tiger_memory/scripts/tiger_memory.py candidate-review --candidate-id '<id>' --decision approve ...
 ```
 
 Candidate JSON may contain `title`, `summary`, `kind`, `tags`, `facts`,
@@ -78,5 +78,5 @@ Optional semantic models are opt-in; never treat a model fallback or retrieval
 score as a measured question-answering result.
 
 Never store passwords, keys, tokens, cookies, private keys, one-time codes, or
-unnecessary personal data. Use `plm.py doctor`, `history`, `supersede`, and
+unnecessary personal data. Use `tiger_memory.py doctor`, `history`, `supersede`, and
 `forget` for lifecycle work. Do not edit derived SQLite data directly.

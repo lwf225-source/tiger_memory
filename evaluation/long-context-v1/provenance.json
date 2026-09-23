@@ -1,0 +1,8 @@
+{
+  "builder_sha256": "904ccb40ef36bc48071e988f73eb6bb514249081985166714c2314cadfc8f9a5",
+  "dataset_manifest_sha256": "a2b52c8c84b0e87ebe0e6a7d1acdef71642e59a1ea9a1108e66fd8014922b5a7",
+  "sidecar_sha256": {
+    "evidence-spans.dev.json": "83abe7c89571af6e5e5ffc4ff2b467a2420207dd2ac9f0d5060d20d31683fa98",
+    "evidence-spans.heldout.json": "fb8390d71c49aad457d387fa06f0db1df2483170edf8eb21431d012d1391be26"
+  }
+}

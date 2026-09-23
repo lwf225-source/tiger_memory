@@ -1,0 +1,1270 @@
+{
+  "annotation_method": "Independently reviewed manual answer points; no model hypotheses used. Unanswerable refusal forms are shared, not generated gold facts.",
+  "dataset_id": "plm-synthetic-zh-v1-80",
+  "limitations": [
+    "Surface forms can miss valid paraphrases.",
+    "Forbidden-claim regexes can misread quoted or negated examples.",
+    "Not official LongMemEval semantic evaluation."
+  ],
+  "questions_sha256": "9373573d7c6216c9cce10267fe9ce1090d1d620d978d156ead2b15955ca17fed",
+  "rubrics": [
+    {
+      "acceptable_answers": [
+        "半高全宽超过三点二像素"
+      ],
+      "forbidden_claims": [
+        {
+          "description": "不得将相冲突或越界的结论作为答案",
+          "id": "f01",
+          "patterns": [
+            "低于.{0,3}(3.2|三点二)"
+          ]
+        }
+      ],
+      "question_id": "hold_observatory-q01",
+      "required_points": [
+        {
+          "any_of": [
+            "超过三点二像素",
+            "超过3.2像素",
+            "大于3.2像素",
+            "3.2像素以上"
+          ],
+          "description": "必要要点：超过三点二像素",
+          "id": "p01"
+        }
+      ],
+      "unanswerable": false
+    },
+    {
+      "acceptable_answers": [
+        "目标曝光前采集十张暗场，全部曝光后采集平场。"
+      ],
+      "forbidden_claims": [],
+      "question_id": "hold_observatory-q02",
+      "required_points": [
+        {
+          "any_of": [
+            "曝光前",
+            "拍目标前"
+          ],
+          "description": "必要要点：曝光前",
+          "id": "p01"
+        },
+        {
+          "any_of": [
+            "十张暗场",
+            "10张暗场",
+            "10 张暗场"
+          ],
+          "description": "必要要点：十张暗场",
+          "id": "p02"
+        },
+        {
+          "any_of": [
+            "曝光后",
+            "曝光完成后",
+            "拍完后"
+          ],
+          "description": "必要要点：曝光后",
+          "id": "p03"
+        },
+        {
+          "any_of": [
+            "平场"
+          ],
+          "description": "必要要点：平场",
+          "id": "p04"
+        }
+      ],
+      "unanswerable": false
+    },
+    {
+      "acceptable_answers": [
+        "超过三点二像素，主要排除跟踪抖动。"
+      ],
+      "forbidden_claims": [],
+      "question_id": "hold_observatory-q03",
+      "required_points": [
+        {
+          "any_of": [
+            "超过三点二",
+            "超过3.2",
+            "大于3.2",
+            "3.2像素以上"
+          ],
+          "description": "必要要点：超过三点二",
+          "id": "p01"
+        },
+        {
+          "any_of": [
+            "跟踪抖动",
+            "追踪抖动"
+          ],
+          "description": "必要要点：跟踪抖动",
+          "id": "p02"
+        }
+      ],
+      "unanswerable": false
+    },
+    {
+      "acceptable_answers": [
+        "观测日期"
+      ],
+      "forbidden_claims": [],
+      "question_id": "hold_observatory-q04",
+      "required_points": [
+        {
+          "any_of": [
+            "观测日期",
+            "观察日期",
+            "观测当天日期"
+          ],
+          "description": "必要要点：观测日期",
+          "id": "p01"
+        }
+      ],
+      "unanswerable": false
+    },
+    {
+      "acceptable_answers": [
+        "目标名称"
+      ],
+      "forbidden_claims": [],
+      "question_id": "hold_observatory-q05",
+      "required_points": [
+        {
+          "any_of": [
+            "目标名称",
+            "天体名称",
+            "观测目标名"
+          ],
+          "description": "必要要点：目标名称",
+          "id": "p01"
+        }
+      ],
+      "unanswerable": false
+    },
+    {
+      "acceptable_answers": [
+        "不可以，原始曝光文件必须保留供复核。"
+      ],
+      "forbidden_claims": [
+        {
+          "description": "不得将相冲突或越界的结论作为答案",
+          "id": "f01",
+          "patterns": [
+            "(?<!不)可以.{0,6}(删除|清掉|清除).{0,6}原始"
+          ]
+        }
+      ],
+      "question_id": "hold_observatory-q06",
+      "required_points": [
+        {
+          "any_of": [
+            "不可以",
+            "不能",
+            "不得"
+          ],
+          "description": "必要要点：不可以",
+          "id": "p01"
+        },
+        {
+          "any_of": [
+            "保留",
+            "保存原始",
+            "留下原始"
+          ],
+          "description": "必要要点：保留",
+          "id": "p02"
+        },
+        {
+          "any_of": [
+            "复核",
+            "复查",
+            "重新核对"
+          ],
+          "description": "必要要点：复核",
+          "id": "p03"
+        }
+      ],
+      "unanswerable": false
+    },
+    {
+      "acceptable_answers": [
+        "无法区分跟踪抖动和薄云。"
+      ],
+      "forbidden_claims": [],
+      "question_id": "hold_observatory-q07",
+      "required_points": [
+        {
+          "any_of": [
+            "无法区分",
+            "不能区分",
+            "分不清"
+          ],
+          "description": "必要要点：无法区分",
+          "id": "p01"
+        },
+        {
+          "any_of": [
+            "跟踪抖动",
+            "追踪抖动"
+          ],
+          "description": "必要要点：跟踪抖动",
+          "id": "p02"
+        },
+        {
+          "any_of": [
+            "薄云"
+          ],
+          "description": "必要要点：薄云",
+          "id": "p03"
+        }
+      ],
+      "unanswerable": false
+    },
+    {
+      "acceptable_answers": [
+        "资料未提供，无法确定。"
+      ],
+      "forbidden_claims": [],
+      "question_id": "hold_observatory-q08",
+      "required_points": [
+        {
+          "any_of": [
+            "资料不足",
+            "没有提供",
+            "未提供",
+            "未说明",
+            "无法确定",
+            "不知道",
+            "不清楚",
+            "缺少依据",
+            "无法回答"
+          ],
+          "description": "明确资料不足，不编造具体值",
+          "id": "p01"
+        }
+      ],
+      "unanswerable": true
+    },
+    {
+      "acceptable_answers": [
+        "二十五秒"
+      ],
+      "forbidden_claims": [],
+      "question_id": "hold_observatory-q09",
+      "required_points": [
+        {
+          "any_of": [
+            "二十五秒",
+            "25秒",
+            "25 秒"
+          ],
+          "description": "必要要点：二十五秒",
+          "id": "p01"
+        }
+      ],
+      "unanswerable": false
+    },
+    {
+      "acceptable_answers": [
+        "资料未提供，无法确定。"
+      ],
+      "forbidden_claims": [],
+      "question_id": "hold_observatory-q10",
+      "required_points": [
+        {
+          "any_of": [
+            "资料不足",
+            "没有提供",
+            "未提供",
+            "未说明",
+            "无法确定",
+            "不知道",
+            "不清楚",
+            "缺少依据",
+            "无法回答"
+          ],
+          "description": "明确资料不足，不编造具体值",
+          "id": "p01"
+        }
+      ],
+      "unanswerable": true
+    },
+    {
+      "acceptable_answers": [
+        "连续四次，相差超过一点五摄氏度。"
+      ],
+      "forbidden_claims": [
+        {
+          "description": "不得将相冲突或越界的结论作为答案",
+          "id": "f01",
+          "patterns": [
+            "一次.{0,6}就.{0,4}(提示|报警)"
+          ]
+        }
+      ],
+      "question_id": "hold_buoy-q01",
+      "required_points": [
+        {
+          "any_of": [
+            "连续四次",
+            "连续4次",
+            "连续 4 次"
+          ],
+          "description": "必要要点：连续四次",
+          "id": "p01"
+        },
+        {
+          "any_of": [
+            "超过一点五",
+            "超过1.5",
+            "大于1.5"
+          ],
+          "description": "必要要点：超过一点五",
+          "id": "p02"
+        }
+      ],
+      "unanswerable": false
+    },
+    {
+      "acceptable_answers": [
+        "起吊前暂停采样并确认日志落盘，起吊后检查渗水再拷贝日志。"
+      ],
+      "forbidden_claims": [],
+      "question_id": "hold_buoy-q02",
+      "required_points": [
+        {
+          "any_of": [
+            "起吊前",
+            "吊起前"
+          ],
+          "description": "必要要点：起吊前",
+          "id": "p01"
+        },
+        {
+          "any_of": [
+            "暂停采样",
+            "停止采样"
+          ],
+          "description": "必要要点：暂停采样",
+          "id": "p02"
+        },
+        {
+          "any_of": [
+            "日志落盘",
+            "日志写盘",
+            "日志保存"
+          ],
+          "description": "必要要点：日志落盘",
+          "id": "p03"
+        },
+        {
+          "any_of": [
+            "检查渗水",
+            "检查进水",
+            "核查渗水"
+          ],
+          "description": "必要要点：检查渗水",
+          "id": "p04"
+        },
+        {
+          "any_of": [
+            "再拷贝",
+            "然后拷贝",
+            "再复制",
+            "后复制日志"
+          ],
+          "description": "必要要点：再拷贝",
+          "id": "p05"
+        }
+      ],
+      "unanswerable": false
+    },
+    {
+      "acceptable_answers": [
+        "用连续四次比较，过滤海浪翻转导致探头短暂露出。"
+      ],
+      "forbidden_claims": [],
+      "question_id": "hold_buoy-q03",
+      "required_points": [
+        {
+          "any_of": [
+            "连续四次",
+            "连续4次",
+            "连续 4 次"
+          ],
+          "description": "必要要点：连续四次",
+          "id": "p01"
+        },
+        {
+          "any_of": [
+            "海浪",
+            "波浪"
+          ],
+          "description": "必要要点：海浪",
+          "id": "p02"
+        },
+        {
+          "any_of": [
+            "短暂露出",
+            "暂时露出",
+            "暴露于空气",
+            "露出空气"
+          ],
+          "description": "必要要点：短暂露出",
+          "id": "p03"
+        }
+      ],
+      "unanswerable": false
+    },
+    {
+      "acceptable_answers": [
+        "两小时"
+      ],
+      "forbidden_claims": [],
+      "question_id": "hold_buoy-q04",
+      "required_points": [
+        {
+          "any_of": [
+            "两小时",
+            "2小时",
+            "2 小时"
+          ],
+          "description": "必要要点：两小时",
+          "id": "p01"
+        }
+      ],
+      "unanswerable": false
+    },
+    {
+      "acceptable_answers": [
+        "四小时"
+      ],
+      "forbidden_claims": [],
+      "question_id": "hold_buoy-q05",
+      "required_points": [
+        {
+          "any_of": [
+            "四小时",
+            "4小时",
+            "4 小时"
+          ],
+          "description": "必要要点：四小时",
+          "id": "p01"
+        }
+      ],
+      "unanswerable": false
+    },
+    {
+      "acceptable_answers": [
+        "不能，应先核对潮汐，不能自动清除历史轨迹。"
+      ],
+      "forbidden_claims": [
+        {
+          "description": "不得将相冲突或越界的结论作为答案",
+          "id": "f01",
+          "patterns": [
+            "(?<!不能)自动清除历史轨迹"
+          ]
+        },
+        {
+          "description": "不得将相冲突或越界的结论作为答案",
+          "id": "f02",
+          "patterns": [
+            "(?<!不)可以.{0,6}擦除历史"
+          ]
+        }
+      ],
+      "question_id": "hold_buoy-q06",
+      "required_points": [
+        {
+          "any_of": [
+            "不能",
+            "不可以",
+            "不得"
+          ],
+          "description": "必要要点：不能",
+          "id": "p01"
+        },
+        {
+          "any_of": [
+            "潮汐"
+          ],
+          "description": "必要要点：潮汐",
+          "id": "p02"
+        },
+        {
+          "any_of": [
+            "不能自动清除",
+            "不得清除",
+            "保留历史轨迹",
+            "不能擦除"
+          ],
+          "description": "必要要点：不能自动清除",
+          "id": "p03"
+        }
+      ],
+      "unanswerable": false
+    },
+    {
+      "acceptable_answers": [
+        "探头被海浪翻转短暂露出空气造成的温度误报。"
+      ],
+      "forbidden_claims": [],
+      "question_id": "hold_buoy-q07",
+      "required_points": [
+        {
+          "any_of": [
+            "海浪",
+            "波浪"
+          ],
+          "description": "必要要点：海浪",
+          "id": "p01"
+        },
+        {
+          "any_of": [
+            "探头"
+          ],
+          "description": "必要要点：探头",
+          "id": "p02"
+        },
+        {
+          "any_of": [
+            "露出空气",
+            "短暂露出",
+            "接触空气",
+            "暴露于空气"
+          ],
+          "description": "必要要点：露出空气",
+          "id": "p03"
+        }
+      ],
+      "unanswerable": false
+    },
+    {
+      "acceptable_answers": [
+        "资料未提供，无法确定。"
+      ],
+      "forbidden_claims": [],
+      "question_id": "hold_buoy-q08",
+      "required_points": [
+        {
+          "any_of": [
+            "资料不足",
+            "没有提供",
+            "未提供",
+            "未说明",
+            "无法确定",
+            "不知道",
+            "不清楚",
+            "缺少依据",
+            "无法回答"
+          ],
+          "description": "明确资料不足，不编造具体值",
+          "id": "p01"
+        }
+      ],
+      "unanswerable": true
+    },
+    {
+      "acceptable_answers": [
+        "七十秒"
+      ],
+      "forbidden_claims": [],
+      "question_id": "hold_buoy-q09",
+      "required_points": [
+        {
+          "any_of": [
+            "七十秒",
+            "70秒",
+            "70 秒"
+          ],
+          "description": "必要要点：七十秒",
+          "id": "p01"
+        }
+      ],
+      "unanswerable": false
+    },
+    {
+      "acceptable_answers": [
+        "资料未提供，无法确定。"
+      ],
+      "forbidden_claims": [],
+      "question_id": "hold_buoy-q10",
+      "required_points": [
+        {
+          "any_of": [
+            "资料不足",
+            "没有提供",
+            "未提供",
+            "未说明",
+            "无法确定",
+            "不知道",
+            "不清楚",
+            "缺少依据",
+            "无法回答"
+          ],
+          "description": "明确资料不足，不编造具体值",
+          "id": "p01"
+        }
+      ],
+      "unanswerable": true
+    },
+    {
+      "acceptable_answers": [
+        "最多十四个汉字，在停顿处拆成两行。"
+      ],
+      "forbidden_claims": [],
+      "question_id": "hold_theater-q01",
+      "required_points": [
+        {
+          "any_of": [
+            "十四个汉字",
+            "14个汉字",
+            "十四字",
+            "14字",
+            "14 个汉字"
+          ],
+          "description": "必要要点：十四个汉字",
+          "id": "p01"
+        },
+        {
+          "any_of": [
+            "停顿处",
+            "停顿位置",
+            "对白停顿"
+          ],
+          "description": "必要要点：停顿处",
+          "id": "p02"
+        },
+        {
+          "any_of": [
+            "两行",
+            "2行",
+            "2 行"
+          ],
+          "description": "必要要点：两行",
+          "id": "p03"
+        }
+      ],
+      "unanswerable": false
+    },
+    {
+      "acceptable_answers": [
+        "先同步时钟并测试对白确认返听，再由操作员确认首句落点。"
+      ],
+      "forbidden_claims": [],
+      "question_id": "hold_theater-q02",
+      "required_points": [
+        {
+          "any_of": [
+            "同步时钟",
+            "时钟同步"
+          ],
+          "description": "必要要点：同步时钟",
+          "id": "p01"
+        },
+        {
+          "any_of": [
+            "测试对白",
+            "对白测试"
+          ],
+          "description": "必要要点：测试对白",
+          "id": "p02"
+        },
+        {
+          "any_of": [
+            "返听"
+          ],
+          "description": "必要要点：返听",
+          "id": "p03"
+        },
+        {
+          "any_of": [
+            "操作员确认",
+            "人工确认"
+          ],
+          "description": "必要要点：操作员确认",
+          "id": "p04"
+        },
+        {
+          "any_of": [
+            "首句落点",
+            "第一句落点",
+            "首句位置"
+          ],
+          "description": "必要要点：首句落点",
+          "id": "p05"
+        }
+      ],
+      "unanswerable": false
+    },
+    {
+      "acceptable_answers": [
+        "对白停顿处；跟上呼吸节奏，避免把否定词和结论拆开。"
+      ],
+      "forbidden_claims": [],
+      "question_id": "hold_theater-q03",
+      "required_points": [
+        {
+          "any_of": [
+            "停顿处",
+            "停顿位置",
+            "对白停顿"
+          ],
+          "description": "必要要点：停顿处",
+          "id": "p01"
+        },
+        {
+          "any_of": [
+            "呼吸节奏",
+            "对白节奏"
+          ],
+          "description": "必要要点：呼吸节奏",
+          "id": "p02"
+        },
+        {
+          "any_of": [
+            "避免把否定词",
+            "不能拆开否定词",
+            "否定词和结论",
+            "否定词与结论"
+          ],
+          "description": "必要要点：避免把否定词",
+          "id": "p03"
+        }
+      ],
+      "unanswerable": false
+    },
+    {
+      "acceptable_answers": [
+        "暖白色"
+      ],
+      "forbidden_claims": [],
+      "question_id": "hold_theater-q04",
+      "required_points": [
+        {
+          "any_of": [
+            "暖白色",
+            "暖白"
+          ],
+          "description": "必要要点：暖白色",
+          "id": "p01"
+        }
+      ],
+      "unanswerable": false
+    },
+    {
+      "acceptable_answers": [
+        "浅绿色"
+      ],
+      "forbidden_claims": [],
+      "question_id": "hold_theater-q05",
+      "required_points": [
+        {
+          "any_of": [
+            "浅绿色",
+            "浅绿"
+          ],
+          "description": "必要要点：浅绿色",
+          "id": "p01"
+        }
+      ],
+      "unanswerable": false
+    },
+    {
+      "acceptable_answers": [
+        "不可以，未说出的台词不能显示在观众屏幕。"
+      ],
+      "forbidden_claims": [
+        {
+          "description": "不得将相冲突或越界的结论作为答案",
+          "id": "f01",
+          "patterns": [
+            "(?<!不)可以.{0,6}(预放|提前显示)"
+          ]
+        }
+      ],
+      "question_id": "hold_theater-q06",
+      "required_points": [
+        {
+          "any_of": [
+            "不可以",
+            "不能",
+            "不得"
+          ],
+          "description": "必要要点：不可以",
+          "id": "p01"
+        },
+        {
+          "any_of": [
+            "未说出",
+            "尚未说出",
+            "还没说",
+            "未说出口"
+          ],
+          "description": "必要要点：未说出",
+          "id": "p02"
+        }
+      ],
+      "unanswerable": false
+    },
+    {
+      "acceptable_answers": [
+        "会把否定词和结论拆开，破坏对白节奏。"
+      ],
+      "forbidden_claims": [],
+      "question_id": "hold_theater-q07",
+      "required_points": [
+        {
+          "any_of": [
+            "否定词和结论",
+            "否定词与结论"
+          ],
+          "description": "必要要点：否定词和结论",
+          "id": "p01"
+        },
+        {
+          "any_of": [
+            "节奏"
+          ],
+          "description": "必要要点：节奏",
+          "id": "p02"
+        }
+      ],
+      "unanswerable": false
+    },
+    {
+      "acceptable_answers": [
+        "资料未提供，无法确定。"
+      ],
+      "forbidden_claims": [],
+      "question_id": "hold_theater-q08",
+      "required_points": [
+        {
+          "any_of": [
+            "资料不足",
+            "没有提供",
+            "未提供",
+            "未说明",
+            "无法确定",
+            "不知道",
+            "不清楚",
+            "缺少依据",
+            "无法回答"
+          ],
+          "description": "明确资料不足，不编造具体值",
+          "id": "p01"
+        }
+      ],
+      "unanswerable": true
+    },
+    {
+      "acceptable_answers": [
+        "三百毫秒"
+      ],
+      "forbidden_claims": [],
+      "question_id": "hold_theater-q09",
+      "required_points": [
+        {
+          "any_of": [
+            "三百毫秒",
+            "300毫秒",
+            "300 毫秒",
+            "300ms",
+            "0.3秒"
+          ],
+          "description": "必要要点：三百毫秒",
+          "id": "p01"
+        }
+      ],
+      "unanswerable": false
+    },
+    {
+      "acceptable_answers": [
+        "资料未提供，无法确定。"
+      ],
+      "forbidden_claims": [],
+      "question_id": "hold_theater-q10",
+      "required_points": [
+        {
+          "any_of": [
+            "资料不足",
+            "没有提供",
+            "未提供",
+            "未说明",
+            "无法确定",
+            "不知道",
+            "不清楚",
+            "缺少依据",
+            "无法回答"
+          ],
+          "description": "明确资料不足，不编造具体值",
+          "id": "p01"
+        }
+      ],
+      "unanswerable": true
+    },
+    {
+      "acceptable_answers": [
+        "低于百分之八十二安排复检，复检前不改评级。"
+      ],
+      "forbidden_claims": [
+        {
+          "description": "不得将相冲突或越界的结论作为答案",
+          "id": "f01",
+          "patterns": [
+            "高于.{0,3}(82%|百分之八十二)"
+          ]
+        }
+      ],
+      "question_id": "hold_seedbank-q01",
+      "required_points": [
+        {
+          "any_of": [
+            "低于百分之八十二",
+            "低于82%",
+            "小于82%",
+            "82%以下"
+          ],
+          "description": "必要要点：低于百分之八十二",
+          "id": "p01"
+        },
+        {
+          "any_of": [
+            "复检",
+            "复测"
+          ],
+          "description": "必要要点：复检",
+          "id": "p02"
+        },
+        {
+          "any_of": [
+            "复检前不改",
+            "复测前不改",
+            "评级不变",
+            "暂不改评级"
+          ],
+          "description": "必要要点：复检前不改",
+          "id": "p03"
+        }
+      ],
+      "unanswerable": false
+    },
+    {
+      "acceptable_answers": [
+        "密封回温四十分钟，称量，开袋分装，封口登记流转，再放回余样。"
+      ],
+      "forbidden_claims": [],
+      "question_id": "hold_seedbank-q02",
+      "required_points": [
+        {
+          "any_of": [
+            "密封回温",
+            "密封状态回温"
+          ],
+          "description": "必要要点：密封回温",
+          "id": "p01"
+        },
+        {
+          "any_of": [
+            "四十分钟",
+            "40分钟",
+            "40 分钟"
+          ],
+          "description": "必要要点：四十分钟",
+          "id": "p02"
+        },
+        {
+          "any_of": [
+            "称量",
+            "称重"
+          ],
+          "description": "必要要点：称量",
+          "id": "p03"
+        },
+        {
+          "any_of": [
+            "开袋分装",
+            "打开分装"
+          ],
+          "description": "必要要点：开袋分装",
+          "id": "p04"
+        },
+        {
+          "any_of": [
+            "封口登记",
+            "封口并登记",
+            "登记流转"
+          ],
+          "description": "必要要点：封口登记",
+          "id": "p05"
+        },
+        {
+          "any_of": [
+            "放回余样",
+            "余样放回",
+            "余样归还"
+          ],
+          "description": "必要要点：放回余样",
+          "id": "p06"
+        }
+      ],
+      "unanswerable": false
+    },
+    {
+      "acceptable_answers": [
+        "密封回温四十分钟，避免冷种子接触湿空气结露。"
+      ],
+      "forbidden_claims": [],
+      "question_id": "hold_seedbank-q03",
+      "required_points": [
+        {
+          "any_of": [
+            "密封回温",
+            "密封状态回温"
+          ],
+          "description": "必要要点：密封回温",
+          "id": "p01"
+        },
+        {
+          "any_of": [
+            "四十分钟",
+            "40分钟",
+            "40 分钟"
+          ],
+          "description": "必要要点：四十分钟",
+          "id": "p02"
+        },
+        {
+          "any_of": [
+            "结露",
+            "凝露",
+            "冷凝"
+          ],
+          "description": "必要要点：结露",
+          "id": "p03"
+        }
+      ],
+      "unanswerable": false
+    },
+    {
+      "acceptable_answers": [
+        "新增批次序号，历史标签保留并另贴关联条码。"
+      ],
+      "forbidden_claims": [],
+      "question_id": "hold_seedbank-q04",
+      "required_points": [
+        {
+          "any_of": [
+            "批次序号",
+            "批次编号"
+          ],
+          "description": "必要要点：批次序号",
+          "id": "p01"
+        },
+        {
+          "any_of": [
+            "历史标签保留",
+            "保留旧标签",
+            "保留历史标签"
+          ],
+          "description": "必要要点：历史标签保留",
+          "id": "p02"
+        },
+        {
+          "any_of": [
+            "关联条码",
+            "关联的条码"
+          ],
+          "description": "必要要点：关联条码",
+          "id": "p03"
+        }
+      ],
+      "unanswerable": false
+    },
+    {
+      "acceptable_answers": [
+        "采集地和年份"
+      ],
+      "forbidden_claims": [],
+      "question_id": "hold_seedbank-q05",
+      "required_points": [
+        {
+          "any_of": [
+            "采集地",
+            "采集地点",
+            "产地"
+          ],
+          "description": "必要要点：采集地",
+          "id": "p01"
+        },
+        {
+          "any_of": [
+            "年份",
+            "采集年"
+          ],
+          "description": "必要要点：年份",
+          "id": "p02"
+        }
+      ],
+      "unanswerable": false
+    },
+    {
+      "acceptable_answers": [
+        "不能，须等待复检结果，也不能直接销毁。"
+      ],
+      "forbidden_claims": [
+        {
+          "description": "不得将相冲突或越界的结论作为答案",
+          "id": "f01",
+          "patterns": [
+            "(?<!不)可以立即.{0,6}(报废|销毁)"
+          ]
+        },
+        {
+          "description": "不得将相冲突或越界的结论作为答案",
+          "id": "f02",
+          "patterns": [
+            "直接报废整个批次"
+          ]
+        }
+      ],
+      "question_id": "hold_seedbank-q06",
+      "required_points": [
+        {
+          "any_of": [
+            "不能",
+            "不可以",
+            "不得"
+          ],
+          "description": "必要要点：不能",
+          "id": "p01"
+        },
+        {
+          "any_of": [
+            "等待复检",
+            "等待复测",
+            "复检结果",
+            "复测结果"
+          ],
+          "description": "必要要点：等待复检",
+          "id": "p02"
+        },
+        {
+          "any_of": [
+            "不能直接销毁",
+            "不得销毁",
+            "不应销毁"
+          ],
+          "description": "必要要点：不能直接销毁",
+          "id": "p03"
+        }
+      ],
+      "unanswerable": false
+    },
+    {
+      "acceptable_answers": [
+        "冷种子遇室内湿空气会表面结露。"
+      ],
+      "forbidden_claims": [],
+      "question_id": "hold_seedbank-q07",
+      "required_points": [
+        {
+          "any_of": [
+            "湿空气",
+            "潮湿空气"
+          ],
+          "description": "必要要点：湿空气",
+          "id": "p01"
+        },
+        {
+          "any_of": [
+            "结露",
+            "凝露",
+            "冷凝"
+          ],
+          "description": "必要要点：结露",
+          "id": "p02"
+        }
+      ],
+      "unanswerable": false
+    },
+    {
+      "acceptable_answers": [
+        "资料未提供，无法确定。"
+      ],
+      "forbidden_claims": [],
+      "question_id": "hold_seedbank-q08",
+      "required_points": [
+        {
+          "any_of": [
+            "资料不足",
+            "没有提供",
+            "未提供",
+            "未说明",
+            "无法确定",
+            "不知道",
+            "不清楚",
+            "缺少依据",
+            "无法回答"
+          ],
+          "description": "明确资料不足，不编造具体值",
+          "id": "p01"
+        }
+      ],
+      "unanswerable": true
+    },
+    {
+      "acceptable_answers": [
+        "十一天"
+      ],
+      "forbidden_claims": [],
+      "question_id": "hold_seedbank-q09",
+      "required_points": [
+        {
+          "any_of": [
+            "十一天",
+            "11天",
+            "11 天"
+          ],
+          "description": "必要要点：十一天",
+          "id": "p01"
+        }
+      ],
+      "unanswerable": false
+    },
+    {
+      "acceptable_answers": [
+        "资料未提供，无法确定。"
+      ],
+      "forbidden_claims": [],
+      "question_id": "hold_seedbank-q10",
+      "required_points": [
+        {
+          "any_of": [
+            "资料不足",
+            "没有提供",
+            "未提供",
+            "未说明",
+            "无法确定",
+            "不知道",
+            "不清楚",
+            "缺少依据",
+            "无法回答"
+          ],
+          "description": "明确资料不足，不编造具体值",
+          "id": "p01"
+        }
+      ],
+      "unanswerable": true
+    }
+  ],
+  "schema_version": 1,
+  "scoring_kind": "local_lexical_rubric_not_semantic_judge",
+  "sources_sha256": "af02bba2dbf7cdbf6f47a5a9fa9a6267d9bb2551bd4659562373885439f94bde",
+  "split": "heldout"
+}

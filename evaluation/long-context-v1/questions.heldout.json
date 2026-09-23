@@ -1,0 +1,503 @@
+[
+  {
+    "acceptable_answers": [
+      "静音的是模型提示音；文字提示仍要保留。",
+      "模型里的提示音先静音，不删除文字提示。"
+    ],
+    "answer": "静音的是模型提示音；文字提示仍要保留。",
+    "category": "pronoun_dependency",
+    "forbidden_claims": [],
+    "project": "long-context-rail",
+    "question": "杉桥排练问答环节里需要静音的是什么，文字提示是否也要去掉？",
+    "question_date": "2026-06-10",
+    "question_id": "lcv1-rail-q1",
+    "required_points": [
+      {
+        "any_of": [
+          "提示音"
+        ],
+        "description": "referent",
+        "id": "referent"
+      },
+      {
+        "any_of": [
+          "静音"
+        ],
+        "description": "action",
+        "id": "action"
+      },
+      {
+        "any_of": [
+          "保留",
+          "不删除"
+        ],
+        "description": "retain",
+        "id": "retain"
+      }
+    ],
+    "required_source_ids": [
+      "lcv1-rail-1"
+    ],
+    "scope": "project",
+    "scope_id": "",
+    "split": "heldout",
+    "unanswerable": false
+  },
+  {
+    "acceptable_answers": [
+      "不是每天；只恢复工作日旁白排练，周末仍暂停。",
+      "工作日恢复，周末不恢复。"
+    ],
+    "answer": "不是每天；只恢复工作日旁白排练，周末仍暂停。",
+    "category": "state_update_exception",
+    "forbidden_claims": [],
+    "project": "long-context-rail",
+    "question": "5月10日修订后杉桥模型是否每天都恢复旁白排练了？",
+    "question_date": "2026-06-10",
+    "question_id": "lcv1-rail-q2",
+    "required_points": [
+      {
+        "any_of": [
+          "工作日"
+        ],
+        "description": "weekday",
+        "id": "weekday"
+      },
+      {
+        "any_of": [
+          "周末"
+        ],
+        "description": "exception",
+        "id": "exception"
+      },
+      {
+        "any_of": [
+          "暂停",
+          "不恢复"
+        ],
+        "description": "negative",
+        "id": "negative"
+      }
+    ],
+    "required_source_ids": [
+      "lcv1-rail-1"
+    ],
+    "scope": "project",
+    "scope_id": "",
+    "split": "heldout",
+    "unanswerable": false
+  },
+  {
+    "acceptable_answers": [
+      "现在不能交付；字幕复核未完成，三项条件必须同时满足。",
+      "不能，还缺字幕复核完成这一项。"
+    ],
+    "answer": "现在不能交付；字幕复核未完成，三项条件必须同时满足。",
+    "category": "multi_source_conditions",
+    "forbidden_claims": [],
+    "project": "long-context-rail",
+    "question": "清晰且场景说明完整的片段收齐后，杉桥教学包现在能交付吗？",
+    "question_date": "2026-06-10",
+    "question_id": "lcv1-rail-q3",
+    "required_points": [
+      {
+        "any_of": [
+          "不能"
+        ],
+        "description": "negative",
+        "id": "negative"
+      },
+      {
+        "any_of": [
+          "字幕复核"
+        ],
+        "description": "missing",
+        "id": "missing"
+      },
+      {
+        "any_of": [
+          "未完成",
+          "还缺"
+        ],
+        "description": "pending",
+        "id": "pending"
+      }
+    ],
+    "required_source_ids": [
+      "lcv1-rail-1",
+      "lcv1-rail-2"
+    ],
+    "scope": "project",
+    "scope_id": "",
+    "split": "heldout",
+    "unanswerable": false
+  },
+  {
+    "acceptable_answers": [
+      "共有五段：甲组四段减去一段缺说明，加上乙组两段。",
+      "5段，甲组三段加乙组两段。"
+    ],
+    "answer": "共有五段：甲组四段减去一段缺说明，加上乙组两段。",
+    "category": "multi_span_calculation",
+    "forbidden_claims": [],
+    "project": "long-context-rail",
+    "question": "不计字幕调试短片，甲乙两组共有几段同时清晰且保留完整开头场景说明的片段？",
+    "question_date": "2026-06-10",
+    "question_id": "lcv1-rail-q4",
+    "required_points": [
+      {
+        "any_of": [
+          "五段",
+          "5段"
+        ],
+        "description": "sum",
+        "id": "sum"
+      },
+      {
+        "any_of": [
+          "甲组"
+        ],
+        "description": "a",
+        "id": "a"
+      },
+      {
+        "any_of": [
+          "乙组"
+        ],
+        "description": "b",
+        "id": "b"
+      }
+    ],
+    "required_source_ids": [
+      "lcv1-rail-2"
+    ],
+    "scope": "project",
+    "scope_id": "",
+    "split": "heldout",
+    "unanswerable": false
+  },
+  {
+    "acceptable_answers": [
+      "记录没有提供最终柜面签收时间，无法确定。",
+      "未记录柜面签收时刻。"
+    ],
+    "answer": "记录没有提供最终柜面签收时间，无法确定。",
+    "category": "unanswerable",
+    "forbidden_claims": [],
+    "project": "long-context-rail",
+    "question": "杉桥教学包的最终柜面签收发生在几点？",
+    "question_date": "2026-06-10",
+    "question_id": "lcv1-rail-q5",
+    "required_points": [
+      {
+        "any_of": [
+          "没有提供",
+          "未记录"
+        ],
+        "description": "absence",
+        "id": "absence"
+      },
+      {
+        "any_of": [
+          "签收"
+        ],
+        "description": "topic",
+        "id": "topic"
+      }
+    ],
+    "required_source_ids": [],
+    "scope": "project",
+    "scope_id": "",
+    "split": "heldout",
+    "unanswerable": true
+  },
+  {
+    "acceptable_answers": [
+      "可以，但只限 cedar-night 夜场练习，不改变项目周末暂停的规则。",
+      "该会话可以播放，项目范围周末仍暂停。"
+    ],
+    "answer": "可以，但只限 cedar-night 夜场练习，不改变项目周末暂停的规则。",
+    "category": "scope_isolation",
+    "forbidden_claims": [],
+    "project": "long-context-rail",
+    "question": "只在 cedar-night 会话中，第二套杉桥模型周末能播放旁白吗？",
+    "question_date": "2026-06-10",
+    "question_id": "lcv1-rail-q6",
+    "required_points": [
+      {
+        "any_of": [
+          "可以"
+        ],
+        "description": "local",
+        "id": "local"
+      },
+      {
+        "any_of": [
+          "会话",
+          "cedar-night"
+        ],
+        "description": "scope",
+        "id": "scope"
+      },
+      {
+        "any_of": [
+          "不改变",
+          "仍暂停"
+        ],
+        "description": "limit",
+        "id": "limit"
+      }
+    ],
+    "required_source_ids": [
+      "lcv1-rail-3"
+    ],
+    "scope": "session",
+    "scope_id": "cedar-night",
+    "split": "heldout",
+    "unanswerable": false
+  },
+  {
+    "acceptable_answers": [
+      "The courtyard arch, not the delivery door.",
+      "The public route should use the courtyard arch."
+    ],
+    "answer": "The courtyard arch, not the delivery door.",
+    "category": "pronoun_dependency",
+    "forbidden_claims": [],
+    "project": "long-context-festival",
+    "question": "Which entrance does the coordinator mean by \"that one\" in the guide conversation?",
+    "question_date": "2026-06-10",
+    "question_id": "lcv1-festival-q1",
+    "required_points": [
+      {
+        "any_of": [
+          "courtyard arch"
+        ],
+        "description": "referent",
+        "id": "referent"
+      }
+    ],
+    "required_source_ids": [
+      "lcv1-festival-1"
+    ],
+    "scope": "project",
+    "scope_id": "",
+    "split": "heldout",
+    "unanswerable": false
+  },
+  {
+    "acceptable_answers": [
+      "No. The revised route uses the courtyard arch on Saturday only; Sunday has not been offered.",
+      "Saturday only, not Sunday."
+    ],
+    "answer": "No. The revised route uses the courtyard arch on Saturday only; Sunday has not been offered.",
+    "category": "state_update_exception",
+    "forbidden_claims": [],
+    "project": "long-context-festival",
+    "question": "After the revision, may visitors use the courtyard arch on both Saturday and Sunday?",
+    "question_date": "2026-06-10",
+    "question_id": "lcv1-festival-q2",
+    "required_points": [
+      {
+        "any_of": [
+          "Saturday"
+        ],
+        "description": "day",
+        "id": "day"
+      },
+      {
+        "any_of": [
+          "only"
+        ],
+        "description": "limit",
+        "id": "limit"
+      },
+      {
+        "any_of": [
+          "Sunday"
+        ],
+        "description": "exception",
+        "id": "exception"
+      }
+    ],
+    "required_source_ids": [
+      "lcv1-festival-1"
+    ],
+    "scope": "project",
+    "scope_id": "",
+    "split": "heldout",
+    "unanswerable": false
+  },
+  {
+    "acceptable_answers": [
+      "No. The exhibition-room wall lacks venue confirmation, and artwork credits must remain visible.",
+      "Not ready: the venue has not confirmed that wall, and credits cannot be removed."
+    ],
+    "answer": "No. The exhibition-room wall lacks venue confirmation, and artwork credits must remain visible.",
+    "category": "multi_source_conditions",
+    "forbidden_claims": [],
+    "project": "long-context-festival",
+    "question": "All print checks passed. Are the exhibition-room inserts ready to install, and may credits be removed to save space?",
+    "question_date": "2026-06-10",
+    "question_id": "lcv1-festival-q3",
+    "required_points": [
+      {
+        "any_of": [
+          "No",
+          "Not ready"
+        ],
+        "description": "negative",
+        "id": "negative"
+      },
+      {
+        "any_of": [
+          "confirmation",
+          "confirmed"
+        ],
+        "description": "permission",
+        "id": "permission"
+      },
+      {
+        "any_of": [
+          "credits"
+        ],
+        "description": "credits",
+        "id": "credits"
+      },
+      {
+        "any_of": [
+          "remain visible",
+          "cannot be removed"
+        ],
+        "description": "retain",
+        "id": "retain"
+      }
+    ],
+    "required_source_ids": [
+      "lcv1-festival-1",
+      "lcv1-festival-2"
+    ],
+    "scope": "project",
+    "scope_id": "",
+    "split": "heldout",
+    "unanswerable": false
+  },
+  {
+    "acceptable_answers": [
+      "Ten locations: seven plus four minus the one replacement.",
+      "10 distinct locations, excluding the duplicated replacement."
+    ],
+    "answer": "Ten locations: seven plus four minus the one replacement.",
+    "category": "multi_span_calculation",
+    "forbidden_claims": [],
+    "project": "long-context-festival",
+    "question": "How many distinct route locations are covered by accepted north- and south-box inserts after accounting for the replacement?",
+    "question_date": "2026-06-10",
+    "question_id": "lcv1-festival-q4",
+    "required_points": [
+      {
+        "any_of": [
+          "Ten",
+          "10"
+        ],
+        "description": "sum",
+        "id": "sum"
+      },
+      {
+        "any_of": [
+          "replacement"
+        ],
+        "description": "replacement",
+        "id": "replacement"
+      }
+    ],
+    "required_source_ids": [
+      "lcv1-festival-2"
+    ],
+    "scope": "project",
+    "scope_id": "",
+    "split": "heldout",
+    "unanswerable": false
+  },
+  {
+    "acceptable_answers": [
+      "The records do not state an insurance-certificate issue time.",
+      "No certificate issue timestamp is provided."
+    ],
+    "answer": "The records do not state an insurance-certificate issue time.",
+    "category": "unanswerable",
+    "forbidden_claims": [],
+    "project": "long-context-festival",
+    "question": "At what exact time was the festival final insurance certificate issued?",
+    "question_date": "2026-06-10",
+    "question_id": "lcv1-festival-q5",
+    "required_points": [
+      {
+        "any_of": [
+          "do not state",
+          "No"
+        ],
+        "description": "absence",
+        "id": "absence"
+      },
+      {
+        "any_of": [
+          "time",
+          "timestamp"
+        ],
+        "description": "topic",
+        "id": "topic"
+      }
+    ],
+    "required_source_ids": [],
+    "scope": "project",
+    "scope_id": "",
+    "split": "heldout",
+    "unanswerable": true
+  },
+  {
+    "acceptable_answers": [
+      "Yes, both routes are open on the session paper map; this does not authorise the real festival on Sunday.",
+      "Both are open in the preview session, not in the real festival plan."
+    ],
+    "answer": "Yes, both routes are open on the session paper map; this does not authorise the real festival on Sunday.",
+    "category": "scope_isolation",
+    "forbidden_claims": [],
+    "project": "long-context-festival",
+    "question": "In mosslight-preview only, are both paper-map routes open on Sunday?",
+    "question_date": "2026-06-10",
+    "question_id": "lcv1-festival-q6",
+    "required_points": [
+      {
+        "any_of": [
+          "both",
+          "Both"
+        ],
+        "description": "local",
+        "id": "local"
+      },
+      {
+        "any_of": [
+          "session"
+        ],
+        "description": "scope",
+        "id": "scope"
+      },
+      {
+        "any_of": [
+          "does not",
+          "not in the real"
+        ],
+        "description": "limit",
+        "id": "limit"
+      }
+    ],
+    "required_source_ids": [
+      "lcv1-festival-3"
+    ],
+    "scope": "session",
+    "scope_id": "mosslight-preview",
+    "split": "heldout",
+    "unanswerable": false
+  }
+]

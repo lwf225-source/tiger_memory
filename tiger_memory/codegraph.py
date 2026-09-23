@@ -168,7 +168,7 @@ def sync(cwd, initialize=False, timeout=180):
     graph = root / ".codegraph"
     exists = (graph / "codegraph.db").is_file()
     if not exists and not initialize:
-        raise PLMError("codegraph index absent; run plm code init explicitly")
+        raise PLMError("codegraph index absent; run tiger_memory code init explicitly")
     if not 1 <= timeout <= 600:
         raise PLMError("codegraph sync timeout must be between 1 and 600 seconds")
     # The lock covers initial construction as well as subsequent syncs.
@@ -189,7 +189,7 @@ def sync(cwd, initialize=False, timeout=180):
             _run([executable, "init", str(root)], root, timeout=timeout)
         after = _snapshot(root)
         if before != after:
-            raise PLMError("repository changed while indexing; run plm code sync again")
+            raise PLMError("repository changed while indexing; run tiger_memory code sync again")
         health = _index_health(root)
         version, _ = _run([executable, "version"], root)
         data = {"schema_version": 1, "project_root": str(root), "snapshot": after,
@@ -221,7 +221,7 @@ def query(cwd, text="", action="explore", max_bytes=16000, timeout=30):
     try:
         result.update(status(cwd))
         if result["status"] != "ready":
-            result["hint"] = "Run plm code init (unbound) or plm code sync (stale)."
+            result["hint"] = "Run tiger_memory code init (unbound) or tiger_memory code sync (stale)."
             return result
         executable = shutil.which("codegraph")
         if not executable:
@@ -243,5 +243,5 @@ def query(cwd, text="", action="explore", max_bytes=16000, timeout=30):
                       provenance="CodeGraph source and locations; inspect snapshot before reuse.")
     except (PLMError, OSError, ValueError) as exc:
         result.update(status="unavailable", reason=type(exc).__name__,
-                      hint="Check plm code status and CLI availability; memory retrieval is unaffected.")
+                      hint="Check tiger_memory code status and CLI availability; memory retrieval is unaffected.")
     return result

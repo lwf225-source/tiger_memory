@@ -1,0 +1,1240 @@
+{
+  "annotation_method": "Independently reviewed manual answer points; no model hypotheses used. Unanswerable refusal forms are shared, not generated gold facts.",
+  "dataset_id": "plm-synthetic-zh-v1-80",
+  "limitations": [
+    "Surface forms can miss valid paraphrases.",
+    "Forbidden-claim regexes can misread quoted or negated examples.",
+    "Not official LongMemEval semantic evaluation."
+  ],
+  "questions_sha256": "993f02200c434c10a66427de211c49a5baa465bf6dc36c1d5ea1e1cba0ebe756",
+  "rubrics": [
+    {
+      "acceptable_answers": [
+        "七本"
+      ],
+      "forbidden_claims": [],
+      "question_id": "dev_library-q01",
+      "required_points": [
+        {
+          "any_of": [
+            "七本",
+            "7本",
+            "7 本"
+          ],
+          "description": "必要要点：七本",
+          "id": "p01"
+        }
+      ],
+      "unanswerable": false
+    },
+    {
+      "acceptable_answers": [
+        "先关闭自动续借，导出借阅清单；对照书架完成后再开启。"
+      ],
+      "forbidden_claims": [],
+      "question_id": "dev_library-q02",
+      "required_points": [
+        {
+          "any_of": [
+            "关闭自动续借",
+            "暂停自动续借",
+            "停用自动续借"
+          ],
+          "description": "必要要点：关闭自动续借",
+          "id": "p01"
+        },
+        {
+          "any_of": [
+            "导出借阅",
+            "导出清单",
+            "导出借书"
+          ],
+          "description": "必要要点：导出借阅",
+          "id": "p02"
+        },
+        {
+          "any_of": [
+            "核对后",
+            "核对完成",
+            "对照书架完成",
+            "确认后"
+          ],
+          "description": "必要要点：核对后",
+          "id": "p03"
+        },
+        {
+          "any_of": [
+            "再开启",
+            "恢复续借",
+            "重新开启",
+            "再打开"
+          ],
+          "description": "必要要点：再开启",
+          "id": "p04"
+        }
+      ],
+      "unanswerable": false
+    },
+    {
+      "acceptable_answers": [
+        "每架七本；周末只有两位志愿者，全面盘点会影响借阅窗口。"
+      ],
+      "forbidden_claims": [],
+      "question_id": "dev_library-q03",
+      "required_points": [
+        {
+          "any_of": [
+            "七本",
+            "7本",
+            "7 本"
+          ],
+          "description": "必要要点：七本",
+          "id": "p01"
+        },
+        {
+          "any_of": [
+            "两位志愿者",
+            "两名志愿者",
+            "2位志愿者",
+            "2名志愿者"
+          ],
+          "description": "必要要点：两位志愿者",
+          "id": "p02"
+        },
+        {
+          "any_of": [
+            "影响借阅",
+            "借阅窗口",
+            "无人接待",
+            "借阅服务"
+          ],
+          "description": "必要要点：影响借阅",
+          "id": "p03"
+        }
+      ],
+      "unanswerable": false
+    },
+    {
+      "acceptable_answers": [
+        "橙色三角"
+      ],
+      "forbidden_claims": [
+        {
+          "description": "不得将相冲突或越界的结论作为答案",
+          "id": "f01",
+          "patterns": [
+            "(?<!不是)(?<!而非)蓝色圆点"
+          ]
+        }
+      ],
+      "question_id": "dev_library-q04",
+      "required_points": [
+        {
+          "any_of": [
+            "橙色三角",
+            "橙色的三角",
+            "橙色三角形"
+          ],
+          "description": "必要要点：橙色三角",
+          "id": "p01"
+        }
+      ],
+      "unanswerable": false
+    },
+    {
+      "acceptable_answers": [
+        "蓝色圆点"
+      ],
+      "forbidden_claims": [
+        {
+          "description": "不得将相冲突或越界的结论作为答案",
+          "id": "f01",
+          "patterns": [
+            "(?<!不是)(?<!而非)橙色三角"
+          ]
+        }
+      ],
+      "question_id": "dev_library-q05",
+      "required_points": [
+        {
+          "any_of": [
+            "蓝色圆点",
+            "蓝色的圆点",
+            "蓝色圆形"
+          ],
+          "description": "必要要点：蓝色圆点",
+          "id": "p01"
+        }
+      ],
+      "unanswerable": false
+    },
+    {
+      "acceptable_answers": [
+        "不可以，必须由馆员逐本判断。"
+      ],
+      "forbidden_claims": [
+        {
+          "description": "不得将相冲突或越界的结论作为答案",
+          "id": "f01",
+          "patterns": [
+            "(?<!不)可以直接.{0,5}(撤下|移除|下架)"
+          ]
+        },
+        {
+          "description": "不得将相冲突或越界的结论作为答案",
+          "id": "f02",
+          "patterns": [
+            "自动.{0,3}(撤下|下架)"
+          ]
+        }
+      ],
+      "question_id": "dev_library-q06",
+      "required_points": [
+        {
+          "any_of": [
+            "不可以",
+            "不能直接",
+            "不得直接",
+            "不能自动"
+          ],
+          "description": "必要要点：不可以",
+          "id": "p01"
+        },
+        {
+          "any_of": [
+            "馆员",
+            "图书管理员"
+          ],
+          "description": "必要要点：馆员",
+          "id": "p02"
+        },
+        {
+          "any_of": [
+            "逐本",
+            "逐一",
+            "单独判断",
+            "一本一本"
+          ],
+          "description": "必要要点：逐本",
+          "id": "p03"
+        }
+      ],
+      "unanswerable": false
+    },
+    {
+      "acceptable_answers": [
+        "周末只有两位志愿者，全面盘点会使借阅窗口无人接待。"
+      ],
+      "forbidden_claims": [],
+      "question_id": "dev_library-q07",
+      "required_points": [
+        {
+          "any_of": [
+            "两位志愿者",
+            "两名志愿者",
+            "2位志愿者",
+            "2名志愿者"
+          ],
+          "description": "必要要点：两位志愿者",
+          "id": "p01"
+        },
+        {
+          "any_of": [
+            "借阅窗口",
+            "无人接待",
+            "影响借阅",
+            "借阅服务"
+          ],
+          "description": "必要要点：借阅窗口",
+          "id": "p02"
+        }
+      ],
+      "unanswerable": false
+    },
+    {
+      "acceptable_answers": [
+        "资料未提供，无法确定。"
+      ],
+      "forbidden_claims": [],
+      "question_id": "dev_library-q08",
+      "required_points": [
+        {
+          "any_of": [
+            "资料不足",
+            "没有提供",
+            "未提供",
+            "未说明",
+            "无法确定",
+            "不知道",
+            "不清楚",
+            "缺少依据",
+            "无法回答"
+          ],
+          "description": "明确资料不足，不编造具体值",
+          "id": "p01"
+        }
+      ],
+      "unanswerable": true
+    },
+    {
+      "acceptable_answers": [
+        "四秒"
+      ],
+      "forbidden_claims": [],
+      "question_id": "dev_library-q09",
+      "required_points": [
+        {
+          "any_of": [
+            "四秒",
+            "4秒",
+            "4 秒"
+          ],
+          "description": "必要要点：四秒",
+          "id": "p01"
+        }
+      ],
+      "unanswerable": false
+    },
+    {
+      "acceptable_answers": [
+        "资料未提供，无法确定。"
+      ],
+      "forbidden_claims": [],
+      "question_id": "dev_library-q10",
+      "required_points": [
+        {
+          "any_of": [
+            "资料不足",
+            "没有提供",
+            "未提供",
+            "未说明",
+            "无法确定",
+            "不知道",
+            "不清楚",
+            "缺少依据",
+            "无法回答"
+          ],
+          "description": "明确资料不足，不编造具体值",
+          "id": "p01"
+        }
+      ],
+      "unanswerable": true
+    },
+    {
+      "acceptable_answers": [
+        "含水读数低于百分之二十四"
+      ],
+      "forbidden_claims": [
+        {
+          "description": "不得将相冲突或越界的结论作为答案",
+          "id": "f01",
+          "patterns": [
+            "高于.{0,3}(24%|百分之二十四)"
+          ]
+        }
+      ],
+      "question_id": "dev_orchard-q01",
+      "required_points": [
+        {
+          "any_of": [
+            "低于百分之二十四",
+            "低于24%",
+            "小于24%",
+            "24%以下",
+            "不足24%"
+          ],
+          "description": "必要要点：低于百分之二十四",
+          "id": "p01"
+        }
+      ],
+      "unanswerable": false
+    },
+    {
+      "acceptable_answers": [
+        "检查末端堵塞，开东侧阀，滴灌十二分钟，关阀，登记流量读数。"
+      ],
+      "forbidden_claims": [],
+      "question_id": "dev_orchard-q02",
+      "required_points": [
+        {
+          "any_of": [
+            "末端堵塞",
+            "检查堵塞",
+            "检查管道"
+          ],
+          "description": "必要要点：末端堵塞",
+          "id": "p01"
+        },
+        {
+          "any_of": [
+            "东侧阀",
+            "东阀"
+          ],
+          "description": "必要要点：东侧阀",
+          "id": "p02"
+        },
+        {
+          "any_of": [
+            "十二分钟",
+            "12分钟",
+            "12 分钟"
+          ],
+          "description": "必要要点：十二分钟",
+          "id": "p03"
+        },
+        {
+          "any_of": [
+            "关阀",
+            "关闭阀门"
+          ],
+          "description": "必要要点：关阀",
+          "id": "p04"
+        },
+        {
+          "any_of": [
+            "登记流量",
+            "记录流量",
+            "流量读数"
+          ],
+          "description": "必要要点：登记流量",
+          "id": "p05"
+        }
+      ],
+      "unanswerable": false
+    },
+    {
+      "acceptable_answers": [
+        "十五厘米；根系主要在这一层吸水，表土读数波动太大。"
+      ],
+      "forbidden_claims": [],
+      "question_id": "dev_orchard-q03",
+      "required_points": [
+        {
+          "any_of": [
+            "十五厘米",
+            "15厘米",
+            "15 cm",
+            "15cm"
+          ],
+          "description": "必要要点：十五厘米",
+          "id": "p01"
+        },
+        {
+          "any_of": [
+            "根系",
+            "根部"
+          ],
+          "description": "必要要点：根系",
+          "id": "p02"
+        },
+        {
+          "any_of": [
+            "波动",
+            "不稳定"
+          ],
+          "description": "必要要点：波动",
+          "id": "p03"
+        }
+      ],
+      "unanswerable": false
+    },
+    {
+      "acceptable_answers": [
+        "六点"
+      ],
+      "forbidden_claims": [],
+      "question_id": "dev_orchard-q04",
+      "required_points": [
+        {
+          "any_of": [
+            "六点",
+            "6点",
+            "06:00",
+            "6:00"
+          ],
+          "description": "必要要点：六点",
+          "id": "p01"
+        }
+      ],
+      "unanswerable": false
+    },
+    {
+      "acceptable_answers": [
+        "十五点"
+      ],
+      "forbidden_claims": [],
+      "question_id": "dev_orchard-q05",
+      "required_points": [
+        {
+          "any_of": [
+            "十五点",
+            "15点",
+            "15:00",
+            "下午三点",
+            "下午3点"
+          ],
+          "description": "必要要点：十五点",
+          "id": "p01"
+        }
+      ],
+      "unanswerable": false
+    },
+    {
+      "acceptable_answers": [
+        "不会，暂停自动滴灌并交人工检查。"
+      ],
+      "forbidden_claims": [
+        {
+          "description": "不得将相冲突或越界的结论作为答案",
+          "id": "f01",
+          "patterns": [
+            "(?<!不)会自动开阀"
+          ]
+        },
+        {
+          "description": "不得将相冲突或越界的结论作为答案",
+          "id": "f02",
+          "patterns": [
+            "继续自动滴灌"
+          ]
+        }
+      ],
+      "question_id": "dev_orchard-q06",
+      "required_points": [
+        {
+          "any_of": [
+            "不会",
+            "不自动",
+            "暂停自动",
+            "停止自动"
+          ],
+          "description": "必要要点：不会",
+          "id": "p01"
+        },
+        {
+          "any_of": [
+            "人工检查",
+            "人工核查",
+            "人工判断",
+            "人工确认"
+          ],
+          "description": "必要要点：人工检查",
+          "id": "p02"
+        }
+      ],
+      "unanswerable": false
+    },
+    {
+      "acceptable_answers": [
+        "表土读数波动太大，根系主要在十五厘米深处吸水。"
+      ],
+      "forbidden_claims": [],
+      "question_id": "dev_orchard-q07",
+      "required_points": [
+        {
+          "any_of": [
+            "波动",
+            "不稳定"
+          ],
+          "description": "必要要点：波动",
+          "id": "p01"
+        },
+        {
+          "any_of": [
+            "十五厘米",
+            "15厘米",
+            "15cm",
+            "15 cm"
+          ],
+          "description": "必要要点：十五厘米",
+          "id": "p02"
+        },
+        {
+          "any_of": [
+            "根系",
+            "根部"
+          ],
+          "description": "必要要点：根系",
+          "id": "p03"
+        }
+      ],
+      "unanswerable": false
+    },
+    {
+      "acceptable_answers": [
+        "资料未提供，无法确定。"
+      ],
+      "forbidden_claims": [],
+      "question_id": "dev_orchard-q08",
+      "required_points": [
+        {
+          "any_of": [
+            "资料不足",
+            "没有提供",
+            "未提供",
+            "未说明",
+            "无法确定",
+            "不知道",
+            "不清楚",
+            "缺少依据",
+            "无法回答"
+          ],
+          "description": "明确资料不足，不编造具体值",
+          "id": "p01"
+        }
+      ],
+      "unanswerable": true
+    },
+    {
+      "acceptable_answers": [
+        "八分钟"
+      ],
+      "forbidden_claims": [],
+      "question_id": "dev_orchard-q09",
+      "required_points": [
+        {
+          "any_of": [
+            "八分钟",
+            "8分钟",
+            "8 分钟"
+          ],
+          "description": "必要要点：八分钟",
+          "id": "p01"
+        }
+      ],
+      "unanswerable": false
+    },
+    {
+      "acceptable_answers": [
+        "资料未提供，无法确定。"
+      ],
+      "forbidden_claims": [],
+      "question_id": "dev_orchard-q10",
+      "required_points": [
+        {
+          "any_of": [
+            "资料不足",
+            "没有提供",
+            "未提供",
+            "未说明",
+            "无法确定",
+            "不知道",
+            "不清楚",
+            "缺少依据",
+            "无法回答"
+          ],
+          "description": "明确资料不足，不编造具体值",
+          "id": "p01"
+        }
+      ],
+      "unanswerable": true
+    },
+    {
+      "acceptable_answers": [
+        "前六件展品"
+      ],
+      "forbidden_claims": [],
+      "question_id": "dev_museum-q01",
+      "required_points": [
+        {
+          "any_of": [
+            "前六件",
+            "前6件",
+            "前 6 件",
+            "最前面的六件"
+          ],
+          "description": "必要要点：前六件",
+          "id": "p01"
+        }
+      ],
+      "unanswerable": false
+    },
+    {
+      "acceptable_answers": [
+        "淡出旧讲解、识别新编号、显示标题卡片，观众确认后播放。"
+      ],
+      "forbidden_claims": [],
+      "question_id": "dev_museum-q02",
+      "required_points": [
+        {
+          "any_of": [
+            "淡出旧",
+            "淡出上一",
+            "旧讲解淡出"
+          ],
+          "description": "必要要点：淡出旧",
+          "id": "p01"
+        },
+        {
+          "any_of": [
+            "识别新编号",
+            "识别新展品",
+            "新编号识别"
+          ],
+          "description": "必要要点：识别新编号",
+          "id": "p02"
+        },
+        {
+          "any_of": [
+            "标题卡片",
+            "标题卡",
+            "展品标题"
+          ],
+          "description": "必要要点：标题卡片",
+          "id": "p03"
+        },
+        {
+          "any_of": [
+            "确认后",
+            "点击确认",
+            "观众确认"
+          ],
+          "description": "必要要点：确认后",
+          "id": "p04"
+        }
+      ],
+      "unanswerable": false
+    },
+    {
+      "acceptable_answers": [
+        "编号识别后显示标题卡片并确认；玻璃反射会使识别跳变。"
+      ],
+      "forbidden_claims": [],
+      "question_id": "dev_museum-q03",
+      "required_points": [
+        {
+          "any_of": [
+            "编号识别后",
+            "识别编号后",
+            "识别新编号后",
+            "识别后"
+          ],
+          "description": "必要要点：编号识别后",
+          "id": "p01"
+        },
+        {
+          "any_of": [
+            "标题卡片",
+            "标题卡"
+          ],
+          "description": "必要要点：标题卡片",
+          "id": "p02"
+        },
+        {
+          "any_of": [
+            "确认",
+            "点一下"
+          ],
+          "description": "必要要点：确认",
+          "id": "p03"
+        },
+        {
+          "any_of": [
+            "反射",
+            "识别跳变",
+            "识别不稳定",
+            "来回跳"
+          ],
+          "description": "必要要点：反射",
+          "id": "p04"
+        }
+      ],
+      "unanswerable": false
+    },
+    {
+      "acceptable_answers": [
+        "二十四像素"
+      ],
+      "forbidden_claims": [],
+      "question_id": "dev_museum-q04",
+      "required_points": [
+        {
+          "any_of": [
+            "二十四像素",
+            "24像素",
+            "24 像素",
+            "24px",
+            "24 px"
+          ],
+          "description": "必要要点：二十四像素",
+          "id": "p01"
+        }
+      ],
+      "unanswerable": false
+    },
+    {
+      "acceptable_answers": [
+        "十八像素"
+      ],
+      "forbidden_claims": [],
+      "question_id": "dev_museum-q05",
+      "required_points": [
+        {
+          "any_of": [
+            "十八像素",
+            "18像素",
+            "18 像素",
+            "18px",
+            "18 px"
+          ],
+          "description": "必要要点：十八像素",
+          "id": "p01"
+        }
+      ],
+      "unanswerable": false
+    },
+    {
+      "acceptable_answers": [
+        "不可以，不得采集人脸照片。"
+      ],
+      "forbidden_claims": [
+        {
+          "description": "不得将相冲突或越界的结论作为答案",
+          "id": "f01",
+          "patterns": [
+            "(?<!不)可以.{0,4}(采集|拍摄).{0,3}人脸"
+          ]
+        }
+      ],
+      "question_id": "dev_museum-q06",
+      "required_points": [
+        {
+          "any_of": [
+            "不可以",
+            "不得",
+            "不能",
+            "禁止"
+          ],
+          "description": "必要要点：不可以",
+          "id": "p01"
+        },
+        {
+          "any_of": [
+            "人脸",
+            "面部照片"
+          ],
+          "description": "必要要点：人脸",
+          "id": "p02"
+        }
+      ],
+      "unanswerable": false
+    },
+    {
+      "acceptable_answers": [
+        "玻璃展柜反射会导致编号识别来回跳变。"
+      ],
+      "forbidden_claims": [],
+      "question_id": "dev_museum-q07",
+      "required_points": [
+        {
+          "any_of": [
+            "玻璃",
+            "展柜"
+          ],
+          "description": "必要要点：玻璃",
+          "id": "p01"
+        },
+        {
+          "any_of": [
+            "反射"
+          ],
+          "description": "必要要点：反射",
+          "id": "p02"
+        },
+        {
+          "any_of": [
+            "跳变",
+            "来回跳",
+            "识别不稳定",
+            "识别切换"
+          ],
+          "description": "必要要点：跳变",
+          "id": "p03"
+        }
+      ],
+      "unanswerable": false
+    },
+    {
+      "acceptable_answers": [
+        "资料未提供，无法确定。"
+      ],
+      "forbidden_claims": [],
+      "question_id": "dev_museum-q08",
+      "required_points": [
+        {
+          "any_of": [
+            "资料不足",
+            "没有提供",
+            "未提供",
+            "未说明",
+            "无法确定",
+            "不知道",
+            "不清楚",
+            "缺少依据",
+            "无法回答"
+          ],
+          "description": "明确资料不足，不编造具体值",
+          "id": "p01"
+        }
+      ],
+      "unanswerable": true
+    },
+    {
+      "acceptable_answers": [
+        "九十秒"
+      ],
+      "forbidden_claims": [],
+      "question_id": "dev_museum-q09",
+      "required_points": [
+        {
+          "any_of": [
+            "九十秒",
+            "90秒",
+            "90 秒",
+            "一分半",
+            "1分30秒"
+          ],
+          "description": "必要要点：九十秒",
+          "id": "p01"
+        }
+      ],
+      "unanswerable": false
+    },
+    {
+      "acceptable_answers": [
+        "资料未提供，无法确定。"
+      ],
+      "forbidden_claims": [],
+      "question_id": "dev_museum-q10",
+      "required_points": [
+        {
+          "any_of": [
+            "资料不足",
+            "没有提供",
+            "未提供",
+            "未说明",
+            "无法确定",
+            "不知道",
+            "不清楚",
+            "缺少依据",
+            "无法回答"
+          ],
+          "description": "明确资料不足，不编造具体值",
+          "id": "p01"
+        }
+      ],
+      "unanswerable": true
+    },
+    {
+      "acceptable_answers": [
+        "四十五分钟，之后留十分钟清洁间隔。"
+      ],
+      "forbidden_claims": [],
+      "question_id": "dev_workshop-q01",
+      "required_points": [
+        {
+          "any_of": [
+            "四十五分钟",
+            "45分钟",
+            "45 分钟"
+          ],
+          "description": "必要要点：四十五分钟",
+          "id": "p01"
+        },
+        {
+          "any_of": [
+            "十分钟",
+            "10分钟",
+            "10 分钟"
+          ],
+          "description": "必要要点：十分钟",
+          "id": "p02"
+        }
+      ],
+      "unanswerable": false
+    },
+    {
+      "acceptable_answers": [
+        "开工前先开抽风；切割结束等两分钟排烟后关闭。"
+      ],
+      "forbidden_claims": [
+        {
+          "description": "不得将相冲突或越界的结论作为答案",
+          "id": "f01",
+          "patterns": [
+            "结束后立即关闭"
+          ]
+        }
+      ],
+      "question_id": "dev_workshop-q02",
+      "required_points": [
+        {
+          "any_of": [
+            "开工前",
+            "开始前",
+            "切割前"
+          ],
+          "description": "必要要点：开工前",
+          "id": "p01"
+        },
+        {
+          "any_of": [
+            "开抽风",
+            "开启抽风",
+            "启动抽风"
+          ],
+          "description": "必要要点：开抽风",
+          "id": "p02"
+        },
+        {
+          "any_of": [
+            "两分钟",
+            "2分钟",
+            "2 分钟"
+          ],
+          "description": "必要要点：两分钟",
+          "id": "p03"
+        },
+        {
+          "any_of": [
+            "关闭",
+            "停抽风"
+          ],
+          "description": "必要要点：关闭",
+          "id": "p04"
+        }
+      ],
+      "unanswerable": false
+    },
+    {
+      "acceptable_answers": [
+        "留十分钟检查透镜并清理边角料，防止残料引起焦痕。"
+      ],
+      "forbidden_claims": [],
+      "question_id": "dev_workshop-q03",
+      "required_points": [
+        {
+          "any_of": [
+            "十分钟",
+            "10分钟",
+            "10 分钟"
+          ],
+          "description": "必要要点：十分钟",
+          "id": "p01"
+        },
+        {
+          "any_of": [
+            "透镜"
+          ],
+          "description": "必要要点：透镜",
+          "id": "p02"
+        },
+        {
+          "any_of": [
+            "边角料",
+            "残料"
+          ],
+          "description": "必要要点：边角料",
+          "id": "p03"
+        },
+        {
+          "any_of": [
+            "焦痕",
+            "烧焦"
+          ],
+          "description": "必要要点：焦痕",
+          "id": "p04"
+        }
+      ],
+      "unanswerable": false
+    },
+    {
+      "acceptable_answers": [
+        "十八点三十分"
+      ],
+      "forbidden_claims": [],
+      "question_id": "dev_workshop-q04",
+      "required_points": [
+        {
+          "any_of": [
+            "十八点三十分",
+            "18:30",
+            "18点30分",
+            "下午六点半",
+            "晚上六点半"
+          ],
+          "description": "必要要点：十八点三十分",
+          "id": "p01"
+        }
+      ],
+      "unanswerable": false
+    },
+    {
+      "acceptable_answers": [
+        "十九点"
+      ],
+      "forbidden_claims": [],
+      "question_id": "dev_workshop-q05",
+      "required_points": [
+        {
+          "any_of": [
+            "十九点",
+            "19:00",
+            "19点",
+            "晚上七点",
+            "晚上7点"
+          ],
+          "description": "必要要点：十九点",
+          "id": "p01"
+        }
+      ],
+      "unanswerable": false
+    },
+    {
+      "acceptable_answers": [
+        "不可以，必须暂停设备，不能交未培训访客代看。"
+      ],
+      "forbidden_claims": [
+        {
+          "description": "不得将相冲突或越界的结论作为答案",
+          "id": "f01",
+          "patterns": [
+            "(?<!不)可以.{0,8}(朋友|访客).{0,8}(代看|继续)"
+          ]
+        }
+      ],
+      "question_id": "dev_workshop-q06",
+      "required_points": [
+        {
+          "any_of": [
+            "暂停",
+            "停机",
+            "停止设备"
+          ],
+          "description": "必要要点：暂停",
+          "id": "p01"
+        },
+        {
+          "any_of": [
+            "不能交",
+            "不得交",
+            "不允许",
+            "不能让",
+            "不可以"
+          ],
+          "description": "必要要点：不能交",
+          "id": "p02"
+        },
+        {
+          "any_of": [
+            "未培训",
+            "没培训",
+            "未经培训"
+          ],
+          "description": "必要要点：未培训",
+          "id": "p03"
+        }
+      ],
+      "unanswerable": false
+    },
+    {
+      "acceptable_answers": [
+        "防止残料引起焦痕。"
+      ],
+      "forbidden_claims": [],
+      "question_id": "dev_workshop-q07",
+      "required_points": [
+        {
+          "any_of": [
+            "残料",
+            "边角料"
+          ],
+          "description": "必要要点：残料",
+          "id": "p01"
+        },
+        {
+          "any_of": [
+            "焦痕",
+            "烧焦"
+          ],
+          "description": "必要要点：焦痕",
+          "id": "p02"
+        }
+      ],
+      "unanswerable": false
+    },
+    {
+      "acceptable_answers": [
+        "资料未提供，无法确定。"
+      ],
+      "forbidden_claims": [],
+      "question_id": "dev_workshop-q08",
+      "required_points": [
+        {
+          "any_of": [
+            "资料不足",
+            "没有提供",
+            "未提供",
+            "未说明",
+            "无法确定",
+            "不知道",
+            "不清楚",
+            "缺少依据",
+            "无法回答"
+          ],
+          "description": "明确资料不足，不编造具体值",
+          "id": "p01"
+        }
+      ],
+      "unanswerable": true
+    },
+    {
+      "acceptable_answers": [
+        "三十分钟"
+      ],
+      "forbidden_claims": [],
+      "question_id": "dev_workshop-q09",
+      "required_points": [
+        {
+          "any_of": [
+            "三十分钟",
+            "30分钟",
+            "30 分钟"
+          ],
+          "description": "必要要点：三十分钟",
+          "id": "p01"
+        }
+      ],
+      "unanswerable": false
+    },
+    {
+      "acceptable_answers": [
+        "资料未提供，无法确定。"
+      ],
+      "forbidden_claims": [],
+      "question_id": "dev_workshop-q10",
+      "required_points": [
+        {
+          "any_of": [
+            "资料不足",
+            "没有提供",
+            "未提供",
+            "未说明",
+            "无法确定",
+            "不知道",
+            "不清楚",
+            "缺少依据",
+            "无法回答"
+          ],
+          "description": "明确资料不足，不编造具体值",
+          "id": "p01"
+        }
+      ],
+      "unanswerable": true
+    }
+  ],
+  "schema_version": 1,
+  "scoring_kind": "local_lexical_rubric_not_semantic_judge",
+  "sources_sha256": "af02bba2dbf7cdbf6f47a5a9fa9a6267d9bb2551bd4659562373885439f94bde",
+  "split": "dev"
+}

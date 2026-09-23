@@ -1,0 +1,1183 @@
+[
+  {
+    "acceptable_answers": [
+      "记忆的源记录是不可变 Markdown Event；SQLite 保存目录和当前事实、检索等派生视图。"
+    ],
+    "answer": "记忆的源记录是不可变 Markdown Event；SQLite 保存目录和当前事实、检索等派生视图。",
+    "category": "principle",
+    "forbidden_claims": [
+      {
+        "description": "不能说 SQLite 是唯一记忆源",
+        "id": "sqlite_only",
+        "patterns": [
+          "SQLite.{0,8}(唯一|仅有).{0,5}(源|记忆)"
+        ]
+      }
+    ],
+    "project": "plm-storage",
+    "question": "这些记忆真正依赖哪些源文件保存？SQLite 在其中承担什么角色？",
+    "question_id": "pdv1-d01",
+    "required_points": [
+      {
+        "any_of": [
+          "Markdown",
+          "Markdown Event",
+          "Markdown 事件"
+        ],
+        "description": "不可变 Markdown Event 是源记录",
+        "id": "source"
+      },
+      {
+        "any_of": [
+          "派生",
+          "当前事实",
+          "current facts"
+        ],
+        "description": "SQLite 保存当前事实和检索视图",
+        "id": "derived"
+      }
+    ],
+    "required_source_ids": [
+      "pdv1-s02"
+    ],
+    "scope": "project",
+    "scope_id": "",
+    "split": "dev",
+    "unanswerable": false,
+    "view": "current"
+  },
+  {
+    "acceptable_answers": [
+      "需要项目 manifests、Markdown Events、candidate 文件和迁移 checksum manifest。"
+    ],
+    "answer": "需要项目 manifests、Markdown Events、candidate 文件和迁移 checksum manifest。",
+    "category": "recovery_reason",
+    "forbidden_claims": [
+      {
+        "description": "不能宣称删数据库等于记忆永久丢失",
+        "id": "lost_forever",
+        "patterns": [
+          "(记忆|记录).{0,5}(全部|永久).{0,5}(丢失|无法恢复)"
+        ]
+      }
+    ],
+    "project": "plm-storage",
+    "question": "索引数据库意外丢失后，重建时还要准备哪些原始材料？",
+    "question_id": "pdv1-d02",
+    "required_points": [
+      {
+        "any_of": [
+          "manifest",
+          "项目清单"
+        ],
+        "description": "项目身份 manifests",
+        "id": "manifests"
+      },
+      {
+        "any_of": [
+          "Markdown",
+          "事件文件"
+        ],
+        "description": "Markdown Events",
+        "id": "events"
+      },
+      {
+        "any_of": [
+          "candidate",
+          "候选"
+        ],
+        "description": "候选文件",
+        "id": "candidates"
+      },
+      {
+        "any_of": [
+          "checksum",
+          "校验",
+          "迁移清单"
+        ],
+        "description": "迁移校验清单",
+        "id": "checksums"
+      }
+    ],
+    "required_source_ids": [
+      "pdv1-s03"
+    ],
+    "scope": "project",
+    "scope_id": "",
+    "split": "dev",
+    "unanswerable": false,
+    "view": "current"
+  },
+  {
+    "acceptable_answers": [
+      "保存在 candidates/*.json 持久候选队列中。"
+    ],
+    "answer": "保存在 candidates/*.json 持久候选队列中。",
+    "category": "location",
+    "forbidden_claims": [
+      {
+        "description": "候选不是只留在进程内存",
+        "id": "volatile",
+        "patterns": [
+          "仅.{0,5}(进程内存|内存中)"
+        ]
+      }
+    ],
+    "project": "plm-storage",
+    "question": "Agent 刚提交、还等着处理的候选内容，会以什么文件形式保存？",
+    "question_id": "pdv1-d03",
+    "required_points": [
+      {
+        "any_of": [
+          "candidates/*.json",
+          "candidates",
+          "候选 JSON"
+        ],
+        "description": "candidates JSON 文件",
+        "id": "queue"
+      }
+    ],
+    "required_source_ids": [
+      "pdv1-s02"
+    ],
+    "scope": "project",
+    "scope_id": "",
+    "split": "dev",
+    "unanswerable": false,
+    "view": "current"
+  },
+  {
+    "acceptable_answers": [
+      "项目目录下的 manifest.json 保存稳定身份和路径 aliases。"
+    ],
+    "answer": "项目目录下的 manifest.json 保存稳定身份和路径 aliases。",
+    "category": "identity",
+    "forbidden_claims": [
+      {
+        "description": "不能把每次移动都说成新项目",
+        "id": "new_id",
+        "patterns": [
+          "(必须|一定).{0,8}(新建|生成新).{0,5}项目"
+        ]
+      }
+    ],
+    "project": "plm-storage",
+    "question": "项目改了名字或迁了目录，存储布局里哪个文件负责保留身份和路径别名？",
+    "question_id": "pdv1-d04",
+    "required_points": [
+      {
+        "any_of": [
+          "manifest.json"
+        ],
+        "description": "manifest.json",
+        "id": "file"
+      },
+      {
+        "any_of": [
+          "alias",
+          "别名"
+        ],
+        "description": "保存路径别名",
+        "id": "alias"
+      }
+    ],
+    "required_source_ids": [
+      "pdv1-s02"
+    ],
+    "scope": "project",
+    "scope_id": "",
+    "split": "dev",
+    "unanswerable": false,
+    "view": "current"
+  },
+  {
+    "acceptable_answers": [
+      "拒绝；只有内容完全相同的重试才被接受。"
+    ],
+    "answer": "拒绝；只有内容完全相同的重试才被接受。",
+    "category": "immutability",
+    "forbidden_claims": [
+      {
+        "description": "不能允许覆盖同 ID 正文",
+        "id": "overwrite",
+        "patterns": [
+          "(允许|可以|直接).{0,4}覆盖"
+        ]
+      }
+    ],
+    "project": "plm-storage",
+    "question": "同一个 Event ID 重试时，如果正文已经变了，系统应该接受还是拒绝？",
+    "question_id": "pdv1-d05",
+    "required_points": [
+      {
+        "any_of": [
+          "拒绝",
+          "不接受",
+          "不能覆盖"
+        ],
+        "description": "内容变化时拒绝",
+        "id": "reject"
+      },
+      {
+        "any_of": [
+          "相同",
+          "一致",
+          "identical"
+        ],
+        "description": "相同内容可以幂等重试",
+        "id": "identical"
+      }
+    ],
+    "required_source_ids": [
+      "pdv1-s04"
+    ],
+    "scope": "project",
+    "scope_id": "",
+    "split": "dev",
+    "unanswerable": false,
+    "view": "current"
+  },
+  {
+    "acceptable_answers": [
+      "不能；修改命令从 cwd 确定当前项目，不能操作另一个项目的 ID。"
+    ],
+    "answer": "不能；修改命令从 cwd 确定当前项目，不能操作另一个项目的 ID。",
+    "category": "scope_boundary",
+    "forbidden_claims": [
+      {
+        "description": "知道 ID 不能绕过项目边界",
+        "id": "id_bypass",
+        "patterns": [
+          "知道.{0,6}ID.{0,6}就能"
+        ]
+      }
+    ],
+    "project": "plm-storage",
+    "question": "知道另一个项目的记忆 ID，能否从当前工作目录直接修改它？",
+    "question_id": "pdv1-d06",
+    "required_points": [
+      {
+        "any_of": [
+          "不能",
+          "不可以",
+          "拒绝"
+        ],
+        "description": "拒绝跨项目修改",
+        "id": "deny"
+      },
+      {
+        "any_of": [
+          "cwd",
+          "当前工作目录"
+        ],
+        "description": "以 cwd 确定项目",
+        "id": "cwd"
+      }
+    ],
+    "required_source_ids": [
+      "pdv1-s04"
+    ],
+    "scope": "project",
+    "scope_id": "",
+    "split": "dev",
+    "unanswerable": false,
+    "view": "current"
+  },
+  {
+    "acceptable_answers": [
+      "以项目文件、Git 提交、测试和部署证据为最终依据；记忆只提供有来源的工作上下文。"
+    ],
+    "answer": "以项目文件、Git 提交、测试和部署证据为最终依据；记忆只提供有来源的工作上下文。",
+    "category": "authority",
+    "forbidden_claims": [
+      {
+        "description": "不能让记忆自动覆盖事实证据",
+        "id": "memory_wins",
+        "patterns": [
+          "记忆.{0,6}(最高权威|优先于真实|覆盖实际)"
+        ]
+      }
+    ],
+    "project": "plm-storage",
+    "question": "记忆里写的结论与真实项目证据冲突时，应该以什么为准？",
+    "question_id": "pdv1-d07",
+    "required_points": [
+      {
+        "any_of": [
+          "项目文件",
+          "Git",
+          "测试",
+          "部署证据"
+        ],
+        "description": "实际项目证据优先",
+        "id": "authority"
+      },
+      {
+        "any_of": [
+          "上下文",
+          "context",
+          "辅助"
+        ],
+        "description": "记忆作为有来源上下文",
+        "id": "role"
+      }
+    ],
+    "required_source_ids": [
+      "pdv1-s01"
+    ],
+    "scope": "project",
+    "scope_id": "",
+    "split": "dev",
+    "unanswerable": false,
+    "view": "current"
+  },
+  {
+    "acceptable_answers": [
+      "不能。重建应从原始记录恢复目录；原 Event ID 不能承载不同内容。"
+    ],
+    "answer": "不能。重建应从原始记录恢复目录；原 Event ID 不能承载不同内容。",
+    "category": "multi_source",
+    "forbidden_claims": [
+      {
+        "description": "恢复不允许复用旧 ID 改内容",
+        "id": "rewrite_ok",
+        "patterns": [
+          "(可以|允许).{0,12}(改写|覆盖)"
+        ]
+      }
+    ],
+    "project": "plm-storage",
+    "question": "重建丢失的目录索引时，能顺手把旧 Event 改写后沿用原 ID 吗？为什么？",
+    "question_id": "pdv1-d08",
+    "required_points": [
+      {
+        "any_of": [
+          "原始记录",
+          "源记录",
+          "Markdown"
+        ],
+        "description": "从源记录恢复",
+        "id": "rebuild"
+      },
+      {
+        "any_of": [
+          "不能",
+          "拒绝",
+          "不可改写"
+        ],
+        "description": "同 ID 内容不可更改",
+        "id": "immutable"
+      }
+    ],
+    "required_source_ids": [
+      "pdv1-s03",
+      "pdv1-s04"
+    ],
+    "scope": "project",
+    "scope_id": "",
+    "split": "dev",
+    "unanswerable": false,
+    "view": "current"
+  },
+  {
+    "acceptable_answers": [
+      "资料没有提供按条计费价格，无法据此确定。"
+    ],
+    "answer": "资料没有提供按条计费价格，无法据此确定。",
+    "category": "unanswerable",
+    "forbidden_claims": [
+      {
+        "description": "不得编造价格",
+        "id": "invent_price",
+        "patterns": [
+          "每千条.{0,8}\\d+.{0,2}元"
+        ]
+      }
+    ],
+    "project": "plm-storage",
+    "question": "这套存储服务按每千条记忆收多少钱？",
+    "question_id": "pdv1-d09",
+    "required_points": [
+      {
+        "any_of": [
+          "没有提供",
+          "未说明",
+          "无法确定",
+          "不知道"
+        ],
+        "description": "价格未提供",
+        "id": "unknown"
+      }
+    ],
+    "required_source_ids": [],
+    "scope": "project",
+    "scope_id": "",
+    "split": "dev",
+    "unanswerable": true,
+    "view": "current"
+  },
+  {
+    "acceptable_answers": [
+      "不能；需要实际核验，并有与具体 Fact key/value 绑定的本地 receipt。"
+    ],
+    "answer": "不能；需要实际核验，并有与具体 Fact key/value 绑定的本地 receipt。",
+    "category": "evidence_requirement",
+    "forbidden_claims": [
+      {
+        "description": "自报信心不是高风险证明",
+        "id": "confidence_proof",
+        "patterns": [
+          "confidence.{0,12}(就能证明|即可通过)"
+        ]
+      }
+    ],
+    "project": "plm-evidence",
+    "question": "提交一个格式正确的 hash，或把 confidence 写得很高，能直接证明高风险状态吗？",
+    "question_id": "pdv1-d10",
+    "required_points": [
+      {
+        "any_of": [
+          "不能",
+          "不够",
+          "不足"
+        ],
+        "description": "hash 格式和自报信心不足",
+        "id": "insufficient"
+      },
+      {
+        "any_of": [
+          "receipt",
+          "回执"
+        ],
+        "description": "需要绑定具体 Fact 的回执",
+        "id": "receipt"
+      },
+      {
+        "any_of": [
+          "key/value",
+          "具体 Fact",
+          "键和值",
+          "具体结论"
+        ],
+        "description": "绑定具体 key/value",
+        "id": "binding"
+      }
+    ],
+    "required_source_ids": [
+      "pdv1-s05"
+    ],
+    "scope": "project",
+    "scope_id": "",
+    "split": "dev",
+    "unanswerable": false,
+    "view": "current"
+  },
+  {
+    "acceptable_answers": [
+      "不等于；receipt 只能证明本地记录与结论一致，不认证身份，也不直接核验远端付款等状态。"
+    ],
+    "answer": "不等于；receipt 只能证明本地记录与结论一致，不认证身份，也不直接核验远端付款等状态。",
+    "category": "trust_limit",
+    "forbidden_claims": [
+      {
+        "description": "不能夸大为已认证外部事实",
+        "id": "remote_verified",
+        "patterns": [
+          "(用户身份|远端付款).{0,5}已被认证"
+        ]
+      }
+    ],
+    "project": "plm-evidence",
+    "question": "本地 receipt 校验通过，是否等于用户身份和远端付款都已被系统认证？",
+    "question_id": "pdv1-d11",
+    "required_points": [
+      {
+        "any_of": [
+          "本地",
+          "记录一致"
+        ],
+        "description": "仅证实本地记录一致",
+        "id": "local"
+      },
+      {
+        "any_of": [
+          "不认证",
+          "不等于",
+          "不能证明",
+          "不直接"
+        ],
+        "description": "身份和外部状态仍未认证",
+        "id": "not_auth"
+      }
+    ],
+    "required_source_ids": [
+      "pdv1-s05"
+    ],
+    "scope": "project",
+    "scope_id": "",
+    "split": "dev",
+    "unanswerable": false,
+    "view": "current"
+  },
+  {
+    "acceptable_answers": [
+      "不应合并；Fact identity 同时由项目、scope、scope_id 和 key 区分。"
+    ],
+    "answer": "不应合并；Fact identity 同时由项目、scope、scope_id 和 key 区分。",
+    "category": "identity",
+    "forbidden_claims": [
+      {
+        "description": "不能只凭 key 合并",
+        "id": "key_only",
+        "patterns": [
+          "只.{0,4}(看|按).{0,4}key.{0,6}(合并|相同)"
+        ]
+      }
+    ],
+    "project": "plm-evidence",
+    "question": "两个不同 session 都有同名 Fact key，它们应当算同一条事实吗？",
+    "question_id": "pdv1-d12",
+    "required_points": [
+      {
+        "any_of": [
+          "scope"
+        ],
+        "description": "scope 参与身份",
+        "id": "scope"
+      },
+      {
+        "any_of": [
+          "scope_id",
+          "session ID"
+        ],
+        "description": "scope_id 参与身份",
+        "id": "scope_id"
+      },
+      {
+        "any_of": [
+          "不应",
+          "不同",
+          "区分",
+          "不合并"
+        ],
+        "description": "不同作用域不合并",
+        "id": "separate"
+      }
+    ],
+    "required_source_ids": [
+      "pdv1-s07"
+    ],
+    "scope": "project",
+    "scope_id": "",
+    "split": "dev",
+    "unanswerable": false,
+    "view": "current"
+  },
+  {
+    "acceptable_answers": [
+      "不会；未来版本生效之前，原版本仍可作为当前事实。"
+    ],
+    "answer": "不会；未来版本生效之前，原版本仍可作为当前事实。",
+    "category": "temporal_condition",
+    "forbidden_claims": [
+      {
+        "description": "不能提前挤掉旧值",
+        "id": "early_drop",
+        "patterns": [
+          "(立即|提前).{0,6}(删除|失效|消失)"
+        ]
+      }
+    ],
+    "project": "plm-evidence",
+    "question": "新 Fact 的生效日还没到，原来的值会立即从当前上下文消失吗？",
+    "question_id": "pdv1-d13",
+    "required_points": [
+      {
+        "any_of": [
+          "不会",
+          "仍可",
+          "仍然",
+          "继续有效"
+        ],
+        "description": "旧值不提前失效",
+        "id": "not_early"
+      },
+      {
+        "any_of": [
+          "生效前",
+          "生效之前",
+          "生效日",
+          "未来版本生效"
+        ],
+        "description": "等未来版本生效",
+        "id": "until"
+      }
+    ],
+    "required_source_ids": [
+      "pdv1-s07"
+    ],
+    "scope": "project",
+    "scope_id": "",
+    "split": "dev",
+    "unanswerable": false,
+    "view": "current"
+  },
+  {
+    "acceptable_answers": [
+      "不能；整个候选先在事务内预校验，失败不激活前缀，故障恢复必须重建原批次。"
+    ],
+    "answer": "不能；整个候选先在事务内预校验，失败不激活前缀，故障恢复必须重建原批次。",
+    "category": "atomicity",
+    "forbidden_claims": [
+      {
+        "description": "不能称前缀已正式激活",
+        "id": "partial",
+        "patterns": [
+          "前.{0,5}(仍然|可以|先).{0,4}激活"
+        ]
+      }
+    ],
+    "project": "plm-evidence",
+    "question": "一个候选包含多条 Fact，后面的校验失败时，前面已处理的部分能先算激活成功吗？",
+    "question_id": "pdv1-d14",
+    "required_points": [
+      {
+        "any_of": [
+          "不能",
+          "不激活前缀",
+          "整体"
+        ],
+        "description": "不能激活成功前缀",
+        "id": "atomic"
+      },
+      {
+        "any_of": [
+          "事务",
+          "SQL"
+        ],
+        "description": "事务预校验",
+        "id": "transaction"
+      },
+      {
+        "any_of": [
+          "原批次",
+          "原 IDs",
+          "不能重新生成"
+        ],
+        "description": "恢复原批次",
+        "id": "batch"
+      }
+    ],
+    "required_source_ids": [
+      "pdv1-s06"
+    ],
+    "scope": "project",
+    "scope_id": "",
+    "split": "dev",
+    "unanswerable": false,
+    "view": "current"
+  },
+  {
+    "acceptable_answers": [
+      "替代生效前旧 Fact 仍有效；到期后检索应沿来源链过滤依赖过期祖先的派生说明。"
+    ],
+    "answer": "替代生效前旧 Fact 仍有效；到期后检索应沿来源链过滤依赖过期祖先的派生说明。",
+    "category": "multi_source",
+    "forbidden_claims": [
+      {
+        "description": "派生说明不能无限沿用旧值",
+        "id": "forever",
+        "patterns": [
+          "派生.{0,10}永久有效"
+        ]
+      }
+    ],
+    "project": "plm-evidence",
+    "question": "若旧 Fact 要到未来才被替代，依赖它的说明在前后两个阶段应怎样处理？",
+    "question_id": "pdv1-d15",
+    "required_points": [
+      {
+        "any_of": [
+          "生效前",
+          "生效之前",
+          "到期前"
+        ],
+        "description": "生效前旧 Fact 有效",
+        "id": "before"
+      },
+      {
+        "any_of": [
+          "过滤",
+          "排除",
+          "失效"
+        ],
+        "description": "到期后排除派生说明",
+        "id": "after"
+      },
+      {
+        "any_of": [
+          "来源链",
+          "祖先",
+          "派生"
+        ],
+        "description": "沿来源祖先处理",
+        "id": "provenance"
+      }
+    ],
+    "required_source_ids": [
+      "pdv1-s07",
+      "pdv1-s08"
+    ],
+    "scope": "project",
+    "scope_id": "",
+    "split": "dev",
+    "unanswerable": false,
+    "view": "current"
+  },
+  {
+    "acceptable_answers": [
+      "目前没有片段级依赖，候选暂作为保守清除单元，以避免摘要残留被清除的内容。"
+    ],
+    "answer": "目前没有片段级依赖，候选暂作为保守清除单元，以避免摘要残留被清除的内容。",
+    "category": "privacy_condition",
+    "forbidden_claims": [
+      {
+        "description": "不能声称已能精确片段清除",
+        "id": "precise_fragment",
+        "patterns": [
+          "已经.{0,4}(精确|片段级).{0,6}清除"
+        ]
+      }
+    ],
+    "project": "plm-evidence",
+    "question": "为什么清除一个候选里的某条内容，可能连同同批摘要和兄弟 Facts 一起受影响？",
+    "question_id": "pdv1-d16",
+    "required_points": [
+      {
+        "any_of": [
+          "没有片段级",
+          "尚无片段级",
+          "未实现片段级"
+        ],
+        "description": "尚无片段级依赖",
+        "id": "granularity"
+      },
+      {
+        "any_of": [
+          "候选",
+          "同批",
+          "批次"
+        ],
+        "description": "按候选或批次保守清除",
+        "id": "unit"
+      },
+      {
+        "any_of": [
+          "残留",
+          "泄漏"
+        ],
+        "description": "防止残留",
+        "id": "purpose"
+      }
+    ],
+    "required_source_ids": [
+      "pdv1-s09"
+    ],
+    "scope": "project",
+    "scope_id": "",
+    "split": "dev",
+    "unanswerable": false,
+    "view": "current"
+  },
+  {
+    "acceptable_answers": [
+      "保留 scope、条件、观察与生效时间等限定，同时保留来源和与具体 Fact 绑定的可核验 receipt 证据。"
+    ],
+    "answer": "保留 scope、条件、观察与生效时间等限定，同时保留来源和与具体 Fact 绑定的可核验 receipt 证据。",
+    "category": "multi_source",
+    "forbidden_claims": [
+      {
+        "description": "不能为了短摘要舍弃条件",
+        "id": "discard_conditions",
+        "patterns": [
+          "(可以|应当).{0,6}(丢弃|忽略|省略)条件"
+        ]
+      }
+    ],
+    "project": "plm-evidence",
+    "question": "候选里既有生效条件又有高风险结论，正式写入时需要同时保住哪两类信息？",
+    "question_id": "pdv1-d17",
+    "required_points": [
+      {
+        "any_of": [
+          "条件",
+          "限定",
+          "生效时间"
+        ],
+        "description": "限定和时间保留",
+        "id": "conditions"
+      },
+      {
+        "any_of": [
+          "来源",
+          "source"
+        ],
+        "description": "保留来源",
+        "id": "source"
+      },
+      {
+        "any_of": [
+          "receipt",
+          "回执"
+        ],
+        "description": "高风险证据绑定具体 Fact",
+        "id": "receipt"
+      }
+    ],
+    "required_source_ids": [
+      "pdv1-s05",
+      "pdv1-s07"
+    ],
+    "scope": "project",
+    "scope_id": "",
+    "split": "dev",
+    "unanswerable": false,
+    "view": "current"
+  },
+  {
+    "acceptable_answers": [
+      "现有材料没有提供用户身份认证算法；本地 receipt 不承担身份认证。"
+    ],
+    "answer": "现有材料没有提供用户身份认证算法；本地 receipt 不承担身份认证。",
+    "category": "unanswerable",
+    "forbidden_claims": [
+      {
+        "description": "不能猜测认证签名算法",
+        "id": "invent_algorithm",
+        "patterns": [
+          "(采用|使用|基于).{0,6}(RSA|Ed25519|ECDSA).{0,8}(认证|签名)"
+        ]
+      }
+    ],
+    "project": "plm-evidence",
+    "question": "系统用哪一种数字签名算法认证提交回执的真实用户？",
+    "question_id": "pdv1-d18",
+    "required_points": [
+      {
+        "any_of": [
+          "没有提供",
+          "未提供",
+          "不承担",
+          "不认证"
+        ],
+        "description": "不提供认证算法",
+        "id": "unknown"
+      }
+    ],
+    "required_source_ids": [],
+    "scope": "project",
+    "scope_id": "",
+    "split": "dev",
+    "unanswerable": true,
+    "view": "current"
+  },
+  {
+    "acceptable_answers": [
+      "不必；核心保持零第三方依赖，模型是独立环境中的可选能力。"
+    ],
+    "answer": "不必；核心保持零第三方依赖，模型是独立环境中的可选能力。",
+    "category": "dependency_boundary",
+    "forbidden_claims": [
+      {
+        "description": "不能把模型当作默认强依赖",
+        "id": "mandatory",
+        "patterns": [
+          "必须.{0,6}(安装|下载).{0,6}模型"
+        ]
+      }
+    ],
+    "project": "plm-retrieval",
+    "question": "要运行基本记忆检索，必须先装神经网络模型环境吗？",
+    "question_id": "pdv1-d19",
+    "required_points": [
+      {
+        "any_of": [
+          "不必",
+          "不需要",
+          "可选"
+        ],
+        "description": "模型不是核心必需",
+        "id": "optional"
+      },
+      {
+        "any_of": [
+          "零第三方依赖",
+          "零依赖",
+          "标准库"
+        ],
+        "description": "核心零第三方依赖",
+        "id": "core"
+      },
+      {
+        "any_of": [
+          "独立环境",
+          "可选环境"
+        ],
+        "description": "模型在独立环境",
+        "id": "separate"
+      }
+    ],
+    "required_source_ids": [
+      "pdv1-s11"
+    ],
+    "scope": "project",
+    "scope_id": "",
+    "split": "dev",
+    "unanswerable": false,
+    "view": "current"
+  },
+  {
+    "acceptable_answers": [
+      "不能；模型缺失必须有明确诊断或降级说明，不冒充语义运行成功。"
+    ],
+    "answer": "不能；模型缺失必须有明确诊断或降级说明，不冒充语义运行成功。",
+    "category": "fallback",
+    "forbidden_claims": [
+      {
+        "description": "缺模型不能仍报模型成功",
+        "id": "silent_success",
+        "patterns": [
+          "(静默|直接).{0,8}(报告|标记).{0,4}成功"
+        ]
+      }
+    ],
+    "project": "plm-retrieval",
+    "question": "本地模型没有准备好时，检索能否假装语义模型成功运行？",
+    "question_id": "pdv1-d20",
+    "required_points": [
+      {
+        "any_of": [
+          "诊断",
+          "降级",
+          "缺失"
+        ],
+        "description": "明确记录模型缺失",
+        "id": "diagnosis"
+      },
+      {
+        "any_of": [
+          "不能",
+          "不冒充",
+          "不得",
+          "不假报"
+        ],
+        "description": "不假报成功",
+        "id": "no_false_success"
+      }
+    ],
+    "required_source_ids": [
+      "pdv1-s11"
+    ],
+    "scope": "project",
+    "scope_id": "",
+    "split": "dev",
+    "unanswerable": false,
+    "view": "current"
+  },
+  {
+    "acceptable_answers": [
+      "不是；这里采用 UTF-8 字节的保守额度，不是模型 tokenizer 的精确 Token 数。"
+    ],
+    "answer": "不是；这里采用 UTF-8 字节的保守额度，不是模型 tokenizer 的精确 Token 数。",
+    "category": "budget",
+    "forbidden_claims": [
+      {
+        "description": "不能当成精确计费 Token",
+        "id": "billing_exact",
+        "patterns": [
+          "就是.{0,5}精确.{0,5}Token",
+          "等于.{0,6}计费"
+        ]
+      }
+    ],
+    "project": "plm-retrieval",
+    "question": "上下文预算显示 1800，这是否就是某个回答模型会计费的精确 Token 数？",
+    "question_id": "pdv1-d21",
+    "required_points": [
+      {
+        "any_of": [
+          "UTF-8",
+          "字节"
+        ],
+        "description": "UTF-8 字节计量",
+        "id": "bytes"
+      },
+      {
+        "any_of": [
+          "保守",
+          "不是精确",
+          "非精确"
+        ],
+        "description": "保守而非精确 token",
+        "id": "estimate"
+      }
+    ],
+    "required_source_ids": [
+      "pdv1-s12"
+    ],
+    "scope": "project",
+    "scope_id": "",
+    "split": "dev",
+    "unanswerable": false,
+    "view": "current"
+  },
+  {
+    "acceptable_answers": [
+      "采用多证据公平配额和查询相关摘录，优先保留条件与否定信息。"
+    ],
+    "answer": "采用多证据公平配额和查询相关摘录，优先保留条件与否定信息。",
+    "category": "context_selection",
+    "forbidden_claims": [
+      {
+        "description": "不能永远只保留第一条长记忆",
+        "id": "first_only",
+        "patterns": [
+          "只保留第一条"
+        ]
+      }
+    ],
+    "project": "plm-retrieval",
+    "question": "一条记忆特别长、另一条含有关键限制时，包装上下文怎样避免后者被吞掉？",
+    "question_id": "pdv1-d22",
+    "required_points": [
+      {
+        "any_of": [
+          "公平配额",
+          "公平分配",
+          "多证据"
+        ],
+        "description": "多证据公平配额",
+        "id": "fair"
+      },
+      {
+        "any_of": [
+          "摘录",
+          "相关片段"
+        ],
+        "description": "查询相关摘录",
+        "id": "excerpt"
+      },
+      {
+        "any_of": [
+          "条件",
+          "否定",
+          "限制"
+        ],
+        "description": "优先限定和否定",
+        "id": "conditions"
+      }
+    ],
+    "required_source_ids": [
+      "pdv1-s12"
+    ],
+    "scope": "project",
+    "scope_id": "",
+    "split": "dev",
+    "unanswerable": false,
+    "view": "current"
+  },
+  {
+    "acceptable_answers": [
+      "不同：原向量是字符 n-gram 的词法向量，新 embedding 是可选神经语义能力；provider 边界允许保留原来的源记录。"
+    ],
+    "answer": "不同：原向量是字符 n-gram 的词法向量，新 embedding 是可选神经语义能力；provider 边界允许保留原来的源记录。",
+    "category": "multi_source",
+    "forbidden_claims": [
+      {
+        "description": "不能把旧哈希向量说成神经向量",
+        "id": "old_neural",
+        "patterns": [
+          "原来.{0,12}就是神经"
+        ]
+      }
+    ],
+    "project": "plm-retrieval",
+    "question": "原来 512 维本地向量与第一批增加的 embedding 是同一种能力吗？增加模型会迫使源记录换格式吗？",
+    "question_id": "pdv1-d23",
+    "required_points": [
+      {
+        "any_of": [
+          "词法",
+          "lexical",
+          "字符 n-gram"
+        ],
+        "description": "512 维是词法向量",
+        "id": "lexical"
+      },
+      {
+        "any_of": [
+          "神经",
+          "语义"
+        ],
+        "description": "新能力是神经 embedding",
+        "id": "neural"
+      },
+      {
+        "any_of": [
+          "保留",
+          "不改变",
+          "无需",
+          "不用改"
+        ],
+        "description": "源记录无需替换",
+        "id": "source"
+      }
+    ],
+    "required_source_ids": [
+      "pdv1-s10",
+      "pdv1-s11"
+    ],
+    "scope": "project",
+    "scope_id": "",
+    "split": "dev",
+    "unanswerable": false,
+    "view": "current"
+  },
+  {
+    "acceptable_answers": [
+      "给定资料没有规定统一的最大保留天数。"
+    ],
+    "answer": "给定资料没有规定统一的最大保留天数。",
+    "category": "unanswerable",
+    "forbidden_claims": [
+      {
+        "description": "不能编造统一保留天数",
+        "id": "invent_retention",
+        "patterns": [
+          "(保留|保存).{0,5}\\d+天"
+        ]
+      }
+    ],
+    "project": "plm-retrieval",
+    "question": "检索模块规定每条记忆最多永久保留多少天？",
+    "question_id": "pdv1-d24",
+    "required_points": [
+      {
+        "any_of": [
+          "没有规定",
+          "未说明",
+          "无法确定",
+          "不知道"
+        ],
+        "description": "没有统一保留天数",
+        "id": "unknown"
+      }
+    ],
+    "required_source_ids": [],
+    "scope": "project",
+    "scope_id": "",
+    "split": "dev",
+    "unanswerable": true,
+    "view": "current"
+  }
+]

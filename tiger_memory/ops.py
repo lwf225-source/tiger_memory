@@ -5,6 +5,7 @@ import os
 import re
 import shutil
 import subprocess
+import sys
 import tarfile
 import tempfile
 import time
@@ -29,13 +30,16 @@ def repository_root() -> Path:
     installed = package.parent.parent
     if (installed / "SKILL.md").is_file() and (installed / "scripts").is_dir():
         return installed
+    wheel_bundle = package / "_bundle"
+    if (wheel_bundle / "skill" / "SKILL.md").is_file():
+        return wheel_bundle
     raise PLMError("could not locate the PLM source or installed bundle root")
 
 
 def code_fingerprint() -> str:
     root = repository_root()
     candidates: List[Path] = []
-    for relative in ("project_long_memory", "lib/project_long_memory", "scripts"):
+    for relative in ("tiger_memory", "lib/tiger_memory", "scripts"):
         folder = root / relative
         if folder.is_dir():
             candidates.extend(folder.rglob("*.py"))
@@ -43,6 +47,11 @@ def code_fingerprint() -> str:
     if skill_file.is_file():
         candidates.append(skill_file)
     digest = __import__("hashlib").sha256()
+    # A wheel keeps support files separate from the actual imported runtime.
+    if root == Path(__file__).resolve().parent / "_bundle":
+        for path in sorted(Path(__file__).resolve().parent.glob("*.py")):
+            digest.update(("tiger_memory/" + path.name).encode("utf-8"))
+            digest.update(b"\0" + path.read_bytes() + b"\0")
     for path in sorted(set(candidates), key=lambda item: str(item.relative_to(root))):
         digest.update(str(path.relative_to(root)).encode("utf-8"))
         digest.update(b"\0")
@@ -53,19 +62,37 @@ def code_fingerprint() -> str:
 
 def run_bundle_tests(root: Optional[Path] = None) -> Dict[str, Any]:
     root = root or repository_root()
+    if root == Path(__file__).resolve().parent / "_bundle":
+        # Recreate the source layout so the same tests run against the installed
+        # package bytes, with no dependency on a checkout or sibling packages.
+        with tempfile.TemporaryDirectory(prefix="plm-wheel-verify-") as directory:
+            staged = Path(directory) / "source"
+            shutil.copytree(str(root), str(staged))
+            shutil.copytree(str(Path(__file__).resolve().parent), str(staged / "tiger_memory"),
+                            ignore=shutil.ignore_patterns("_bundle", "__pycache__", "*.pyc"))
+            return run_bundle_tests(staged)
     tests = root / "tests"
-    if not tests.is_dir():
+    if not tests.is_dir() or not any(tests.rglob("test*.py")):
         return {"passed": False, "returncode": 2, "summary": "installed bundle has no tests"}
-    env = dict(os.environ)
-    import_path = root / "lib" if (root / "lib" / "project_long_memory").is_dir() else root
-    env["PYTHONPATH"] = str(import_path)
-    env["PLM_INSTALL_VALIDATION"] = "1"
-    result = subprocess.run(
-        ["python3", "-m", "unittest", "discover", "-s", str(tests), "-v"],
-        cwd=str(root), env=env, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-    )
+    import_path = root / "lib" if (root / "lib" / "tiger_memory").is_dir() else root
+    with tempfile.TemporaryDirectory(prefix="plm-test-environment-") as directory:
+        env = {key: os.environ[key] for key in ("PATH", "LANG", "SYSTEMROOT", "TMPDIR") if key in os.environ}
+        env.update({"HOME": directory, "USERPROFILE": directory,
+                    "TIGER_MEMORY_DIR": str(Path(directory) / "memory"),
+                    "PLM_SKILL_DIR": str(Path(directory) / "skill"),
+                    "PLM_SKILL_BACKUP_DIR": str(Path(directory) / "backups"),
+                    "PYTHONDONTWRITEBYTECODE": "1", "PYTHONPATH": str(import_path),
+                    "PLM_INSTALL_VALIDATION": "1"})
+        result = subprocess.run(
+            [sys.executable, "-m", "unittest", "discover", "-s", str(tests), "-v"],
+            cwd=str(root), env=env, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+        )
     output = (result.stdout + "\n" + result.stderr).strip()
-    return {"passed": result.returncode == 0, "returncode": result.returncode, "summary": output[-4000:]}
+    count = re.search(r"Ran (\d+) tests? in", output)
+    tests_run = int(count.group(1)) if count else 0
+    return {"passed": result.returncode == 0 and tests_run > 0,
+            "returncode": result.returncode if tests_run else 2,
+            "tests_run": tests_run, "summary": output[-4000:]}
 
 
 def backup_memory(destination: Optional[Path] = None) -> Dict[str, Any]:
@@ -237,7 +264,7 @@ def restore_backup(archive: Path, destination: Path, deletion_ledger: Path) -> D
 
     The operator must explicitly supply the latest external deletion ledger.
     Freshness cannot be established from the archive's own historical copy.
-    This function temporarily changes PROJECT_LONG_MEMORY_DIR and must not run
+    This function temporarily changes TIGER_MEMORY_DIR and must not run
     concurrently with other in-process memory operations.
     """
     from .privacy import read_ledger
@@ -260,7 +287,7 @@ def restore_backup(archive: Path, destination: Path, deletion_ledger: Path) -> D
     archive = Path(archive).expanduser().absolute()
     if archive.is_symlink() or not archive.is_file():
         raise PLMError("backup archive must be a regular local file")
-    original_environment = os.environ.get("PROJECT_LONG_MEMORY_DIR")
+    original_environment = os.environ.get("TIGER_MEMORY_DIR")
     staging = Path(tempfile.mkdtemp(prefix=".plm-restore-", dir=str(destination.parent)))
     published = False
     try:
@@ -283,7 +310,7 @@ def restore_backup(archive: Path, destination: Path, deletion_ledger: Path) -> D
                         origins.append(value)
         if not origins:
             origins = _archive_legacy_origins(staging)
-        os.environ["PROJECT_LONG_MEMORY_DIR"] = str(staging)
+        os.environ["TIGER_MEMORY_DIR"] = str(staging)
         atomic_write(archived_ledger_path, json.dumps(merged, ensure_ascii=False, sort_keys=True))
         atomic_write(staging / "v2" / "restore-origin.json", json.dumps({
             "schema_version": 1, "source_memory_root": origins[0] if origins else "",
@@ -307,7 +334,7 @@ def restore_backup(archive: Path, destination: Path, deletion_ledger: Path) -> D
             raise PLMError("restore destination changed during validation")
         os.replace(str(staging), str(destination))
         published = True
-        os.environ["PROJECT_LONG_MEMORY_DIR"] = str(destination)
+        os.environ["TIGER_MEMORY_DIR"] = str(destination)
         checked = doctor()
         if not checked.get("healthy"):
             # Withdraw only the directory created by this restore operation.
@@ -322,9 +349,9 @@ def restore_backup(archive: Path, destination: Path, deletion_ledger: Path) -> D
         raise PLMError("backup restoration failed safely") from None
     finally:
         if original_environment is None:
-            os.environ.pop("PROJECT_LONG_MEMORY_DIR", None)
+            os.environ.pop("TIGER_MEMORY_DIR", None)
         else:
-            os.environ["PROJECT_LONG_MEMORY_DIR"] = original_environment
+            os.environ["TIGER_MEMORY_DIR"] = original_environment
         if not published and staging.exists():
             shutil.rmtree(str(staging))
 
@@ -333,18 +360,24 @@ def _copy_skill_bundle(destination: Path) -> None:
     repo = repository_root()
     ensure_private_dir(destination)
     skill_root = repo / "skill" if (repo / "skill" / "SKILL.md").is_file() else repo
-    package_root = repo / "project_long_memory" if (repo / "project_long_memory").is_dir() else repo / "lib" / "project_long_memory"
+    package_root = Path(__file__).resolve().parent
     shutil.copy2(str(skill_root / "SKILL.md"), str(destination / "SKILL.md"))
     shutil.copytree(str(skill_root / "agents"), str(destination / "agents"))
     shutil.copytree(str(skill_root / "legacy"), str(destination / "legacy"))
-    shutil.copytree(str(repo / "scripts"), str(destination / "scripts"))
-    shutil.copytree(str(package_root), str(destination / "lib" / "project_long_memory"), ignore=shutil.ignore_patterns("__pycache__", "*.pyc"))
+    if (skill_root / "references").is_dir():
+        shutil.copytree(str(skill_root / "references"), str(destination / "references"))
+    from .build_backend import SDIST_PUBLIC_FILES, PUBLIC_TREES
+    ensure_private_dir(destination / "scripts")
+    for relative in SDIST_PUBLIC_FILES:
+        if relative.startswith("scripts/"):
+            shutil.copy2(str(repo / relative), str(destination / relative))
+    shutil.copytree(str(package_root), str(destination / "lib" / "tiger_memory"), ignore=shutil.ignore_patterns("_bundle", "__pycache__", "*.pyc"))
     if (repo / "tests").is_dir():
         shutil.copytree(str(repo / "tests"), str(destination / "tests"), ignore=shutil.ignore_patterns("__pycache__", "*.pyc"))
-    if (repo / "evaluation").is_dir():
-        shutil.copytree(str(repo / "evaluation"), str(destination / "evaluation"), ignore=shutil.ignore_patterns(
-            "__pycache__", "*.pyc", "reports", "models", "*.safetensors", "*.onnx", "*.bin",
-        ))
+    for relative in PUBLIC_TREES:
+        if relative.startswith("evaluation/") and (repo / relative).is_dir():
+            shutil.copytree(str(repo / relative), str(destination / relative),
+                            ignore=shutil.ignore_patterns("__pycache__", "*.pyc"))
     code_examples = repo / "examples" / "code_memory"
     if code_examples.is_dir():
         shutil.copytree(str(code_examples), str(destination / "examples" / "code_memory"),
@@ -354,20 +387,20 @@ def _copy_skill_bundle(destination: Path) -> None:
 
 def install_skill(target: Optional[Path] = None) -> Dict[str, Any]:
     previous_config = read_config()
-    target = target or Path(os.environ.get("PLM_SKILL_DIR", str(Path.home() / ".codex" / "skills" / "project-long-memory")))
+    target = target or Path(os.environ.get("TIGER_MEMORY_SKILL_DIR") or os.environ.get("PLM_SKILL_DIR") or str(Path.home() / ".codex" / "skills" / "tiger_memory"))
     target = target.expanduser().absolute()
     if target.is_symlink():
         raise PLMError("refusing to replace symlinked skill directory")
     ensure_private_dir(target.parent)
-    temp = Path(tempfile.mkdtemp(prefix=".project-long-memory-v2-", dir=str(target.parent)))
-    backup_root = Path(os.environ.get("PLM_SKILL_BACKUP_DIR", str(Path.home() / ".codex" / "skill-backups" / "project-long-memory")))
+    temp = Path(tempfile.mkdtemp(prefix=".tiger_memory-v2-", dir=str(target.parent)))
+    backup_root = Path(os.environ.get("TIGER_MEMORY_SKILL_BACKUP_DIR") or os.environ.get("PLM_SKILL_BACKUP_DIR") or str(Path.home() / ".codex" / "skill-backups" / "tiger_memory"))
     ensure_private_dir(backup_root)
     stamp = datetime.now().strftime("%Y%m%dT%H%M%S%f")
     backup = backup_root / stamp
     try:
         _copy_skill_bundle(temp)
         compile_result = subprocess.run(
-            ["python3", "-m", "compileall", "-q", str(temp)],
+            [sys.executable, "-m", "compileall", "-q", str(temp)],
             text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
         )
         if compile_result.returncode:
@@ -453,7 +486,7 @@ def rollback_skill(target: Optional[Path] = None, materialize_v1: bool = False) 
     backup = Path(config.get("skill_backup", "")) if config.get("skill_backup") else None
     if not backup or not backup.exists():
         raise PLMError("no installed skill backup is available")
-    target = target or Path(os.environ.get("PLM_SKILL_DIR", str(Path.home() / ".codex" / "skills" / "project-long-memory")))
+    target = target or Path(os.environ.get("PLM_SKILL_DIR", str(Path.home() / ".codex" / "skills" / "tiger_memory")))
     stamp = datetime.now().strftime("%Y%m%dT%H%M%S%f")
     recovery = memory_base() / "rollback-export" / stamp
     exported = export_v1(recovery, config.get("cutover_at", ""))
@@ -517,6 +550,9 @@ def run_retrieval_benchmark(sample_limit: int = 80) -> Dict[str, Any]:
     latencies.sort()
     p95 = latencies[min(len(latencies) - 1, int(len(latencies) * 0.95))] if latencies else 0.0
     return {
+        "status": "measured" if rows else "not_measured",
+        "sample_kind": "legacy_import_title_lookup",
+        "reason": "" if rows else "no eligible legacy_import records",
         "queries": len(rows),
         "recall_at_5": (hits / len(rows)) if rows else 0.0,
         "cross_project_results": cross_project,

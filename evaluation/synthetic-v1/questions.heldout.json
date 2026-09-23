@@ -1,0 +1,594 @@
+[
+  {
+    "question_id": "hold_observatory-q01",
+    "project": "hold_observatory",
+    "split": "heldout",
+    "category": "paraphrase",
+    "question": "星点拖得多宽时，那张照片就不能拿去堆栈？",
+    "answer": "半高全宽超过三点二像素",
+    "required_source_ids": [
+      "hold_observatory-a"
+    ],
+    "unanswerable": false,
+    "scope": "project",
+    "scope_id": "",
+    "view": "current"
+  },
+  {
+    "question_id": "hold_observatory-q02",
+    "project": "hold_observatory",
+    "split": "heldout",
+    "category": "cross_event",
+    "question": "一次夜场观测在目标曝光前后分别要拍哪些校准帧？",
+    "answer": "目标曝光前采集十张暗场，全部曝光后采集平场。",
+    "required_source_ids": [
+      "hold_observatory-b",
+      "hold_observatory-c"
+    ],
+    "unanswerable": false,
+    "scope": "project",
+    "scope_id": "",
+    "view": "current"
+  },
+  {
+    "question_id": "hold_observatory-q03",
+    "project": "hold_observatory",
+    "split": "heldout",
+    "category": "cross_event",
+    "question": "筛掉星点过宽的观测帧用什么界限，主要排除哪类问题？",
+    "answer": "超过三点二像素，主要排除跟踪抖动。",
+    "required_source_ids": [
+      "hold_observatory-a",
+      "hold_observatory-g"
+    ],
+    "unanswerable": false,
+    "scope": "project",
+    "scope_id": "",
+    "view": "current"
+  },
+  {
+    "question_id": "hold_observatory-q04",
+    "project": "hold_observatory",
+    "split": "heldout",
+    "category": "temporal",
+    "question": "六月三日改规则以后，夜场目录最前面写什么？",
+    "answer": "观测日期",
+    "required_source_ids": [
+      "hold_observatory-e"
+    ],
+    "unanswerable": false,
+    "scope": "project",
+    "scope_id": "",
+    "view": "current"
+  },
+  {
+    "question_id": "hold_observatory-q05",
+    "project": "hold_observatory",
+    "split": "heldout",
+    "category": "temporal",
+    "question": "一月那套目录规则把什么放在开头？",
+    "answer": "目标名称",
+    "required_source_ids": [
+      "hold_observatory-d"
+    ],
+    "unanswerable": false,
+    "scope": "project",
+    "scope_id": "",
+    "view": "history"
+  },
+  {
+    "question_id": "hold_observatory-q06",
+    "project": "hold_observatory",
+    "split": "heldout",
+    "category": "negation",
+    "question": "一帧没有通过堆栈质量检查，就可以把它的原始文件清掉吗？",
+    "answer": "不可以，原始曝光文件必须保留供复核。",
+    "required_source_ids": [
+      "hold_observatory-f"
+    ],
+    "unanswerable": false,
+    "scope": "project",
+    "scope_id": "",
+    "view": "current"
+  },
+  {
+    "question_id": "hold_observatory-q07",
+    "project": "hold_observatory",
+    "split": "heldout",
+    "category": "procedure_reason",
+    "question": "为什么仅依据天空背景亮度筛图不够？",
+    "answer": "无法区分跟踪抖动和薄云。",
+    "required_source_ids": [
+      "hold_observatory-g"
+    ],
+    "unanswerable": false,
+    "scope": "project",
+    "scope_id": "",
+    "view": "current"
+  },
+  {
+    "question_id": "hold_observatory-q08",
+    "project": "hold_observatory",
+    "split": "heldout",
+    "category": "unanswerable",
+    "question": "望远镜主镜的反射镀膜是哪一年更换的？",
+    "answer": "",
+    "required_source_ids": [],
+    "unanswerable": true,
+    "scope": "project",
+    "scope_id": "",
+    "view": "current"
+  },
+  {
+    "question_id": "hold_observatory-q09",
+    "project": "hold_observatory",
+    "split": "heldout",
+    "category": "scope",
+    "question": "彗星那组独立试验每张照片曝光多久？",
+    "answer": "二十五秒",
+    "required_source_ids": [
+      "hold_observatory-h"
+    ],
+    "unanswerable": false,
+    "scope": "session",
+    "scope_id": "comet",
+    "view": "current"
+  },
+  {
+    "question_id": "hold_observatory-q10",
+    "project": "hold_observatory",
+    "split": "heldout",
+    "category": "unanswerable",
+    "question": "这次观测发现的新天体获得了什么正式编号？",
+    "answer": "",
+    "required_source_ids": [],
+    "unanswerable": true,
+    "scope": "project",
+    "scope_id": "",
+    "view": "current"
+  },
+  {
+    "question_id": "hold_buoy-q01",
+    "project": "hold_buoy",
+    "split": "heldout",
+    "category": "paraphrase",
+    "question": "温度忽高忽低要连续出现几次、相差多少，浮标才提示异常？",
+    "answer": "连续四次，相差超过一点五摄氏度。",
+    "required_source_ids": [
+      "hold_buoy-a"
+    ],
+    "unanswerable": false,
+    "scope": "project",
+    "scope_id": "",
+    "view": "current"
+  },
+  {
+    "question_id": "hold_buoy-q02",
+    "project": "hold_buoy",
+    "split": "heldout",
+    "category": "cross_event",
+    "question": "浮标从海里吊回船上之前与之后，各要怎样保护采样日志？",
+    "answer": "起吊前暂停采样并确认日志落盘，起吊后检查渗水再拷贝日志。",
+    "required_source_ids": [
+      "hold_buoy-b",
+      "hold_buoy-c"
+    ],
+    "unanswerable": false,
+    "scope": "project",
+    "scope_id": "",
+    "view": "current"
+  },
+  {
+    "question_id": "hold_buoy-q03",
+    "project": "hold_buoy",
+    "split": "heldout",
+    "category": "cross_event",
+    "question": "为什么不因一次温度突变就提示，判定窗口有多长？",
+    "answer": "用连续四次比较，过滤海浪翻转导致探头短暂露出。",
+    "required_source_ids": [
+      "hold_buoy-a",
+      "hold_buoy-g"
+    ],
+    "unanswerable": false,
+    "scope": "project",
+    "scope_id": "",
+    "view": "current"
+  },
+  {
+    "question_id": "hold_buoy-q04",
+    "project": "hold_buoy",
+    "split": "heldout",
+    "category": "temporal",
+    "question": "五月十八日之后浮标隔多久发送一批数据？",
+    "answer": "两小时",
+    "required_source_ids": [
+      "hold_buoy-e"
+    ],
+    "unanswerable": false,
+    "scope": "project",
+    "scope_id": "",
+    "view": "current"
+  },
+  {
+    "question_id": "hold_buoy-q05",
+    "project": "hold_buoy",
+    "split": "heldout",
+    "category": "temporal",
+    "question": "二月那版浮标数据回传周期是多少？",
+    "answer": "四小时",
+    "required_source_ids": [
+      "hold_buoy-d"
+    ],
+    "unanswerable": false,
+    "scope": "project",
+    "scope_id": "",
+    "view": "history"
+  },
+  {
+    "question_id": "hold_buoy-q06",
+    "project": "hold_buoy",
+    "split": "heldout",
+    "category": "negation",
+    "question": "位置漂了就能认定设备坏了并擦除历史轨迹吗？",
+    "answer": "不能，应先核对潮汐，不能自动清除历史轨迹。",
+    "required_source_ids": [
+      "hold_buoy-f"
+    ],
+    "unanswerable": false,
+    "scope": "project",
+    "scope_id": "",
+    "view": "current"
+  },
+  {
+    "question_id": "hold_buoy-q07",
+    "project": "hold_buoy",
+    "split": "heldout",
+    "category": "procedure_reason",
+    "question": "连续多次温度比较主要避免哪一种误报？",
+    "answer": "探头被海浪翻转短暂露出空气造成的温度误报。",
+    "required_source_ids": [
+      "hold_buoy-g"
+    ],
+    "unanswerable": false,
+    "scope": "project",
+    "scope_id": "",
+    "view": "current"
+  },
+  {
+    "question_id": "hold_buoy-q08",
+    "project": "hold_buoy",
+    "split": "heldout",
+    "category": "unanswerable",
+    "question": "浮标电池现在还剩多少容量？",
+    "answer": "",
+    "required_source_ids": [],
+    "unanswerable": true,
+    "scope": "project",
+    "scope_id": "",
+    "view": "current"
+  },
+  {
+    "question_id": "hold_buoy-q09",
+    "project": "hold_buoy",
+    "split": "heldout",
+    "category": "scope",
+    "question": "浅水湾独立试验两次采样之间隔多长时间？",
+    "answer": "七十秒",
+    "required_source_ids": [
+      "hold_buoy-h"
+    ],
+    "unanswerable": false,
+    "scope": "session",
+    "scope_id": "shallow",
+    "view": "current"
+  },
+  {
+    "question_id": "hold_buoy-q10",
+    "project": "hold_buoy",
+    "split": "heldout",
+    "category": "unanswerable",
+    "question": "海湾主管部门已经批准了哪项扩建许可？",
+    "answer": "",
+    "required_source_ids": [],
+    "unanswerable": true,
+    "scope": "project",
+    "scope_id": "",
+    "view": "current"
+  },
+  {
+    "question_id": "hold_theater-q01",
+    "project": "hold_theater",
+    "split": "heldout",
+    "category": "paraphrase",
+    "question": "一行中文台词字幕允许放多少字？长了如何处理？",
+    "answer": "最多十四个汉字，在停顿处拆成两行。",
+    "required_source_ids": [
+      "hold_theater-a"
+    ],
+    "unanswerable": false,
+    "scope": "project",
+    "scope_id": "",
+    "view": "current"
+  },
+  {
+    "question_id": "hold_theater-q02",
+    "project": "hold_theater",
+    "split": "heldout",
+    "category": "cross_event",
+    "question": "字幕机开始自动跟对白之前，必须完成哪些人工确认？",
+    "answer": "先同步时钟并测试对白确认返听，再由操作员确认首句落点。",
+    "required_source_ids": [
+      "hold_theater-b",
+      "hold_theater-c"
+    ],
+    "unanswerable": false,
+    "scope": "project",
+    "scope_id": "",
+    "view": "current"
+  },
+  {
+    "question_id": "hold_theater-q03",
+    "project": "hold_theater",
+    "split": "heldout",
+    "category": "cross_event",
+    "question": "字幕超过行宽后应该在哪里换行，为什么？",
+    "answer": "对白停顿处；跟上呼吸节奏，避免把否定词和结论拆开。",
+    "required_source_ids": [
+      "hold_theater-a",
+      "hold_theater-g"
+    ],
+    "unanswerable": false,
+    "scope": "project",
+    "scope_id": "",
+    "view": "current"
+  },
+  {
+    "question_id": "hold_theater-q04",
+    "project": "hold_theater",
+    "split": "heldout",
+    "category": "temporal",
+    "question": "四月九日改动以后，观众看到的侧屏文字是什么颜色？",
+    "answer": "暖白色",
+    "required_source_ids": [
+      "hold_theater-e"
+    ],
+    "unanswerable": false,
+    "scope": "project",
+    "scope_id": "",
+    "view": "current"
+  },
+  {
+    "question_id": "hold_theater-q05",
+    "project": "hold_theater",
+    "split": "heldout",
+    "category": "temporal",
+    "question": "一月十二日那版侧屏字幕用什么颜色？",
+    "answer": "浅绿色",
+    "required_source_ids": [
+      "hold_theater-d"
+    ],
+    "unanswerable": false,
+    "scope": "project",
+    "scope_id": "",
+    "view": "history"
+  },
+  {
+    "question_id": "hold_theater-q06",
+    "project": "hold_theater",
+    "split": "heldout",
+    "category": "negation",
+    "question": "为了让观众提前准备，可以预放下一句尚未说出口的台词吗？",
+    "answer": "不可以，未说出的台词不能显示在观众屏幕。",
+    "required_source_ids": [
+      "hold_theater-f"
+    ],
+    "unanswerable": false,
+    "scope": "project",
+    "scope_id": "",
+    "view": "current"
+  },
+  {
+    "question_id": "hold_theater-q07",
+    "project": "hold_theater",
+    "split": "heldout",
+    "category": "procedure_reason",
+    "question": "为什么字幕不能只数够字数就换行？",
+    "answer": "会把否定词和结论拆开，破坏对白节奏。",
+    "required_source_ids": [
+      "hold_theater-g"
+    ],
+    "unanswerable": false,
+    "scope": "project",
+    "scope_id": "",
+    "view": "current"
+  },
+  {
+    "question_id": "hold_theater-q08",
+    "project": "hold_theater",
+    "split": "heldout",
+    "category": "unanswerable",
+    "question": "这场演出的最终票房金额是多少？",
+    "answer": "",
+    "required_source_ids": [],
+    "unanswerable": true,
+    "scope": "project",
+    "scope_id": "",
+    "view": "current"
+  },
+  {
+    "question_id": "hold_theater-q09",
+    "project": "hold_theater",
+    "split": "heldout",
+    "category": "scope",
+    "question": "小剧场排练单独采用的字幕补偿时延是多少？",
+    "answer": "三百毫秒",
+    "required_source_ids": [
+      "hold_theater-h"
+    ],
+    "unanswerable": false,
+    "scope": "session",
+    "scope_id": "small",
+    "view": "current"
+  },
+  {
+    "question_id": "hold_theater-q10",
+    "project": "hold_theater",
+    "split": "heldout",
+    "category": "unanswerable",
+    "question": "字幕系统采购合同由哪位负责人签署？",
+    "answer": "",
+    "required_source_ids": [],
+    "unanswerable": true,
+    "scope": "project",
+    "scope_id": "",
+    "view": "current"
+  },
+  {
+    "question_id": "hold_seedbank-q01",
+    "project": "hold_seedbank",
+    "split": "heldout",
+    "category": "paraphrase",
+    "question": "种子发芽表现低到什么比例会再测一次，评级什么时候改？",
+    "answer": "低于百分之八十二安排复检，复检前不改评级。",
+    "required_source_ids": [
+      "hold_seedbank-a"
+    ],
+    "unanswerable": false,
+    "scope": "project",
+    "scope_id": "",
+    "view": "current"
+  },
+  {
+    "question_id": "hold_seedbank-q02",
+    "project": "hold_seedbank",
+    "split": "heldout",
+    "category": "cross_event",
+    "question": "种子从冷藏柜取出到余样放回的顺序是什么？",
+    "answer": "密封回温四十分钟，称量，开袋分装，封口登记流转，再放回余样。",
+    "required_source_ids": [
+      "hold_seedbank-b",
+      "hold_seedbank-c"
+    ],
+    "unanswerable": false,
+    "scope": "project",
+    "scope_id": "",
+    "view": "current"
+  },
+  {
+    "question_id": "hold_seedbank-q03",
+    "project": "hold_seedbank",
+    "split": "heldout",
+    "category": "cross_event",
+    "question": "取样为什么先不打开袋子，需要放多久？",
+    "answer": "密封回温四十分钟，避免冷种子接触湿空气结露。",
+    "required_source_ids": [
+      "hold_seedbank-b",
+      "hold_seedbank-g"
+    ],
+    "unanswerable": false,
+    "scope": "project",
+    "scope_id": "",
+    "view": "current"
+  },
+  {
+    "question_id": "hold_seedbank-q04",
+    "project": "hold_seedbank",
+    "split": "heldout",
+    "category": "temporal",
+    "question": "六月十二日后新标签比之前多了什么？旧标签怎么处理？",
+    "answer": "新增批次序号，历史标签保留并另贴关联条码。",
+    "required_source_ids": [
+      "hold_seedbank-e"
+    ],
+    "unanswerable": false,
+    "scope": "project",
+    "scope_id": "",
+    "view": "current"
+  },
+  {
+    "question_id": "hold_seedbank-q05",
+    "project": "hold_seedbank",
+    "split": "heldout",
+    "category": "temporal",
+    "question": "二月六日的样本标签包含哪些信息？",
+    "answer": "采集地和年份",
+    "required_source_ids": [
+      "hold_seedbank-d"
+    ],
+    "unanswerable": false,
+    "scope": "project",
+    "scope_id": "",
+    "view": "history"
+  },
+  {
+    "question_id": "hold_seedbank-q06",
+    "project": "hold_seedbank",
+    "split": "heldout",
+    "category": "negation",
+    "question": "第一次发芽率不过关，可以立即把整个批次标成报废吗？",
+    "answer": "不能，须等待复检结果，也不能直接销毁。",
+    "required_source_ids": [
+      "hold_seedbank-f"
+    ],
+    "unanswerable": false,
+    "scope": "project",
+    "scope_id": "",
+    "view": "current"
+  },
+  {
+    "question_id": "hold_seedbank-q07",
+    "project": "hold_seedbank",
+    "split": "heldout",
+    "category": "procedure_reason",
+    "question": "为何不能从冷柜取出来马上开袋？",
+    "answer": "冷种子遇室内湿空气会表面结露。",
+    "required_source_ids": [
+      "hold_seedbank-g"
+    ],
+    "unanswerable": false,
+    "scope": "project",
+    "scope_id": "",
+    "view": "current"
+  },
+  {
+    "question_id": "hold_seedbank-q08",
+    "project": "hold_seedbank",
+    "split": "heldout",
+    "category": "unanswerable",
+    "question": "种子库目前储存了多少个完整批次？",
+    "answer": "",
+    "required_source_ids": [],
+    "unanswerable": true,
+    "scope": "project",
+    "scope_id": "",
+    "view": "current"
+  },
+  {
+    "question_id": "hold_seedbank-q09",
+    "project": "hold_seedbank",
+    "split": "heldout",
+    "category": "scope",
+    "question": "高山草种试验需要观察多少天？",
+    "answer": "十一天",
+    "required_source_ids": [
+      "hold_seedbank-h"
+    ],
+    "unanswerable": false,
+    "scope": "session",
+    "scope_id": "alpine",
+    "view": "current"
+  },
+  {
+    "question_id": "hold_seedbank-q10",
+    "project": "hold_seedbank",
+    "split": "heldout",
+    "category": "unanswerable",
+    "question": "该种子库已经获得哪项国际认证？",
+    "answer": "",
+    "required_source_ids": [],
+    "unanswerable": true,
+    "scope": "project",
+    "scope_id": "",
+    "view": "current"
+  }
+]

@@ -46,7 +46,7 @@ def parse_time(value: Optional[str]) -> str:
 
 
 def memory_base() -> Path:
-    configured = os.environ.get("PROJECT_LONG_MEMORY_DIR")
+    configured = os.environ.get("TIGER_MEMORY_DIR") or os.environ.get("PROJECT_LONG_MEMORY_DIR")
     return Path(configured).expanduser().resolve() if configured else Path.home() / ".codex" / "project-memory"
 
 

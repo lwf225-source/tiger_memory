@@ -1,0 +1,251 @@
+{
+  "dataset_id": "plm-long-context-synthetic-v1-24",
+  "offset_unit": "Unicode code points; start inclusive/end exclusive; hash of quote.encode(utf-8)",
+  "questions": [
+    {
+      "absence_check_source_ids": [],
+      "absence_policy": null,
+      "question_id": "lcv1-rail-q1",
+      "spans": [
+        {
+          "end": 1507,
+          "evidence_id": "r-ref",
+          "quote_sha256": "d8d978666967876ea6a8c30456c2419381edc99c9299736322a607ef0599feb0",
+          "source_id": "lcv1-rail-1",
+          "start": 1478
+        },
+        {
+          "end": 1532,
+          "evidence_id": "r-pro",
+          "quote_sha256": "801cc56fcdd0688fba8bd04dc2bdd628441de5de5e732da0281bc54aec008b73",
+          "source_id": "lcv1-rail-1",
+          "start": 1509
+        }
+      ],
+      "unanswerable": false
+    },
+    {
+      "absence_check_source_ids": [],
+      "absence_policy": null,
+      "question_id": "lcv1-rail-q2",
+      "spans": [
+        {
+          "end": 1476,
+          "evidence_id": "r-old",
+          "quote_sha256": "3af9dbd2fdb9b1a0eae292161a443bdd4e4e9df0debda028cbeba5e57202146b",
+          "source_id": "lcv1-rail-1",
+          "start": 1454
+        },
+        {
+          "end": 4167,
+          "evidence_id": "r-new",
+          "quote_sha256": "1b4c1aec347766d3953751cedfb55342c9a8c391f2323069a0e4daf7a8dad9ac",
+          "source_id": "lcv1-rail-1",
+          "start": 4123
+        }
+      ],
+      "unanswerable": false
+    },
+    {
+      "absence_check_source_ids": [],
+      "absence_policy": null,
+      "question_id": "lcv1-rail-q3",
+      "spans": [
+        {
+          "end": 4211,
+          "evidence_id": "r-rule",
+          "quote_sha256": "996e2104f097ad55267e4934a8b8bc3fd4ab22a294c17c1226330f0358f84bac",
+          "source_id": "lcv1-rail-1",
+          "start": 4169
+        },
+        {
+          "end": 4467,
+          "evidence_id": "r-review",
+          "quote_sha256": "1e27b82b61fb5a0fe59eb51ee1531b9c80a8f7a7a95b672a4469d50b4880b774",
+          "source_id": "lcv1-rail-2",
+          "start": 4426
+        }
+      ],
+      "unanswerable": false
+    },
+    {
+      "absence_check_source_ids": [],
+      "absence_policy": null,
+      "question_id": "lcv1-rail-q4",
+      "spans": [
+        {
+          "end": 1817,
+          "evidence_id": "r-a",
+          "quote_sha256": "2aff2faed979974713894788dc953cece4abd2b2ec70a47cc0aa93fa81d84361",
+          "source_id": "lcv1-rail-2",
+          "start": 1783
+        },
+        {
+          "end": 1855,
+          "evidence_id": "r-b",
+          "quote_sha256": "cd201948b4223eea12048cf0373fc23819e55c13e46202fd2af99b57560f24bf",
+          "source_id": "lcv1-rail-2",
+          "start": 1819
+        }
+      ],
+      "unanswerable": false
+    },
+    {
+      "absence_check_source_ids": [
+        "lcv1-rail-1",
+        "lcv1-rail-2"
+      ],
+      "absence_policy": "exhaustive authored in-scope record contains no requested value; no fabricated positive evidence span",
+      "question_id": "lcv1-rail-q5",
+      "spans": [],
+      "unanswerable": true
+    },
+    {
+      "absence_check_source_ids": [],
+      "absence_policy": null,
+      "question_id": "lcv1-rail-q6",
+      "spans": [
+        {
+          "end": 1759,
+          "evidence_id": "r-lab",
+          "quote_sha256": "85fb43280485f3b37c4c8e9ba9b7980074d0184865039cc81ae71128b708f6c7",
+          "source_id": "lcv1-rail-3",
+          "start": 1718
+        },
+        {
+          "end": 4344,
+          "evidence_id": "r-labscope",
+          "quote_sha256": "1140181418b22c935b5d117591cf70a287b251db4a7b62197952bf6190b61ab0",
+          "source_id": "lcv1-rail-3",
+          "start": 4300
+        }
+      ],
+      "unanswerable": false
+    },
+    {
+      "absence_check_source_ids": [],
+      "absence_policy": null,
+      "question_id": "lcv1-festival-q1",
+      "spans": [
+        {
+          "end": 1805,
+          "evidence_id": "f-ref",
+          "quote_sha256": "364ed98d49db7897e5c3778192651bd62453ebb99efdebf14ea70f2c96c3f69d",
+          "source_id": "lcv1-festival-1",
+          "start": 1749
+        },
+        {
+          "end": 1897,
+          "evidence_id": "f-pro",
+          "quote_sha256": "3e67bec3429d60ec4226437e4e4982eb6100eababa2b75bae958da5619b89f02",
+          "source_id": "lcv1-festival-1",
+          "start": 1807
+        }
+      ],
+      "unanswerable": false
+    },
+    {
+      "absence_check_source_ids": [],
+      "absence_policy": null,
+      "question_id": "lcv1-festival-q2",
+      "spans": [
+        {
+          "end": 1747,
+          "evidence_id": "f-old",
+          "quote_sha256": "05bcacb7a597f84468a9ccc0682cce6fafd74803da873cef7d8d106829a9732f",
+          "source_id": "lcv1-festival-1",
+          "start": 1671
+        },
+        {
+          "end": 4905,
+          "evidence_id": "f-new",
+          "quote_sha256": "dc4101acbebf719c979d6e1f6a2c5eb2acd894ec3ae542d0fbfb19d427b68036",
+          "source_id": "lcv1-festival-1",
+          "start": 4748
+        }
+      ],
+      "unanswerable": false
+    },
+    {
+      "absence_check_source_ids": [],
+      "absence_policy": null,
+      "question_id": "lcv1-festival-q3",
+      "spans": [
+        {
+          "end": 5096,
+          "evidence_id": "f-rule",
+          "quote_sha256": "30c4560436dd5c4d3770c775efcc7c0f4de177b888dcc502583f9974b1e40ed9",
+          "source_id": "lcv1-festival-1",
+          "start": 4907
+        },
+        {
+          "end": 4950,
+          "evidence_id": "f-permit",
+          "quote_sha256": "826a44cfd64445e1cbf969a609ab414a1362ce1475431bc84e282fda9707b76a",
+          "source_id": "lcv1-festival-2",
+          "start": 4772
+        }
+      ],
+      "unanswerable": false
+    },
+    {
+      "absence_check_source_ids": [],
+      "absence_policy": null,
+      "question_id": "lcv1-festival-q4",
+      "spans": [
+        {
+          "end": 1789,
+          "evidence_id": "f-north",
+          "quote_sha256": "90415893fb147f77132c5feff52dcc9c31fefc97422f799c304ca250eb7c647c",
+          "source_id": "lcv1-festival-2",
+          "start": 1719
+        },
+        {
+          "end": 1936,
+          "evidence_id": "f-south",
+          "quote_sha256": "a6abe5b85bd06fd5ecf9a96f0293f02c6308b4ea8ee35bf3dee2b61924c9d103",
+          "source_id": "lcv1-festival-2",
+          "start": 1791
+        }
+      ],
+      "unanswerable": false
+    },
+    {
+      "absence_check_source_ids": [
+        "lcv1-festival-1",
+        "lcv1-festival-2"
+      ],
+      "absence_policy": "exhaustive authored in-scope record contains no requested value; no fabricated positive evidence span",
+      "question_id": "lcv1-festival-q5",
+      "spans": [],
+      "unanswerable": true
+    },
+    {
+      "absence_check_source_ids": [],
+      "absence_policy": null,
+      "question_id": "lcv1-festival-q6",
+      "spans": [
+        {
+          "end": 1809,
+          "evidence_id": "f-lab",
+          "quote_sha256": "81aee530ea4e6a160feca2097deb020bfb4bd0a4b7d1c82551e451afb8f22671",
+          "source_id": "lcv1-festival-3",
+          "start": 1690
+        },
+        {
+          "end": 4795,
+          "evidence_id": "f-labscope",
+          "quote_sha256": "ad5fadada9f85560535e04c47fe39361cd476875c35dbf59f764b46f1ed02d6d",
+          "source_id": "lcv1-festival-3",
+          "start": 4657
+        }
+      ],
+      "unanswerable": false
+    }
+  ],
+  "questions_sha256": "f16674e62736f27d1291457a0984ead89ba7872a4620eca375fd2de95e98f258",
+  "retrieval_use_forbidden": true,
+  "schema_version": 1,
+  "sources_sha256": "8b98205b6edae74ef4bd4e93516a1b4102d658b26f76a6f3a5509b429d92dfff",
+  "split": "heldout"
+}

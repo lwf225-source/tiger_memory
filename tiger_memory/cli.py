@@ -21,7 +21,7 @@ def _json(value: Any) -> None:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(prog="plm", description="Project Long Memory v2")
+    parser = argparse.ArgumentParser(prog="tiger_memory", description="tiger_memory v2")
     sub = parser.add_subparsers(dest="command", required=True)
 
     context = sub.add_parser("context")
@@ -324,7 +324,9 @@ def main(argv=None) -> int:
         elif args.command == "alias":
             _json(add_project_alias(Path(args.cwd), Path(args.path)))
         elif args.command == "verify":
-            _json(verify_acceptance(args.tests_passed))
+            report = verify_acceptance(args.tests_passed)
+            _json(report)
+            return 0 if report["passed"] else 1
         elif args.command == "backup":
             _json(backup_memory(Path(args.destination) if args.destination else None))
         elif args.command == "restore":
@@ -342,7 +344,7 @@ def main(argv=None) -> int:
             _json(read_config())
         return 0
     except (PLMError, json.JSONDecodeError, OSError) as exc:
-        print("plm: %s" % exc, file=sys.stderr)
+        print("tiger_memory: %s" % exc, file=sys.stderr)
         return 2
 
 

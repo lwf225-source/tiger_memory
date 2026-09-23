@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "description": "Small synthetic evidence-retrieval diagnostic, not a leaderboard dataset.",
+  "memory": [
+    {
+      "id": "retry-decision",
+      "title": "retry_limit design decision",
+      "body": "On 2026-09-01 retry_limit was set to three attempts to tolerate transient mobile-network failures. Recheck current code before reporting the active limit."
+    },
+    {
+      "id": "launch-meeting",
+      "title": "Launch review meeting",
+      "body": "The launch review meeting is Friday 14:00 UTC. The release owner is Morgan."
+    }
+  ],
+  "cases": [
+    {
+      "id": "decision-and-changed-code",
+      "state": "fresh",
+      "question": "Why was retry_limit introduced, and what limit does the changed implementation use now?",
+      "memory_query": "retry_limit",
+      "code_query": "retry_limit",
+      "expected_code_status": "ready",
+      "requirements": [
+        {"id": "historical-reason", "source": "memory", "all_of": ["transient mobile-network failures"]},
+        {"id": "current-limit", "source": "code", "all_of": ["return 1"]}
+      ]
+    },
+    {
+      "id": "non-code-memory-control",
+      "state": "fresh",
+      "question": "When is the launch review meeting and who owns the release?",
+      "memory_query": "launch review meeting",
+      "code_query": "launch review meeting",
+      "expected_code_status": "ready",
+      "requirements": [
+        {"id": "meeting-time", "source": "memory", "all_of": ["Friday 14:00 UTC"]},
+        {"id": "release-owner", "source": "memory", "all_of": ["Morgan"]}
+      ]
+    },
+    {
+      "id": "stale-index-negative",
+      "state": "stale",
+      "question": "Why was retry_limit introduced, and can the current limit be established from this evidence?",
+      "memory_query": "retry_limit",
+      "code_query": "retry_limit",
+      "expected_code_status": "stale",
+      "requirements": [
+        {"id": "historical-reason", "source": "memory", "all_of": ["transient mobile-network failures"]},
+        {"id": "current-limit", "source": "code", "all_of": ["return 2"]}
+      ]
+    },
+    {
+      "id": "missing-cli-negative",
+      "state": "missing_cli",
+      "question": "Why was retry_limit introduced, and can the current limit be established without the code tool?",
+      "memory_query": "retry_limit",
+      "code_query": "retry_limit",
+      "expected_code_status": "unavailable",
+      "requirements": [
+        {"id": "historical-reason", "source": "memory", "all_of": ["transient mobile-network failures"]},
+        {"id": "current-limit", "source": "code", "all_of": ["return 1"]}
+      ]
+    }
+  ]
+}

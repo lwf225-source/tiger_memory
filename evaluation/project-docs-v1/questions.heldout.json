@@ -1,0 +1,864 @@
+[
+  {
+    "acceptable_answers": [
+      "目录中的来源路径是绝对路径，需要先从恢复的 Markdown Events 重建索引，再运行 doctor。"
+    ],
+    "answer": "目录中的来源路径是绝对路径，需要先从恢复的 Markdown Events 重建索引，再运行 doctor。",
+    "category": "recovery_reason",
+    "forbidden_claims": [
+      {
+        "description": "不能跳过重建直接认定恢复健康",
+        "id": "direct_health",
+        "patterns": [
+          "无需重建.{0,8}(健康|doctor)"
+        ]
+      }
+    ],
+    "project": "plm-ops",
+    "question": "把传统备份放到另一个记忆根目录后，为什么不能直接拿旧索引做健康检查？",
+    "question_id": "pdv1-h01",
+    "required_points": [
+      {
+        "any_of": [
+          "绝对路径",
+          "absolute"
+        ],
+        "description": "旧索引含绝对路径",
+        "id": "absolute"
+      },
+      {
+        "any_of": [
+          "rebuild-index",
+          "先重建",
+          "重建索引"
+        ],
+        "description": "先 rebuild-index",
+        "id": "rebuild"
+      },
+      {
+        "any_of": [
+          "doctor",
+          "健康检查"
+        ],
+        "description": "之后 doctor",
+        "id": "doctor"
+      }
+    ],
+    "required_source_ids": [
+      "pdv1-s14"
+    ],
+    "scope": "project",
+    "scope_id": "",
+    "split": "heldout",
+    "unanswerable": false,
+    "view": "current"
+  },
+  {
+    "acceptable_answers": [
+      "首先进入 shadow 模式，安装本身不是正式 cutover。"
+    ],
+    "answer": "首先进入 shadow 模式，安装本身不是正式 cutover。",
+    "category": "rollout_condition",
+    "forbidden_claims": [
+      {
+        "description": "不能把安装后状态说成立即正式 v2",
+        "id": "immediate_v2",
+        "patterns": [
+          "安装.{0,6}(立即|自动).{0,6}正式"
+        ]
+      }
+    ],
+    "project": "plm-ops",
+    "question": "执行安装命令成功后，新安装包首先进入哪个模式？这一步是否已经完成正式切换？",
+    "question_id": "pdv1-h02",
+    "required_points": [
+      {
+        "any_of": [
+          "shadow",
+          "影子"
+        ],
+        "description": "初始为 shadow",
+        "id": "shadow"
+      },
+      {
+        "any_of": [
+          "不是",
+          "不等于",
+          "尚未",
+          "还没有"
+        ],
+        "description": "安装不等于正式切换",
+        "id": "not_cutover"
+      }
+    ],
+    "required_source_ids": [
+      "pdv1-s16"
+    ],
+    "scope": "project",
+    "scope_id": "",
+    "split": "heldout",
+    "unanswerable": false,
+    "view": "current"
+  },
+  {
+    "acceptable_answers": [
+      "verify 执行随包测试并绑定代码指纹及 Event 数；所有门禁通过后 cutover，再确认 engine=v2、write_mode=v2 并运行 doctor。"
+    ],
+    "answer": "verify 执行随包测试并绑定代码指纹及 Event 数；所有门禁通过后 cutover，再确认 engine=v2、write_mode=v2 并运行 doctor。",
+    "category": "release_gate",
+    "forbidden_claims": [
+      {
+        "description": "部分门禁通过不足切换",
+        "id": "some_gates",
+        "patterns": [
+          "部分.{0,5}通过.{0,5}即可"
+        ]
+      }
+    ],
+    "project": "plm-ops",
+    "question": "什么样的验收报告才可以用于正式切换，切换后还要确认哪些运行状态？",
+    "question_id": "pdv1-h03",
+    "required_points": [
+      {
+        "any_of": [
+          "代码指纹",
+          "code fingerprint",
+          "Event 数"
+        ],
+        "description": "报告绑定代码及事件数",
+        "id": "binding"
+      },
+      {
+        "any_of": [
+          "所有",
+          "全部",
+          "every"
+        ],
+        "description": "所有门禁通过",
+        "id": "all_gates"
+      },
+      {
+        "any_of": [
+          "engine=v2",
+          "write_mode=v2",
+          "读写"
+        ],
+        "description": "确认读写 v2",
+        "id": "runtime"
+      },
+      {
+        "any_of": [
+          "doctor"
+        ],
+        "description": "运行 doctor",
+        "id": "doctor"
+      }
+    ],
+    "required_source_ids": [
+      "pdv1-s16"
+    ],
+    "scope": "project",
+    "scope_id": "",
+    "split": "heldout",
+    "unanswerable": false,
+    "view": "current"
+  },
+  {
+    "acceptable_answers": [
+      "先把切换后新增 Event 导出为 v1 兼容 Markdown；只有要立即放进旧项目目录时才加 --materialize-v1。"
+    ],
+    "answer": "先把切换后新增 Event 导出为 v1 兼容 Markdown；只有要立即放进旧项目目录时才加 --materialize-v1。",
+    "category": "rollback",
+    "forbidden_claims": [
+      {
+        "description": "回滚不能直接丢掉新增事件",
+        "id": "discard",
+        "patterns": [
+          "直接.{0,5}(丢弃|删除).{0,8}新增"
+        ]
+      }
+    ],
+    "project": "plm-ops",
+    "question": "回滚前新增的 v2 数据会如何处理，什么时候才需要 materialize-v1 选项？",
+    "question_id": "pdv1-h04",
+    "required_points": [
+      {
+        "any_of": [
+          "导出",
+          "export"
+        ],
+        "description": "先导出新增数据",
+        "id": "export"
+      },
+      {
+        "any_of": [
+          "v1",
+          "Markdown"
+        ],
+        "description": "v1 兼容 Markdown",
+        "id": "compat"
+      },
+      {
+        "any_of": [
+          "立即",
+          "旧项目目录",
+          "legacy"
+        ],
+        "description": "选项用于立即进入旧目录",
+        "id": "immediate"
+      }
+    ],
+    "required_source_ids": [
+      "pdv1-s15"
+    ],
+    "scope": "project",
+    "scope_id": "",
+    "split": "heldout",
+    "unanswerable": false,
+    "view": "current"
+  },
+  {
+    "acceptable_answers": [
+      "不能；账本虽必填，但无法验证它绝对最新，旧 tar 和未知外部导出仍可能保留历史字节。"
+    ],
+    "answer": "不能；账本虽必填，但无法验证它绝对最新，旧 tar 和未知外部导出仍可能保留历史字节。",
+    "category": "privacy_recovery_limit",
+    "forbidden_claims": [
+      {
+        "description": "不能承诺所有外部副本都已清除",
+        "id": "all_erased",
+        "patterns": [
+          "所有.{0,6}(外部副本|旧备份).{0,6}(都已|全部).{0,4}清除"
+        ]
+      }
+    ],
+    "project": "plm-ops",
+    "question": "恢复工具要求提供删除账本，是否就能证明操作者拿来的账本绝对最新、旧导出也都已清干净？",
+    "question_id": "pdv1-h05",
+    "required_points": [
+      {
+        "any_of": [
+          "必填",
+          "必须",
+          "无法验证",
+          "不能保证"
+        ],
+        "description": "账本必填但新鲜度不能保证",
+        "id": "ledger"
+      },
+      {
+        "any_of": [
+          "旧 tar",
+          "外部导出",
+          "历史字节",
+          "残留"
+        ],
+        "description": "旧归档和外部导出可能残留",
+        "id": "copies"
+      }
+    ],
+    "required_source_ids": [
+      "pdv1-s17"
+    ],
+    "scope": "project",
+    "scope_id": "",
+    "split": "heldout",
+    "unanswerable": false,
+    "view": "current"
+  },
+  {
+    "acceptable_answers": [
+      "只恢复到新建或空目录，拒绝路径逃逸、链接和特殊文件；隔离验证后发布副本，不修改原存储。"
+    ],
+    "answer": "只恢复到新建或空目录，拒绝路径逃逸、链接和特殊文件；隔离验证后发布副本，不修改原存储。",
+    "category": "restore_boundary",
+    "forbidden_claims": [
+      {
+        "description": "不能直接覆盖原记忆目录",
+        "id": "overwrite_original",
+        "patterns": [
+          "直接覆盖原"
+        ]
+      }
+    ],
+    "project": "plm-ops",
+    "question": "恢复副本的目标目录和归档成员有什么限制，会直接覆盖原存储吗？",
+    "question_id": "pdv1-h06",
+    "required_points": [
+      {
+        "any_of": [
+          "新建",
+          "空目录"
+        ],
+        "description": "目标必须新建或为空",
+        "id": "empty"
+      },
+      {
+        "any_of": [
+          "链接",
+          "路径逃逸",
+          "特殊文件"
+        ],
+        "description": "拒绝链接等不安全成员",
+        "id": "unsafe_members"
+      },
+      {
+        "any_of": [
+          "不修改",
+          "不覆盖",
+          "原存储保持"
+        ],
+        "description": "不修改原存储",
+        "id": "original"
+      }
+    ],
+    "required_source_ids": [
+      "pdv1-s17"
+    ],
+    "scope": "project",
+    "scope_id": "",
+    "split": "heldout",
+    "unanswerable": false,
+    "view": "current"
+  },
+  {
+    "acceptable_answers": [
+      "可以看调用次数、结果数、成功和延迟；只存查询 SHA-256 hash，不存提问原文或记忆正文。"
+    ],
+    "answer": "可以看调用次数、结果数、成功和延迟；只存查询 SHA-256 hash，不存提问原文或记忆正文。",
+    "category": "observability",
+    "forbidden_claims": [
+      {
+        "description": "不能把审计说成完整查询日志",
+        "id": "full_query_log",
+        "patterns": [
+          "(保存|记录).{0,4}完整提问"
+        ]
+      }
+    ],
+    "project": "plm-ops",
+    "question": "usage 能看到哪些调用信息，它会保留原始提问和返回的记忆正文吗？",
+    "question_id": "pdv1-h07",
+    "required_points": [
+      {
+        "any_of": [
+          "次数",
+          "结果数"
+        ],
+        "description": "次数与结果数量",
+        "id": "counts"
+      },
+      {
+        "any_of": [
+          "延迟",
+          "耗时",
+          "成功"
+        ],
+        "description": "成功和耗时信息",
+        "id": "latency"
+      },
+      {
+        "any_of": [
+          "SHA-256",
+          "hash",
+          "哈希"
+        ],
+        "description": "仅查询 hash",
+        "id": "hash"
+      },
+      {
+        "any_of": [
+          "不存",
+          "不保存",
+          "never"
+        ],
+        "description": "不保存原文",
+        "id": "no_plaintext"
+      }
+    ],
+    "required_source_ids": [
+      "pdv1-s13"
+    ],
+    "scope": "project",
+    "scope_id": "",
+    "split": "heldout",
+    "unanswerable": false,
+    "view": "current"
+  },
+  {
+    "acceptable_answers": [
+      "现有文档没有给出每天自动备份的具体定时。"
+    ],
+    "answer": "现有文档没有给出每天自动备份的具体定时。",
+    "category": "unanswerable",
+    "forbidden_claims": [
+      {
+        "description": "不能猜测自动备份时刻",
+        "id": "invent_time",
+        "patterns": [
+          "每天.{0,5}\\d{1,2}[:：]\\d{2}"
+        ]
+      }
+    ],
+    "project": "plm-ops",
+    "question": "生产记忆库每天自动备份的定时时刻是几点几分？",
+    "question_id": "pdv1-h08",
+    "required_points": [
+      {
+        "any_of": [
+          "没有给出",
+          "未说明",
+          "无法确定",
+          "不知道"
+        ],
+        "description": "没有定时信息",
+        "id": "unknown"
+      }
+    ],
+    "required_source_ids": [],
+    "scope": "project",
+    "scope_id": "",
+    "split": "heldout",
+    "unanswerable": true,
+    "view": "current"
+  },
+  {
+    "acceptable_answers": [
+      "没有；QA 正确率、官方榜单成绩和真实任务成功率都未测。"
+    ],
+    "answer": "没有；QA 正确率、官方榜单成绩和真实任务成功率都未测。",
+    "category": "measurement_boundary",
+    "forbidden_claims": [
+      {
+        "description": "不能将证据召回100%冒充官方问答成绩",
+        "id": "official_score",
+        "patterns": [
+          "官方.{0,6}(正确率|成绩).{0,4}100%"
+        ]
+      }
+    ],
+    "project": "plm-eval",
+    "question": "第一批能报告证据召回表现，是否也已经测出了问答正确率和官方榜单成绩？",
+    "question_id": "pdv1-h09",
+    "required_points": [
+      {
+        "any_of": [
+          "未测",
+          "没有",
+          "尚未"
+        ],
+        "description": "明确未测 QA 和榜单",
+        "id": "unmeasured"
+      },
+      {
+        "any_of": [
+          "QA",
+          "问答"
+        ],
+        "description": "问答正确率",
+        "id": "qa"
+      },
+      {
+        "any_of": [
+          "榜单",
+          "官方"
+        ],
+        "description": "官方成绩",
+        "id": "official"
+      }
+    ],
+    "required_source_ids": [
+      "pdv1-s20"
+    ],
+    "scope": "project",
+    "scope_id": "",
+    "split": "heldout",
+    "unanswerable": false,
+    "view": "current"
+  },
+  {
+    "acceptable_answers": [
+      "完整证据覆盖提高 12.5 个百分点，但无答案误召回从 87.5% 升到 100%。"
+    ],
+    "answer": "完整证据覆盖提高 12.5 个百分点，但无答案误召回从 87.5% 升到 100%。",
+    "category": "tradeoff",
+    "forbidden_claims": [
+      {
+        "description": "不能称所有指标同步改善",
+        "id": "all_better",
+        "patterns": [
+          "所有指标.{0,4}(改善|提升)"
+        ]
+      }
+    ],
+    "project": "plm-eval",
+    "question": "在留出对照中，增加 embedding 带来了什么收益，又伴随什么无答案问题上的代价？",
+    "question_id": "pdv1-h10",
+    "required_points": [
+      {
+        "any_of": [
+          "12.5",
+          "十二点五"
+        ],
+        "description": "覆盖增益12.5个百分点",
+        "id": "coverage_gain"
+      },
+      {
+        "any_of": [
+          "87.5"
+        ],
+        "description": "此前87.5%",
+        "id": "false_before"
+      },
+      {
+        "any_of": [
+          "100%",
+          "百分之百"
+        ],
+        "description": "之后100%",
+        "id": "false_after"
+      }
+    ],
+    "required_source_ids": [
+      "pdv1-s19"
+    ],
+    "scope": "project",
+    "scope_id": "",
+    "split": "heldout",
+    "unanswerable": false,
+    "view": "current"
+  },
+  {
+    "acceptable_answers": [
+      "没有独立净增益，暂不默认启用精排；开发集到留出集回落不等于精排导致退化，应比较同组 lexical。"
+    ],
+    "answer": "没有独立净增益，暂不默认启用精排；开发集到留出集回落不等于精排导致退化，应比较同组 lexical。",
+    "category": "configuration_choice",
+    "forbidden_claims": [
+      {
+        "description": "不能把跨数据集回落直接归因精排",
+        "id": "reranker_caused",
+        "patterns": [
+          "(?<!不等于)(?<!不是)(?<!说成)精排导致退化"
+        ]
+      }
+    ],
+    "project": "plm-eval",
+    "question": "第一批有没有证据支持把精排默认打开？开发集到留出集的变化应怎样解释？",
+    "question_id": "pdv1-h11",
+    "required_points": [
+      {
+        "any_of": [
+          "没有净",
+          "无净",
+          "没有独立",
+          "未带来净"
+        ],
+        "description": "同组精排无净提升",
+        "id": "no_gain"
+      },
+      {
+        "any_of": [
+          "不默认",
+          "暂不",
+          "不采用"
+        ],
+        "description": "不默认启用",
+        "id": "not_default"
+      },
+      {
+        "any_of": [
+          "同组",
+          "lexical",
+          "不能归因"
+        ],
+        "description": "同组比较",
+        "id": "comparison"
+      }
+    ],
+    "required_source_ids": [
+      "pdv1-s19"
+    ],
+    "scope": "project",
+    "scope_id": "",
+    "split": "heldout",
+    "unanswerable": false,
+    "view": "current"
+  },
+  {
+    "acceptable_answers": [
+      "计入分派、数据库打开、检索、模型和证据包装；不含回答模型、启动或建库，且每组只有40条短来源，不能外推大规模。"
+    ],
+    "answer": "计入分派、数据库打开、检索、模型和证据包装；不含回答模型、启动或建库，且每组只有40条短来源，不能外推大规模。",
+    "category": "latency_scope",
+    "forbidden_claims": [
+      {
+        "description": "不能说包含回答模型的全部端到端耗时",
+        "id": "all_e2e",
+        "patterns": [
+          "包含回答模型.{0,6}全部"
+        ]
+      }
+    ],
+    "project": "plm-eval",
+    "question": "报告里的热遍 P95 覆盖了哪些工作，为什么不能据此估算十万条真实记忆的端到端性能？",
+    "question_id": "pdv1-h12",
+    "required_points": [
+      {
+        "any_of": [
+          "检索",
+          "证据包装",
+          "数据库打开"
+        ],
+        "description": "涵盖检索和包装",
+        "id": "included"
+      },
+      {
+        "any_of": [
+          "不含",
+          "不包括"
+        ],
+        "description": "不含回答器或启动建库",
+        "id": "excluded"
+      },
+      {
+        "any_of": [
+          "40",
+          "四十",
+          "短来源"
+        ],
+        "description": "仅40条短来源",
+        "id": "scale"
+      },
+      {
+        "any_of": [
+          "不能外推",
+          "无法外推",
+          "不代表十万"
+        ],
+        "description": "不能外推",
+        "id": "no_extrapolate"
+      }
+    ],
+    "required_source_ids": [
+      "pdv1-s21"
+    ],
+    "scope": "project",
+    "scope_id": "",
+    "split": "heldout",
+    "unanswerable": false,
+    "view": "current"
+  },
+  {
+    "acceptable_answers": [
+      "已完成的是80条合成来源和80道人工作题；约300道独立自然中文项目题是后续目标，尚不能说已完成。"
+    ],
+    "answer": "已完成的是80条合成来源和80道人工作题；约300道独立自然中文项目题是后续目标，尚不能说已完成。",
+    "category": "multi_source",
+    "forbidden_claims": [
+      {
+        "description": "不能说已经完成300道真实题",
+        "id": "already_300",
+        "patterns": [
+          "已(经)?完成.{0,4}300.{0,4}真实"
+        ]
+      }
+    ],
+    "project": "plm-eval",
+    "question": "这次已完成的数据集与后续约300题目标有什么区别？",
+    "question_id": "pdv1-h13",
+    "required_points": [
+      {
+        "any_of": [
+          "80",
+          "八十"
+        ],
+        "description": "已有80道合成题",
+        "id": "existing"
+      },
+      {
+        "any_of": [
+          "合成"
+        ],
+        "description": "明确合成性质",
+        "id": "synthetic"
+      },
+      {
+        "any_of": [
+          "300",
+          "三百"
+        ],
+        "description": "300是后续目标",
+        "id": "target"
+      },
+      {
+        "any_of": [
+          "后续",
+          "目标",
+          "尚未",
+          "待"
+        ],
+        "description": "目标未全部完成",
+        "id": "future"
+      }
+    ],
+    "required_source_ids": [
+      "pdv1-s18",
+      "pdv1-s22"
+    ],
+    "scope": "project",
+    "scope_id": "",
+    "split": "heldout",
+    "unanswerable": false,
+    "view": "current"
+  },
+  {
+    "acceptable_answers": [
+      "不是严格硬件冷启动，操作系统页缓存可能已热；没有启动常驻进程。"
+    ],
+    "answer": "不是严格硬件冷启动，操作系统页缓存可能已热；没有启动常驻进程。",
+    "category": "runtime_limit",
+    "forbidden_claims": [
+      {
+        "description": "不能称严格硬件冷启动",
+        "id": "hardware_cold",
+        "patterns": [
+          "(这是|属于|完成了).{0,4}严格.{0,4}硬件冷启动"
+        ]
+      }
+    ],
+    "project": "plm-eval",
+    "question": "首次模型探测是不是硬件冷启动测试？实验运行时是否有常驻服务？",
+    "question_id": "pdv1-h14",
+    "required_points": [
+      {
+        "any_of": [
+          "页缓存",
+          "缓存可能",
+          "不称硬件冷启动"
+        ],
+        "description": "页缓存可能已热",
+        "id": "cache"
+      },
+      {
+        "any_of": [
+          "没有启动常驻",
+          "无常驻",
+          "不是常驻"
+        ],
+        "description": "没有常驻进程",
+        "id": "no_daemon"
+      }
+    ],
+    "required_source_ids": [
+      "pdv1-s21"
+    ],
+    "scope": "project",
+    "scope_id": "",
+    "split": "heldout",
+    "unanswerable": false,
+    "view": "current"
+  },
+  {
+    "acceptable_answers": [
+      "需要固定回答模型与语义评分协议，测充分证据下答对和不足证据下正确拒答，并实际运行官方 LongMemEval。"
+    ],
+    "answer": "需要固定回答模型与语义评分协议，测充分证据下答对和不足证据下正确拒答，并实际运行官方 LongMemEval。",
+    "category": "multi_source",
+    "forbidden_claims": [
+      {
+        "description": "不能直接将召回率当问答正确率",
+        "id": "retrieval_equals_qa",
+        "patterns": [
+          "召回率就是问答正确率"
+        ]
+      }
+    ],
+    "project": "plm-eval",
+    "question": "要把检索实验推进为可比较的问答能力，下一步需要增加什么固定环节？",
+    "question_id": "pdv1-h15",
+    "required_points": [
+      {
+        "any_of": [
+          "固定回答模型",
+          "固定 reader",
+          "固定读者"
+        ],
+        "description": "固定回答模型",
+        "id": "reader"
+      },
+      {
+        "any_of": [
+          "评分协议",
+          "语义评分",
+          "评审协议"
+        ],
+        "description": "固定评分协议",
+        "id": "scoring"
+      },
+      {
+        "any_of": [
+          "拒答",
+          "依据不足"
+        ],
+        "description": "同时测答对和拒答",
+        "id": "abstention"
+      },
+      {
+        "any_of": [
+          "LongMemEval",
+          "官方实际运行",
+          "运行官方"
+        ],
+        "description": "实际运行官方评测",
+        "id": "official_run"
+      }
+    ],
+    "required_source_ids": [
+      "pdv1-s20",
+      "pdv1-s22"
+    ],
+    "scope": "project",
+    "scope_id": "",
+    "split": "heldout",
+    "unanswerable": false,
+    "view": "current"
+  },
+  {
+    "acceptable_answers": [
+      "给定项目资料没有提供当前官方榜单第一名的得分。"
+    ],
+    "answer": "给定项目资料没有提供当前官方榜单第一名的得分。",
+    "category": "unanswerable",
+    "forbidden_claims": [
+      {
+        "description": "不得编造榜首分数",
+        "id": "invent_rank",
+        "patterns": [
+          "第一名.{0,8}\\d+(\\.\\d+)?%"
+        ]
+      }
+    ],
+    "project": "plm-eval",
+    "question": "LongMemEval 当前官方榜单第一名的准确率是多少？",
+    "question_id": "pdv1-h16",
+    "required_points": [
+      {
+        "any_of": [
+          "没有提供",
+          "未提供",
+          "无法确定",
+          "不知道"
+        ],
+        "description": "榜首得分未提供",
+        "id": "unknown"
+      }
+    ],
+    "required_source_ids": [],
+    "scope": "project",
+    "scope_id": "",
+    "split": "heldout",
+    "unanswerable": true,
+    "view": "current"
+  }
+]

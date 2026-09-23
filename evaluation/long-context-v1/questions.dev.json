@@ -1,0 +1,494 @@
+[
+  {
+    "acceptable_answers": [
+      "当前人工播报；4月2日的自动播报旧方案已撤销。",
+      "现在采用人工播报，旧的自动播报方案不再有效。"
+    ],
+    "answer": "当前人工播报；4月2日的自动播报旧方案已撤销。",
+    "category": "state_update",
+    "forbidden_claims": [],
+    "project": "long-context-harbor",
+    "question": "东窗生产面板现在是自动还是人工播报，早先方案还有效吗？",
+    "question_date": "2026-06-10",
+    "question_id": "lcv1-harbor-q1",
+    "required_points": [
+      {
+        "any_of": [
+          "人工播报"
+        ],
+        "description": "mode",
+        "id": "mode"
+      },
+      {
+        "any_of": [
+          "已撤销",
+          "不再有效"
+        ],
+        "description": "supersession",
+        "id": "supersession"
+      }
+    ],
+    "required_source_ids": [
+      "lcv1-harbor-1"
+    ],
+    "scope": "project",
+    "scope_id": "",
+    "split": "dev",
+    "unanswerable": false
+  },
+  {
+    "acceptable_answers": [
+      "关闭的是故障后自动重试开关；人工刷新仍可使用。",
+      "自动重试保持关闭，人工刷新可以继续由值班员使用。"
+    ],
+    "answer": "关闭的是故障后自动重试开关；人工刷新仍可使用。",
+    "category": "pronoun_dependency",
+    "forbidden_claims": [],
+    "project": "long-context-harbor",
+    "question": "4月8日对话里先保持关闭的是哪个部件，人工刷新能否继续用？",
+    "question_date": "2026-06-10",
+    "question_id": "lcv1-harbor-q2",
+    "required_points": [
+      {
+        "any_of": [
+          "自动重试"
+        ],
+        "description": "referent",
+        "id": "referent"
+      },
+      {
+        "any_of": [
+          "关闭"
+        ],
+        "description": "negative",
+        "id": "negative"
+      },
+      {
+        "any_of": [
+          "人工刷新仍可",
+          "人工刷新可以"
+        ],
+        "description": "other",
+        "id": "other"
+      }
+    ],
+    "required_source_ids": [
+      "lcv1-harbor-1"
+    ],
+    "scope": "project",
+    "scope_id": "",
+    "split": "dev",
+    "unanswerable": false
+  },
+  {
+    "acceptable_answers": [
+      "不能申请；还缺通过的双端时钟核对，两项必须同时通过。",
+      "不能，双端时钟核对尚未通过，单项回放通过不够。"
+    ],
+    "answer": "不能申请；还缺通过的双端时钟核对，两项必须同时通过。",
+    "category": "multi_source_conditions",
+    "forbidden_claims": [],
+    "project": "long-context-harbor",
+    "question": "丢样回放已经通过，当天能申请开启自动播报了吗？请说明缺什么。",
+    "question_date": "2026-06-10",
+    "question_id": "lcv1-harbor-q3",
+    "required_points": [
+      {
+        "any_of": [
+          "不能"
+        ],
+        "description": "decision",
+        "id": "decision"
+      },
+      {
+        "any_of": [
+          "双端时钟核对"
+        ],
+        "description": "missing",
+        "id": "missing"
+      },
+      {
+        "any_of": [
+          "同时",
+          "单项"
+        ],
+        "description": "joint",
+        "id": "joint"
+      }
+    ],
+    "required_source_ids": [
+      "lcv1-harbor-1",
+      "lcv1-harbor-2"
+    ],
+    "scope": "project",
+    "scope_id": "",
+    "split": "dev",
+    "unanswerable": false
+  },
+  {
+    "acceptable_answers": [
+      "不能；绿色勾号仅代表本地丢样回放成功，不是生产验收。",
+      "不可以，绿勾只说明本地回放这一项通过。"
+    ],
+    "answer": "不能；绿色勾号仅代表本地丢样回放成功，不是生产验收。",
+    "category": "negation_boundary",
+    "forbidden_claims": [],
+    "project": "long-context-harbor",
+    "question": "回放记录出现绿色勾号，能把它写成生产验收完成吗？",
+    "question_date": "2026-06-10",
+    "question_id": "lcv1-harbor-q4",
+    "required_points": [
+      {
+        "any_of": [
+          "不能",
+          "不可以"
+        ],
+        "description": "negative",
+        "id": "negative"
+      },
+      {
+        "any_of": [
+          "本地"
+        ],
+        "description": "boundary",
+        "id": "boundary"
+      },
+      {
+        "any_of": [
+          "回放"
+        ],
+        "description": "scope",
+        "id": "scope"
+      }
+    ],
+    "required_source_ids": [
+      "lcv1-harbor-2"
+    ],
+    "scope": "project",
+    "scope_id": "",
+    "split": "dev",
+    "unanswerable": false
+  },
+  {
+    "acceptable_answers": [
+      "资料没有提供正式审批人的签字，无法确定。",
+      "未提供审批签字，不能确定审批人。"
+    ],
+    "answer": "资料没有提供正式审批人的签字，无法确定。",
+    "category": "unanswerable",
+    "forbidden_claims": [],
+    "project": "long-context-harbor",
+    "question": "哪一位正式审批人签字批准了东窗面板自动播报？",
+    "question_date": "2026-06-10",
+    "question_id": "lcv1-harbor-q5",
+    "required_points": [
+      {
+        "any_of": [
+          "没有提供",
+          "未提供"
+        ],
+        "description": "absence",
+        "id": "absence"
+      },
+      {
+        "any_of": [
+          "无法确定",
+          "不能确定"
+        ],
+        "description": "refusal",
+        "id": "refusal"
+      }
+    ],
+    "required_source_ids": [],
+    "scope": "project",
+    "scope_id": "",
+    "split": "dev",
+    "unanswerable": true
+  },
+  {
+    "acceptable_answers": [
+      "该会话的模拟面板采用自动播报，仅限课堂，不改变生产状态。",
+      "lantern-lab 模拟面板自动播报；这不是生产设置。"
+    ],
+    "answer": "该会话的模拟面板采用自动播报，仅限课堂，不改变生产状态。",
+    "category": "scope_isolation",
+    "forbidden_claims": [],
+    "project": "long-context-harbor",
+    "question": "在 lantern-lab 这个会话里，模拟东窗面板使用什么播报方式？",
+    "question_date": "2026-06-10",
+    "question_id": "lcv1-harbor-q6",
+    "required_points": [
+      {
+        "any_of": [
+          "自动播报"
+        ],
+        "description": "mode",
+        "id": "mode"
+      },
+      {
+        "any_of": [
+          "会话",
+          "lantern-lab"
+        ],
+        "description": "scope",
+        "id": "scope"
+      },
+      {
+        "any_of": [
+          "不改变",
+          "不是生产"
+        ],
+        "description": "limit",
+        "id": "limit"
+      }
+    ],
+    "required_source_ids": [
+      "lcv1-harbor-3"
+    ],
+    "scope": "session",
+    "scope_id": "lantern-lab",
+    "split": "dev",
+    "unanswerable": false
+  },
+  {
+    "acceptable_answers": [
+      "The overhead lamp must stay off; the vacuum bed may remain on.",
+      "Keep the lamp off, not the vacuum bed."
+    ],
+    "answer": "The overhead lamp must stay off; the vacuum bed may remain on.",
+    "category": "pronoun_dependency",
+    "forbidden_claims": [],
+    "project": "long-context-museum",
+    "question": "In the alignment conversation, what must be kept off, and may the vacuum bed remain on?",
+    "question_date": "2026-06-10",
+    "question_id": "lcv1-museum-q1",
+    "required_points": [
+      {
+        "any_of": [
+          "lamp"
+        ],
+        "description": "referent",
+        "id": "referent"
+      },
+      {
+        "any_of": [
+          "off"
+        ],
+        "description": "negative",
+        "id": "negative"
+      },
+      {
+        "any_of": [
+          "vacuum bed"
+        ],
+        "description": "other",
+        "id": "other"
+      }
+    ],
+    "required_source_ids": [
+      "lcv1-museum-1"
+    ],
+    "scope": "project",
+    "scope_id": "",
+    "split": "dev",
+    "unanswerable": false
+  },
+  {
+    "acceptable_answers": [
+      "The current teaching derivative is 400 dpi; the earlier 600 dpi proposal was withdrawn.",
+      "400 dpi, replacing the withdrawn 600 dpi proposal."
+    ],
+    "answer": "The current teaching derivative is 400 dpi; the earlier 600 dpi proposal was withdrawn.",
+    "category": "state_update",
+    "forbidden_claims": [],
+    "project": "long-context-museum",
+    "question": "What is the current resolution of the Rowan teaching derivative after the revision?",
+    "question_date": "2026-06-10",
+    "question_id": "lcv1-museum-q2",
+    "required_points": [
+      {
+        "any_of": [
+          "400 dpi"
+        ],
+        "description": "current",
+        "id": "current"
+      },
+      {
+        "any_of": [
+          "600 dpi"
+        ],
+        "description": "history",
+        "id": "history"
+      },
+      {
+        "any_of": [
+          "withdrawn"
+        ],
+        "description": "withdrawn",
+        "id": "withdrawn"
+      }
+    ],
+    "required_source_ids": [
+      "lcv1-museum-1"
+    ],
+    "scope": "project",
+    "scope_id": "",
+    "split": "dev",
+    "unanswerable": false
+  },
+  {
+    "acceptable_answers": [
+      "No. Written loan permission has not arrived; both written permission and a completed credit line are required.",
+      "Not yet: the completed credits and local export do not replace the missing written loan permission."
+    ],
+    "answer": "No. Written loan permission has not arrived; both written permission and a completed credit line are required.",
+    "category": "multi_source_conditions",
+    "forbidden_claims": [],
+    "project": "long-context-museum",
+    "question": "The local Rowan export succeeded and the credits are complete. Can it be sent to the partner classroom now?",
+    "question_date": "2026-06-10",
+    "question_id": "lcv1-museum-q3",
+    "required_points": [
+      {
+        "any_of": [
+          "No",
+          "Not yet"
+        ],
+        "description": "negative",
+        "id": "negative"
+      },
+      {
+        "any_of": [
+          "written loan permission"
+        ],
+        "description": "permission",
+        "id": "permission"
+      },
+      {
+        "any_of": [
+          "credit"
+        ],
+        "description": "credits",
+        "id": "credits"
+      }
+    ],
+    "required_source_ids": [
+      "lcv1-museum-1",
+      "lcv1-museum-2"
+    ],
+    "scope": "project",
+    "scope_id": "",
+    "split": "dev",
+    "unanswerable": false
+  },
+  {
+    "acceptable_answers": [
+      "Five accepted scans: three from the east and two from the west.",
+      "There are 5 accepted scans in total."
+    ],
+    "answer": "Five accepted scans: three from the east and two from the west.",
+    "category": "multi_span_calculation",
+    "forbidden_claims": [],
+    "project": "long-context-museum",
+    "question": "How many accepted scans came from the east and west cabinets together, excluding rejected attempts and the empty sleeve?",
+    "question_date": "2026-06-10",
+    "question_id": "lcv1-museum-q4",
+    "required_points": [
+      {
+        "any_of": [
+          "Five",
+          "5"
+        ],
+        "description": "sum",
+        "id": "sum"
+      },
+      {
+        "any_of": [
+          "accepted scans"
+        ],
+        "description": "unit",
+        "id": "unit"
+      }
+    ],
+    "required_source_ids": [
+      "lcv1-museum-2"
+    ],
+    "scope": "project",
+    "scope_id": "",
+    "split": "dev",
+    "unanswerable": false
+  },
+  {
+    "acceptable_answers": [
+      "No courier fee is given in the records, so it cannot be determined.",
+      "The records do not provide a transport quotation."
+    ],
+    "answer": "No courier fee is given in the records, so it cannot be determined.",
+    "category": "unanswerable",
+    "forbidden_claims": [],
+    "project": "long-context-museum",
+    "question": "What courier fee was quoted to transport the Rowan loan to the partner classroom?",
+    "question_date": "2026-06-10",
+    "question_id": "lcv1-museum-q5",
+    "required_points": [
+      {
+        "any_of": [
+          "No courier fee",
+          "do not provide"
+        ],
+        "description": "absence",
+        "id": "absence"
+      },
+      {
+        "any_of": [
+          "cannot be determined",
+          "quotation"
+        ],
+        "description": "unknown",
+        "id": "unknown"
+      }
+    ],
+    "required_source_ids": [],
+    "scope": "project",
+    "scope_id": "",
+    "split": "dev",
+    "unanswerable": true
+  },
+  {
+    "acceptable_answers": [
+      "The dry-glass mock uses 800 dpi; that does not set the Rowan project resolution.",
+      "800 dpi for the session mock, not the real Rowan loan."
+    ],
+    "answer": "The dry-glass mock uses 800 dpi; that does not set the Rowan project resolution.",
+    "category": "scope_isolation",
+    "forbidden_claims": [],
+    "project": "long-context-museum",
+    "question": "Within session dry-glass only, which resolution does the generated Rowan pattern use?",
+    "question_date": "2026-06-10",
+    "question_id": "lcv1-museum-q6",
+    "required_points": [
+      {
+        "any_of": [
+          "800 dpi"
+        ],
+        "description": "mock",
+        "id": "mock"
+      },
+      {
+        "any_of": [
+          "does not",
+          "not the real"
+        ],
+        "description": "limit",
+        "id": "limit"
+      }
+    ],
+    "required_source_ids": [
+      "lcv1-museum-3"
+    ],
+    "scope": "session",
+    "scope_id": "dry-glass",
+    "split": "dev",
+    "unanswerable": false
+  }
+]

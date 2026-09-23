@@ -1,0 +1,22 @@
+{
+  "annotation_policy": "Human-style manual annotation by a separate agent; no model tuning on heldout questions. Not an external secret test.",
+  "dataset_id": "plm-project-docs-zh-v1-40",
+  "freeze_date": "2026-09-11",
+  "official_benchmark_score": false,
+  "origin": "manually_annotated_questions_from_one_real_project_document_snapshot",
+  "question_count": 40,
+  "real_project_count": 1,
+  "real_user_query_sample": false,
+  "sha256": {
+    "questions.dev.json": "78a076d8a4647ec4c056e7fe6eb05f6e0f0bd4968c47a8405c6bb15fd8bf89c8",
+    "questions.heldout.json": "4b8dfc7eeca4e39e1f96cceeeea95f9cb432c446952f22e65c7e5080ae06819d",
+    "sources.json": "6dbd0eaa4a97c40ac1d7d3fb9ebc7af49583c5bdda35ab1d34a236b3c93194b7"
+  },
+  "snapshot_semantics": "Answers describe the frozen 2026-09-11 documentation, not the future installed runtime.",
+  "source_count": 22,
+  "split_policy": "One PLM project, five non-overlapping topic groups; dev=storage/evidence/retrieval; heldout=operations/evaluation. Topic keys are not independent real projects.",
+  "splits": [
+    "dev",
+    "heldout"
+  ]
+}
