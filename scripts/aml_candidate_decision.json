@@ -1,0 +1,13 @@
+{
+  "adopted": false,
+  "baseline_none": "research-only; no new deployable entry",
+  "candidate": "v4/P3a",
+  "deadline_enabled": false,
+  "decision": "DECISION_PENDING",
+  "future_spending_authorized": false,
+  "official_score": null,
+  "old75_gate": "FAIL",
+  "p3b_enabled": false,
+  "production_ready": false,
+  "schema": "candidate92-public-status-v1"
+}

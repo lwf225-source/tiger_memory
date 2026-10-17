@@ -1,0 +1,11 @@
+# Startup, stop, restart and recovery
+
+Use README's three distinct modes: static self-check; disposable synthetic rehearsal; real configured service under an operator's external authorization. Self-check/rehearsal never supply a valid production budget. A healthy rehearsal is not a supplier or official Smoke result.
+
+For real startup, retain the exact artifact hash, selected profile, dedicated store, provider configuration and lawful externally provisioned receipt. `--check-config` and `--check-startup` validate locally but may transact on that new ledger; the latter also checks store/Git topology. A changed identity or nonempty foreign store must be diagnosed, not repaired by deleting the marker. Do not log keys, request bodies, provider error bodies or private fingerprints.
+
+Stop through the selected process manager: stop admitting requests, establish actual in-flight state, allow the manager's documented grace, then confirm process termination. No hard graceful-stop time is certified here. Preserve sources, catalog, raw cache, ledger, receipt and private operational logs together. HTTP response/write completion is not client ACK; a timeout,503 or killed process does not prove zero supplier billing.
+
+Restart with the same persisted identity and artifact. Recover source/catalog using established runtime mechanisms only after diagnosis; never delete ledger or UNKNOWN to unlock work. A valid raw checkpoint can be reused even when its historical attempt is UNKNOWN; absent raw for UNKNOWN or SETTLED work blocks automatic paid retry. A different request ID or regrouped batch does not grant new sending permission. Corrupt/missing identity, cache or receipt is a stop condition. Reopening the stopped historical DEV ledger cannot authorize official cold Add.
+
+The synthetic `aml_reference --rehearse` validates three service lifecycles in one process, local HTTP, scoped log privacy and test-only journal behavior. It does not validate OS process restart or production log archival. Runtime P3b/deadline remain disabled. Production resource envelope, TLS, proxy, disk failure behavior, durable log retention and restore drill must be bound to the selected host before deployment. Old Ubuntu/BGE operating parameters are historical and must not be copied as current evidence.

@@ -1,0 +1,12 @@
+Tiger memory local candidate92
+
+This distribution preserves the repository's Apache License, Version2.0.
+All43 runtime modules are unchanged from the project's frozen88v3 source.
+Round92 changes only distribution assembly, source selection and accompanying
+public documentation/configuration templates. It uses a separate allowlisted
+build backend; the original runtime builder remains unchanged but is not the
+selected PEP517 backend for this source distribution.
+
+Methodological influences previously credited: FlowGrid, ReFind, Chronicle.
+Optional CodeGraph integration attribution: Copyright(c)2026 Colby Mchenry,
+MIT; no upstream implementation is bundled. See THIRD_PARTY.md.

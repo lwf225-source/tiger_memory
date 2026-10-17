@@ -1,0 +1,11 @@
+.env
+.env.*
+*.receipt.json
+*.sqlite3*
+__pycache__/
+*.pyc
+dist/
+build/
+output/
+store/
+cache/
