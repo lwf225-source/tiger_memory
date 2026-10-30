@@ -79,6 +79,14 @@ def verify(with_codegraph=False):
         run([python, "-c", "import importlib, pkgutil, tiger_memory; "
              "[importlib.import_module(m.name) for m in pkgutil.iter_modules(tiger_memory.__path__, tiger_memory.__name__+'.')]"])
         checks.append("all-runtime-modules-import")
+        candidate = json.loads(run([python, "-m", "tiger_memory.aml_open_source", "--check-config"], expected=2))
+        assert candidate["configured"] is False and candidate["remote_probe_performed"] is False, candidate
+        assert candidate["config"]["embedding"]["model"] == "text-embedding-v4", candidate
+        run([python, "-c", "from pathlib import Path; import tiger_memory; "
+             "p=Path(tiger_memory.__file__).parent/'_bundle'; "
+             "assert (p/'docs/OPEN_SOURCE_PREP.md').is_file(); "
+             "assert (p/'repro/aml-open-source.env.example').is_file()"])
+        checks.append("open-source-entrypoint-and-resources-without-api-call")
         assert "context" in run([plm, "--help"])
         assert "--with-code" in run([plm, "context", "--help"])
         assert "init" in run([plm, "code", "--help"])

@@ -1,0 +1,18 @@
+{
+  "status": "DRAFT_NOT_FROZEN_POLICY",
+  "description": "Minimal non-authorizing reference metadata; private research and operations evidence is not published.",
+  "future_policy": {
+    "can_freeze_now": false,
+    "margin": null
+  },
+  "identity": {
+    "frozen75": {
+      "old_adoption_gate": "FAIL"
+    },
+    "deployment_candidate": {
+      "adopted": false,
+      "equivalent_to75": "UNPROVEN"
+    }
+  },
+  "execution_authorized_by_this_file": false
+}

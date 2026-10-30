@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
-"""Static AML submission preflight; never reads, prints, or sends credentials."""
+"""Static AML submission preflight; never reads, prints, or sends credentials.
+
+This is an inventory of local source artifacts, not a deployment check or an
+assertion of competition eligibility. Run aml_open_source --check-config
+separately to validate a deployment's explicit environment without API calls.
+"""
 from __future__ import annotations
 
 import argparse
@@ -11,10 +16,11 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from tiger_memory import aml_adapter  # noqa: E402
+from tiger_memory import aml_adapter, aml_open_source  # noqa: E402
 
 
 def _docker_context_guard(root: Path) -> dict:
+    """Optional packaging diagnostic; Docker is not a submission prerequisite."""
     dockerfile = root / "Dockerfile"
     ignore = root / ".dockerignore"
     required = {".codex_work/", "output/", "aml_data_store/", ".env", ".env.*"}
@@ -25,6 +31,7 @@ def _docker_context_guard(root: Path) -> dict:
         "dockerignore_present": ignore.is_file(),
         "missing_sensitive_context_exclusions": sorted(required - entries),
         "copies_full_context": "COPY . " in text or "ADD . " in text,
+        "required_for_submission": False,
     }
 
 
@@ -39,43 +46,53 @@ def _has_origin(root: Path) -> bool:
 
 
 def preflight(root: Path = ROOT) -> dict:
-    """Report only non-sensitive, submission-relevant readiness facts."""
+    """Report source availability, leaving external evidence explicitly unknown.
+
+    Do not call configuration() here: this check intentionally does not even
+    inspect credential presence. A Git remote alone cannot prove public access.
+    """
     root = Path(root).resolve()
-    try:
-        config_warnings = aml_adapter.validate_model_config()
-    except ValueError as exc:
-        config_warnings = ["invalid-config:" + str(exc)]
-    docker = _docker_context_guard(root)
-    full_gate = {
-        "fact_model": aml_adapter.AML_FACT_MODEL,
-        "query_provider_can_use_openai_namespace": True,
-        "offline_default_is_full_gate_candidate": False,
-        "credentials_present": False,
-        "credentials_policy": "intentionally_not_inspected",
-    }
     checks = {
-        "public_remote_configured": _has_origin(root),
+        "git_origin_configured": _has_origin(root),
         "license_present": (root / "LICENSE").is_file(),
-        "docker_context_guard": docker["dockerfile_present"] and docker["dockerignore_present"]
-                                and not docker["missing_sensitive_context_exclusions"]
-                                and not docker["copies_full_context"],
-        "local_contract_config_valid": not any(item.startswith("invalid-config:") for item in config_warnings),
-        "official_full_result": False,
+        "open_source_entrypoint_present": (root / "tiger_memory" / "aml_open_source.py").is_file(),
+        "remote_embedding_provider_present": (root / "tiger_memory" / "remote_embeddings.py").is_file(),
+        "preparation_notes_present": (root / "docs" / "OPEN_SOURCE_PREP.md").is_file(),
     }
     return {
-        "tool": "plm-aml-preflight-v1",
+        "tool": "plm-aml-preflight-v2",
+        "scope": "local-source-artifacts-only",
         "adapter_version": aml_adapter.AML_ADAPTER_VERSION,
         "checks": checks,
-        "config_warnings": config_warnings,
-        "docker": docker,
-        "full_gate": full_gate,
+        "profile": {
+            "name": aml_open_source.PROFILE,
+            "entrypoint": "python -m tiger_memory.aml_open_source",
+            "config_check": "python -m tiger_memory.aml_open_source --check-config",
+            "embedding_model": "text-embedding-v4",
+            "embedding_dimensions": 1024,
+            "generative_llm": None,
+            "required_environment_names": list(aml_open_source.REQUIRED),
+            "credentials_policy": "intentionally_not_inspected",
+        },
+        "optional_packaging": {"docker": _docker_context_guard(root)},
+        "unverified_evidence": {
+            "current_rules_and_model_disclosure": "not_checked",
+            "public_source_and_fixed_commit": "not_checked",
+            "paid_embedding_api_and_retrieval_quality": "not_checked",
+            "deployed_candidate_config_hash": "not_checked",
+            "official_smoke_result": "not_checked",
+            "official_full_result": "not_checked",
+        },
         "next_required_evidence": [
-            "official-model-credential-injection-rule",
-            "fixed-gpt-4o-mini-paired-evaluation",
-            "public-repository-and-license",
-            "docker-build-and-smoke-in-a-docker-environment",
-            "official-compatibility-smoke-and-full-result",
+            "current-open-source-rules-and-complete-model-disclosure",
+            "public-source-license-and-fixed-candidate-commit",
+            "dedicated-store-and-explicit-runtime-configuration-check",
+            "authorized-embedding-api-call-and-retrieval-quality-latency-cost-evidence",
+            "deployed-candidate-version-config-hash-auth-and-add-search-readback",
+            "official-smoke-and-full-run-results",
         ],
+        "network_probe_performed": False,
+        "submission_readiness_verified": False,
     }
 
 
