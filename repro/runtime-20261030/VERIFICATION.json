@@ -1,0 +1,26 @@
+{
+  "schema": 1,
+  "verification_date": "2026-10-30",
+  "runtime_version": "dmx-network-recovery-20261030",
+  "synthetic_transport_tests": {
+    "run": 5,
+    "passed": 5,
+    "network": "loopback HTTP; synthetic embedding transport",
+    "cases": [
+      "response after 31 seconds; one batch send",
+      "timeout recovery and cache replay",
+      "HTTP 503/429 backoff",
+      "HTTP 401 no retry",
+      "invalid response no retry"
+    ]
+  },
+  "portable_entry": {
+    "isolated_core": true,
+    "removed_modules_loaded": [],
+    "diagnostics_installed": true,
+    "remote_probe_performed": false
+  },
+  "credential_pattern_hits": 0,
+  "official_evaluation_run": false,
+  "deployment_performed": false
+}
