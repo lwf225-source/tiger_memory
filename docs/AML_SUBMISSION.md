@@ -1,5 +1,11 @@
 # tiger_memory：AML 开源组复现与提交说明
 
+> 2026-10-12：本源码已增加 **2.2.0a5 / adapter 1.4.0** 开源参赛候选入口，
+> 使用指定的 `text-embedding-v4`，操作方式与能力差异见
+> [开源参赛准备与启动](OPEN_SOURCE_PREP.md)。候选已通过小规模真实 v4 联调与本地重启回读，
+> 尚未部署到公网，未取得官方 Smoke/Full。本页下方的 BGE 模型、线上容量与耗时均为
+> **历史 2.2.0a4 基线披露**，不能用来证明新候选效果或已符合开源榜资格。
+
 本仓库提供公开源码、依赖、运行说明、来源和改动记录，用于复现与审核。
 AML 参赛仍需要参赛方自行提供可访问、稳定的 Add/Search 在线服务。
 源码交付与在线服务各自验证。当前自托管的 Health 地址为
@@ -10,7 +16,8 @@ AML 参赛仍需要参赛方自行提供可访问、稳定的 Add/Search 在线�
 ## 固定源码版本
 
 - 项目：`tiger_memory`，原名称 Project Long Memory / PLM。
-- 核心版本：`2.2.0a4`（preview）；AML 适配器版本：`1.3.4`。
+- 当前源码候选：`2.2.0a5`（preview）；AML 适配器：`1.4.0`。
+- 本页历史部署基线：`2.2.0a4` / `1.3.4`，Commit `6ab0b870f2f79c458e4f69507b321ba2de4b8396`。
 - 原始工作基线 Commit：`cc346f685764a769de3dfb2eb32ba78ae08dbcbc`。
 - 复现时使用本次提交给评测方的 **40 位 Commit SHA**，不要用可移动的 `main` 作为版本标识。
   GitHub 的 Commit permalink 与 `git rev-parse HEAD` 可用于核对同一个版本。
