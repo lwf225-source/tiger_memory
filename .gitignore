@@ -17,3 +17,8 @@ output/
 .env.*
 aml_data_store/
 models/
+
+# Private experiment datasets and local artifacts are not publication inputs.
+benchmarks/
+repro/candidate92_*/
+*.receipt.json

@@ -2,10 +2,46 @@
 
 Local-first project memory for agent workflows. Immutable Markdown events are
 source records; SQLite, FTS5, facts and retrieval indexes are rebuildable.
-Current source version: **2.2.0a4 (preview)**. The core requires Python 3.9+ and
+Current source version: **2.2.0a5 (preview)**. The core requires Python 3.9+ and
 has no third-party Python runtime dependencies.
 
+## Explicit Active Memory component
+
+[Active Memory](docs/ACTIVE_MEMORY.md) provides a local Python API and CLI for
+explicitly important preferences, goals and project context. Applications can
+retrieve current memory before a task with `run_task`; corrections and logical
+forgetting preserve source lineage. This component is not automatically connected
+to an external assistant or HTTP service. See the guide for storage isolation,
+synthetic verification and the limits of logical forgetting.
+
 ## AML open-source track
+
+**Current source snapshot:** the development package is **2.2.0a5 (preview)**.
+A self-contained runtime snapshot is available in
+[`repro/runtime-20261030`](repro/runtime-20261030/README.md), with isolated base
+modules, an environment-based entry point and synthetic transport tests.
+The root `python -m tiger_memory.aml_open_source` entry retains its earlier
+budget-bound candidate behavior; the separate runtime uses a different policy.
+
+The separate runtime uses `text-embedding-v4` at 1024 dimensions, durable
+per-user caches, credential redaction and bounded diagnostic output. Transient
+network/provider failures retry with backoff; authentication, TLS and invalid
+response failures remain errors. Model calls may incur provider charges.
+See [source scope and verification](docs/GITHUB_SYNC_20261030.md).
+
+Keep the AML store **outside every Git checkout**, separate from the source tree
+and your daily memory. Before configuring credentials or starting a listener,
+check a proposed path without creating it or contacting an API:
+
+```sh
+python3 -m tiger_memory.aml_store_preflight \
+  --store "$HOME/.local/share/tiger-memory-aml-v4"
+```
+
+Git is required for this local topology check. Exit 0 confirms only the checked
+directory/marker topology; it does not confirm writability, model access or
+deployment. See the [local launch and delivery checklist](docs/OPEN_SOURCE_PREP.md#本地启动与交付清单)
+for configuration, launch and remaining external evidence.
 
 This repository contains the source and reproduction materials for
 **tiger_memory** (formerly Project Long Memory / PLM). See
@@ -14,7 +50,7 @@ source baseline, Add/Search API, model disclosure, pinned optional dependencies,
 and the changes included in this upload. The repository is licensed under
 [Apache-2.0](LICENSE).
 
-For the tested Ubuntu CPU environment, use
+For the historical local BGE environment, use
 [`repro/linux-cpu-requirements.lock`](repro/linux-cpu-requirements.lock) and the
 installation order in the AML notes. The macOS model lock is a separate
 measured environment.
@@ -22,9 +58,8 @@ measured environment.
 The public repository supports review and reproduction. An externally reachable
 Add/Search service must be deployed separately for participation; this source
 upload does not establish that such a service is online or accepted by AML.
-The self-hosted service's [public Health endpoint](https://www.aigcpro.cn/aml/health)
-is available separately. Its Add/Search endpoints require a private Memory
-System Key; local contract checks are not an AML platform Smoke or Full result.
+Add/Search endpoints require a configured service key. Local contract checks
+do not establish official evaluation results.
 
 ## Standalone installation
 

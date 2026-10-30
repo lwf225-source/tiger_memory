@@ -5,7 +5,7 @@ backend-path = ["."]
 
 [project]
 name = "tiger_memory"
-version = "2.2.0a4"
+version = "2.2.0a5"
 description = "Local-first, auditable project memory with optional code evidence"
 requires-python = ">=3.9"
 dependencies = []

@@ -50,5 +50,12 @@ default Add/Search configuration.
 
 ## Project license
 
+The optional open-source candidate calls Alibaba Cloud Model Studio's
+`text-embedding-v4` using its OpenAI-compatible HTTP format. The model service
+and its terms remain separate from this Apache-2.0 code; no model weights or SDK
+are bundled. API reference:
+https://www.alibabacloud.com/help/en/model-studio/text-embedding-synchronous-api
+See `docs/OPEN_SOURCE_PREP.md` for the exact candidate configuration and limits.
+
 The repository includes the Apache License, Version 2.0, in the root `LICENSE`.
 This inventory does not change the separate licenses of external components.
