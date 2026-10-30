@@ -1,0 +1,30 @@
+{
+  "format": "synthetic_active_demo.v1",
+  "seed_session_id": "demo-seed-session-1",
+  "entries": [
+    {
+      "label": "style-v1",
+      "payload": {
+        "kind": "preference", "topic_key": "demo.output_style", "project_id": "", "applicability": "always",
+        "confirmation": "caller_asserted", "important": true, "request_id": "demo-seed-style-v1", "valid_until": "",
+        "source": {"session_id": "demo-seed-session-1", "message_id": "seed-style", "role": "user", "asserted_at": "2026-10-01T00:00:00.000000Z", "text": "{\"style\":\"compact\",\"synthetic_marker\":\"STYLE_ONLY_SEED_V1\"}"}
+      }
+    },
+    {
+      "label": "context-a",
+      "payload": {
+        "kind": "project_context", "topic_key": "demo.cobalt.context", "project_id": "demo-project-a", "applicability": "topical",
+        "confirmation": "caller_asserted", "important": true, "request_id": "demo-seed-context-a", "valid_until": "",
+        "source": {"session_id": "demo-seed-session-1", "message_id": "seed-context-a", "role": "user", "asserted_at": "2026-10-01T00:00:00.000000Z", "text": "{\"room\":\"cobalt\",\"synthetic_marker\":\"PROJECT_A_ONLY_SEED\"}"}
+      }
+    },
+    {
+      "label": "goal-a",
+      "payload": {
+        "kind": "goal", "topic_key": "demo.cobalt.goal", "project_id": "demo-project-a", "applicability": "topical",
+        "confirmation": "caller_asserted", "important": true, "request_id": "demo-seed-goal-a", "valid_until": "2026-10-03T00:00:00.000000Z",
+        "source": {"session_id": "demo-seed-session-1", "message_id": "seed-goal-a", "role": "user", "asserted_at": "2026-10-01T00:00:00.000000Z", "text": "{\"goal\":\"cobalt checklist\",\"synthetic_marker\":\"GOAL_UNTIL_BOUNDARY\"}"}
+      }
+    }
+  ]
+}

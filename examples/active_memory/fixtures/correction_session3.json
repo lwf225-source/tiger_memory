@@ -1,0 +1,8 @@
+{
+  "label": "style-v2",
+  "payload": {
+    "kind": "preference", "topic_key": "demo.output_style", "project_id": "", "applicability": "always",
+    "confirmation": "caller_asserted", "important": true, "request_id": "demo-correction-style-v2", "valid_until": "",
+    "source": {"session_id": "demo-correction-session-3", "message_id": "correction-style", "role": "user", "asserted_at": "2026-10-02T00:00:00.000000Z", "text": "{\"style\":\"expanded\",\"synthetic_marker\":\"STYLE_ONLY_CORRECTION_V2\"}"}
+  }
+}
