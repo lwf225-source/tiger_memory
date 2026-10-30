@@ -9,6 +9,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, Iterator, Tuple
 
+from . import request_budget, request_waits
 from .model import EVENT_KINDS, FACT_STATUSES, SCHEMA_VERSION, SCOPES, VISIBILITIES, Event, PLMError, json_compact, v2_root
 from .security import assert_safe_path, ensure_private_dir
 
@@ -134,6 +135,7 @@ def parse_legacy_note(path: Path) -> Tuple[Dict[str, str], str]:
 
 @contextmanager
 def project_lock(project_id: str) -> Iterator[None]:
+    request_budget.check("file-lock-open")
     lock_dir = v2_root() / "locks"
     ensure_private_dir(lock_dir)
     path = lock_dir / (project_id + ".lock")
@@ -142,7 +144,7 @@ def project_lock(project_id: str) -> Iterator[None]:
         raise PLMError("symlinked project lock rejected")
     fd = os.open(str(path), os.O_CREAT | os.O_RDWR | getattr(os, "O_NOFOLLOW", 0), 0o600)
     try:
-        fcntl.flock(fd, fcntl.LOCK_EX)
+        request_waits.flock(fd, fcntl.LOCK_EX)
         yield
     finally:
         fcntl.flock(fd, fcntl.LOCK_UN)
@@ -152,6 +154,7 @@ def project_lock(project_id: str) -> Iterator[None]:
 @contextmanager
 def maintenance_lock(exclusive: bool = False) -> Iterator[None]:
     """Coordinate normal mutations with maintenance operations such as rebuild."""
+    request_budget.check("file-lock-open")
     lock_dir = v2_root() / "locks"
     ensure_private_dir(lock_dir)
     path = lock_dir / "maintenance.lock"
@@ -160,7 +163,7 @@ def maintenance_lock(exclusive: bool = False) -> Iterator[None]:
         raise PLMError("symlinked maintenance lock rejected")
     fd = os.open(str(path), os.O_CREAT | os.O_RDWR | getattr(os, "O_NOFOLLOW", 0), 0o600)
     try:
-        fcntl.flock(fd, fcntl.LOCK_EX if exclusive else fcntl.LOCK_SH)
+        request_waits.flock(fd, fcntl.LOCK_EX if exclusive else fcntl.LOCK_SH)
         yield
     finally:
         fcntl.flock(fd, fcntl.LOCK_UN)

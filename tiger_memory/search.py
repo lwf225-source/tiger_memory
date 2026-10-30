@@ -8,9 +8,11 @@ import struct
 import warnings
 from collections import defaultdict
 from datetime import datetime, timezone
+from contextlib import contextmanager
 from operator import mul
 from typing import Any, Dict, Iterable, List, Optional, Sequence, Tuple
 
+from . import request_budget
 from .database import searchable_tags
 from .model import PLMError, SearchResult, utc_now
 from .passages import split_passages
@@ -239,6 +241,7 @@ def _search_legacy(
     scope: str = "project",
     scope_id: str = "",
 ) -> List[SearchResult]:
+    request_budget.check("search-validation")
     if view not in {"current", "history", "both"}:
         raise ValueError("invalid memory view")
     expanded, aliases = _expand_aliases(conn, project_id, query)
@@ -277,6 +280,7 @@ def _search_legacy(
                 tuple([fts, project_id, *eligibility_params]),
             ).fetchall()
         except sqlite3.OperationalError:
+            request_budget.check("search-fallback")
             rows = []
         for position, row in enumerate(rows, 1):
             key = (row["record_type"], row["ref_id"])
@@ -455,7 +459,10 @@ def _eligible_records(conn: sqlite3.Connection, project_id: str, scope: str, sco
         "AND f.status IN ('active','superseded')" + time_clause,
         tuple(params),
     ).fetchall()
-    records = {(row["record_type"], row["ref_id"]): dict(row) for row in list(event_rows) + list(fact_rows)}
+    records = {}
+    for row in list(event_rows) + list(fact_rows):
+        request_budget.check("search-eligible")
+        records[(row["record_type"], row["ref_id"])] = dict(row)
     return _filter_source_chains(conn, records, project_id, scope, scope_id, view, now,
                                  valid_at=valid_at, soft_supersede=soft_supersede)
 
@@ -648,6 +655,7 @@ def _describe(provider: Any) -> Dict[str, Any]:
     try:
         return dict(provider.describe()) if hasattr(provider, "describe") else {"provider": type(provider).__name__}
     except Exception:
+        request_budget.check("search-fallback")
         return {"provider": type(provider).__name__}
 
 
@@ -689,6 +697,7 @@ def _entity_expand(conn, records, project_id, hits, hops, info, passage_mode=Fal
     """
     event_keys: Dict[str, List[Tuple[str, str]]] = defaultdict(list)
     for key, record in records.items():
+        request_budget.check("search-ranking")
         event_keys[record["assertion_event_id"]].append(key)
     rows = conn.execute(
         "SELECT ee.event_id,ee.entity_id FROM event_entities ee "
@@ -991,6 +1000,90 @@ def _adjacent_augment_reserved(records, project_id, hits, limit, count, info, pa
     return merged
 
 
+# Proposal limits bound copied source payload, not total SQLite RSS.
+PROJECT_FTS_MAX_ROWS = 100000
+PROJECT_FTS_MAX_BYTES = 64 * 1024 * 1024
+_PROJECT_FTS_DDL = """CREATE VIRTUAL TABLE memory_fts USING fts5(
+    ref_id UNINDEXED, project_id UNINDEXED, record_type UNINDEXED,
+    title, tags, body, tokenize='trigram'
+)"""
+_LEXICAL_BM25 = "bm25(memory_fts,0.0,0.0,0.0,8.0,4.0,1.0)"
+
+
+@contextmanager
+def _project_fts_snapshot(conn):
+    """Pin lexical source reads only; retain any caller-owned outer transaction."""
+    name = "project_fts_snapshot"
+    try:
+        conn.execute("SAVEPOINT " + name)
+    except sqlite3.Error as exc:
+        raise PLMError("scoped_stats_snapshot_unavailable") from exc
+    try:
+        yield
+    finally:
+        try:
+            conn.execute("RELEASE " + name)
+        except sqlite3.Error as exc:
+            raise PLMError("scoped_stats_snapshot_unavailable") from exc
+
+
+def _project_fts_rows(conn, project_id, fts, predicate, params, info,
+                      max_rows, max_bytes):
+    """Use project statistics, retaining the original SQL visibility predicate.
+
+    Each lexical channel holds a short snapshot for source reads. No disk writes,
+    cross-request cache, source normalization, or global fallback are allowed.
+    Unknown FTS schemas require explicit support, never guessed DDL rewriting.
+    """
+    local = None
+    try:
+        with _project_fts_snapshot(conn):
+            schema = conn.execute(
+                "SELECT sql FROM sqlite_master WHERE name='memory_fts' AND type='table'"
+            ).fetchone()
+            normalize = lambda sql: re.sub(r"\s+", "", sql).lower().rstrip(";")
+            if not schema or normalize(schema[0]) != normalize(_PROJECT_FTS_DDL):
+                raise PLMError("scoped_stats_schema_unsupported")
+            columns = ("ref_id", "project_id", "record_type", "title", "tags", "body")
+            byte_sum = "+".join("coalesce(length(CAST(%s AS BLOB)),0)" % c for c in columns)
+            count, payload_bytes = conn.execute(
+                "SELECT count(*),coalesce(sum(" + byte_sum + "),0) FROM memory_fts WHERE project_id=?",
+                (project_id,),
+            ).fetchone()
+            if count > max_rows or payload_bytes > max_bytes:
+                raise PLMError("scoped_stats_limit_exceeded")
+            allowed = {(row["record_type"], row["ref_id"]) for row in conn.execute(
+                "SELECT record_type,ref_id FROM memory_fts WHERE memory_fts MATCH ? AND project_id=? AND " + predicate,
+                tuple([fts, project_id, *params]),
+            )}
+            # Allocate only after the deterministic payload preflight succeeds.
+            local = sqlite3.connect(":memory:")
+            local.row_factory = sqlite3.Row
+            local.execute(_PROJECT_FTS_DDL)
+            source_rows = conn.execute(
+                "SELECT rowid,ref_id,project_id,record_type,title,tags,body FROM memory_fts WHERE project_id=?",
+                (project_id,),
+            )
+            local.executemany("INSERT INTO memory_fts(rowid,ref_id,project_id,record_type,title,tags,body) "
+                              "VALUES(?,?,?,?,?,?,?)", source_rows)
+        rows = local.execute(
+            "SELECT record_type,ref_id," + _LEXICAL_BM25 + " AS rank FROM memory_fts "
+            "WHERE memory_fts MATCH ? ORDER BY rank,ref_id", (fts,),
+        ).fetchall()
+        matching = {(row["record_type"], row["ref_id"]) for row in rows}
+        if not allowed <= matching:
+            raise PLMError("scoped_stats_match_mismatch")
+        info.setdefault("fts_statistics", {"scope": "project", "channels": []})["channels"].append(
+            {"copied_rows": count, "copied_utf8_bytes": payload_bytes,
+             "allowed_matches": len(allowed), "max_rows": max_rows, "max_utf8_bytes": max_bytes})
+        return [row for row in rows if (row["record_type"], row["ref_id"]) in allowed]
+    except (sqlite3.Error, MemoryError) as exc:
+        raise PLMError("scoped_stats_unavailable") from exc
+    finally:
+        if local is not None:
+            local.close()
+
+
 def search(
     conn: sqlite3.Connection, project_id: str, query: str, limit: int = 6,
     view: str = "current", scope: str = "project", scope_id: str = "",
@@ -1003,8 +1096,16 @@ def search(
     session_views: bool = False,
     session_rrf: bool = False,
     query_provider: Any = None,
+    *, fts_statistics_scope: str = "global",
+    fts_statistics_max_rows: int = PROJECT_FTS_MAX_ROWS,
+    fts_statistics_max_bytes: int = PROJECT_FTS_MAX_BYTES,
 ) -> List[SearchResult]:
     """Retrieve scoped evidence, optionally augmenting lexical search with local models.
+
+    ``fts_statistics_scope="project"`` is an explicit lexical-only opt-in.
+    Each lexical channel copies all project FTS rows under a short snapshot, retaining
+    original eligibility and RRF semantics. Payload caps fail explicitly.
+    Global/default results and the existing AML profile are unchanged.
 
     ``legacy`` preserves v2.1.0 query/ranking behavior for controlled comparisons.
     Callers selecting models should surface ``diagnostics``; fallback reasons are
@@ -1084,10 +1185,20 @@ def search(
     session digest only when this switch or ``session_views`` is enabled; facts
     and untagged records are untouched. The default is byte-identical.
     """
+    request_budget.check("search-validation")
     if view not in {"current", "history", "both"}:
         raise ValueError("invalid memory view")
     if profile not in {"legacy", "lexical", "passages"}:
         raise ValueError("invalid retrieval profile")
+    if fts_statistics_scope not in {"global", "project"}:
+        raise ValueError("invalid FTS statistics scope")
+    if fts_statistics_scope == "project" and profile != "lexical":
+        raise ValueError("project FTS statistics require lexical profile")
+    if fts_statistics_scope == "project" and any(
+        isinstance(value, bool) or not isinstance(value, int) or value <= 0
+        for value in (fts_statistics_max_rows, fts_statistics_max_bytes)
+    ):
+        raise ValueError("invalid FTS statistics limits")
     if not 0 <= adjacent <= MAX_ADJACENT_WINDOW:
         raise ValueError("invalid adjacent window")
     if not isinstance(recency_boost, bool):
@@ -1238,6 +1349,7 @@ def search(
             else:
                 info["query_rewrite"] = dict(_describe(query_provider), status="empty-output")
         except Exception as exc:
+            request_budget.check("search-fallback")
             reason = str(exc) if isinstance(exc, ProviderUnavailable) else "provider-failed:" + type(exc).__name__
             info["query_rewrite"] = dict(_describe(query_provider), status="unavailable", fallback_reason=reason)
             fallbacks.append("query-rewrite-fallback:" + reason)
@@ -1249,6 +1361,7 @@ def search(
     time_suffixes = {key: _time_text(records[key], now) for key in records} if recency_boost else None
 
     def record_text(key: Tuple[str, str]) -> str:
+        request_budget.check("search-document")
         text = _record_text(records[key])
         return text + " " + time_suffixes[key] if time_suffixes and time_suffixes.get(key) else text
     fts_terms = [term for term in terms if len(term) >= 3]
@@ -1257,12 +1370,18 @@ def search(
                                          valid_at=valid_point, known_at=known_point, soft_supersede=soft_supersede)
         fts = " OR ".join('"' + term.replace('"', '') + '"' for term in fts_terms[:64])
         try:
-            rows = conn.execute(
-                "SELECT record_type,ref_id,bm25(memory_fts,0.0,0.0,0.0,8.0,4.0,1.0) AS rank FROM memory_fts "
-                "WHERE memory_fts MATCH ? AND project_id=? AND " + predicate + " ORDER BY rank,ref_id",
-                tuple([fts, project_id, *params]),
-            ).fetchall()
+            if fts_statistics_scope == "project":
+                rows = _project_fts_rows(
+                    conn, project_id, fts, predicate, params, info,
+                    fts_statistics_max_rows, fts_statistics_max_bytes)
+            else:
+                rows = conn.execute(
+                    "SELECT record_type,ref_id," + _LEXICAL_BM25 + " AS rank FROM memory_fts "
+                    "WHERE memory_fts MATCH ? AND project_id=? AND " + predicate + " ORDER BY rank,ref_id",
+                    tuple([fts, project_id, *params]),
+                ).fetchall()
         except sqlite3.OperationalError:
+            request_budget.check("search-fallback")
             info["fts_fallback_reason"] = "fts-query-unavailable"
             rows = []
         eligible_hits = [row for row in rows if (row["record_type"], row["ref_id"]) in records][:80]
@@ -1312,12 +1431,18 @@ def search(
                                              valid_at=valid_point, known_at=known_point, soft_supersede=soft_supersede)
             fts = " OR ".join('"' + term.replace('"', '') + '"' for term in expansion_fts_terms[:64])
             try:
-                rows = conn.execute(
-                    "SELECT record_type,ref_id,bm25(memory_fts,0.0,0.0,0.0,8.0,4.0,1.0) AS rank FROM memory_fts "
-                    "WHERE memory_fts MATCH ? AND project_id=? AND " + predicate + " ORDER BY rank,ref_id",
-                    tuple([fts, project_id, *params]),
-                ).fetchall()
+                if fts_statistics_scope == "project":
+                    rows = _project_fts_rows(
+                        conn, project_id, fts, predicate, params, info,
+                        fts_statistics_max_rows, fts_statistics_max_bytes)
+                else:
+                    rows = conn.execute(
+                        "SELECT record_type,ref_id," + _LEXICAL_BM25 + " AS rank FROM memory_fts "
+                        "WHERE memory_fts MATCH ? AND project_id=? AND " + predicate + " ORDER BY rank,ref_id",
+                        tuple([fts, project_id, *params]),
+                    ).fetchall()
             except sqlite3.OperationalError:
+                request_budget.check("search-fallback")
                 rows = []
             eligible_hits = [row for row in rows if (row["record_type"], row["ref_id"]) in records][:80]
             for position, row in enumerate(eligible_hits, 1):
@@ -1335,6 +1460,7 @@ def search(
         # eligible-record universe instead of reading the vectors table.
         similarities = []
         for key in records:
+            request_budget.check("search-ranking")
             similarity = cosine_blob(query_vector, encode_vector(record_text(key)))
             if similarity >= MIN_VECTOR_SIMILARITY:
                 similarities.append((similarity, key))
@@ -1345,6 +1471,7 @@ def search(
                                    tuple([project_id, *params])).fetchall()
         similarities = []
         for row in vector_rows:
+            request_budget.check("search-ranking")
             similarity = cosine_blob(query_vector, row["vector"])
             key = (row["record_type"], row["ref_id"])
             if key in records and similarity >= MIN_VECTOR_SIMILARITY:
@@ -1409,6 +1536,7 @@ def search(
                             ranked[key] += 1.0 / (60.0 + position)
                             reasons[key].append(label + ":%.3f" % similarity)
                     except Exception:
+                        request_budget.check("search-fallback")
                         # One broken rewrite channel must not sink the main
                         # embedding channel; degradation is per-channel.
                         continue
@@ -1416,6 +1544,7 @@ def search(
             else:
                 info["embedding"]["status"] = "skipped-no-eligible-records"
         except Exception as exc:
+            request_budget.check("search-fallback")
             reason = str(exc) if isinstance(exc, ProviderUnavailable) else "provider-failed:" + type(exc).__name__
             info["embedding"] = dict(_describe(embedding_provider), status="unavailable", fallback_reason=reason)
             fallbacks.append("embedding-fallback:" + reason)
@@ -1430,6 +1559,7 @@ def search(
     penalty_point = valid_point or now
     soft_penalized = 0
     for key, base_score in ranked.items():
+        request_budget.check("search-ranking")
         record = records[key]
         title_lower = record["title"].lower()
         query_lower = query.strip().lower()
@@ -1474,6 +1604,7 @@ def search(
             else:
                 info["reranker"]["status"] = "skipped-no-candidates"
         except Exception as exc:
+            request_budget.check("search-fallback")
             reason = str(exc) if isinstance(exc, ProviderUnavailable) else "provider-failed:" + type(exc).__name__
             info["reranker"] = dict(_describe(reranker), status="unavailable", fallback_reason=reason)
             if diagnostics is None:
@@ -1532,6 +1663,7 @@ def _search_passages(records, project_id, query, limit, provider, info, aliases,
     chunks = {}
     parents = {}
     for key in sorted(records):
+        request_budget.check("search-ranking")
         row = records[key]
         for span in split_passages(row["body"], row["assertion_event_id"]):
             span_id = span["passage_id"]
@@ -1599,6 +1731,7 @@ def _search_passages(records, project_id, query, limit, provider, info, aliases,
             else:
                 info["embedding"] = {"status": "skipped-no-eligible-records"}
         except Exception as exc:
+            request_budget.check("search-fallback")
             reason = str(exc) if isinstance(exc, ProviderUnavailable) else "provider-failed:" + type(exc).__name__
             info["embedding"] = dict(_describe(provider), status="unavailable", fallback_reason=reason)
             fallback = ["embedding-fallback:" + reason]

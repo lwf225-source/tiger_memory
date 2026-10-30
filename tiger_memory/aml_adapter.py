@@ -2,9 +2,9 @@
 
 This module exposes PLM as an AML participant over two synchronous HTTP
 operations, ``POST /add`` and ``POST /search`` (plus an unauthenticated
-``GET /health``). It is deliberately a *thin* layer: it changes no behavior of
-the existing service/search modules, adds no third-party dependency, and never
-generates answers — Search returns ranked original evidence only.
+``GET /health``). It adds no third-party dependency and never generates answers
+— Search returns ranked original evidence only. AML identity preflight shares
+the service's native Git probe while preserving ordinary project discovery.
 
 Wire contract source: the official AML Add/Search API guide
 (https://agentmemories.ai/api-guide), cross-checked against the public
@@ -14,15 +14,13 @@ validation matrix matches the official guide.
 
 Isolation model
 ---------------
-``user_id`` is the only retrieval scope used by the platform. The adapter maps
-each ``user_id`` to its own on-disk storage directory
-``<TIGER_MEMORY_DIR>/aml_users/<slug>--<hash>/`` carrying a
-``pyproject.toml`` marker, so ``find_project_root`` resolves it as a distinct
-PLM project root (deterministic ``project_id`` per user) without requiring
-git. As a second, independent isolation layer every event is written with
-``scope="session", scope_id=<user_id>`` and every search filters on exactly
-that scope pair — even if project-root resolution ever collapsed, the SQL
-scope filter still cannot cross users.
+Each user_id maps to a canonical private project root with fixed project ID,
+scope=session and scope_id=user_id. The service validates that expected identity
+inside write transactions, idempotent replay, orphan recovery and Search before
+recall. Observed Git/alias conflicts fail closed; ordinary CLI discovery is
+unchanged. No global storage lock is held across embedding calls. These checks
+cannot fence arbitrary same-permission external filesystem changes; writes keep
+the captured target rather than rerouting after a later discovery.
 
 Frozen submission configuration
 -------------------------------
@@ -33,25 +31,63 @@ only with a new recorded version, never silently.
 from __future__ import annotations
 
 import argparse
+from contextlib import nullcontext
 import hashlib
 import json
 import os
 import re
 import sys
+import threading
 from datetime import datetime, timezone
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
 from . import service
-from .model import memory_base
+from . import request_budget
+from . import aml_search_trace
+from .request_budget import RequestCancelled
+from .aml_http_lifecycle import RequestLifecycle
+from .aml_add_lock import AddBusy, AddLockUnavailable, add_admission_lock
+from .reliability import SourceRecoveryError
+from .model import canonical_root, display_slug, memory_base, project_id_for_root
 from .narrative_time import mentioned_date_tags
-from .security import ensure_private_dir
+from .security import SecretDetected, assert_no_secrets, ensure_private_dir
 
 # ---------------------------------------------------------------------------
 # Frozen AML submission configuration (see docs/AML_SUBMISSION.md).
 # ---------------------------------------------------------------------------
-AML_ADAPTER_VERSION = "1.3.4"
+AML_ADAPTER_VERSION = "1.4.0"
+# Enabled only by the explicit open-source launcher, never by the daily CLI.
+AML_STRICT_RETRIEVAL = False
+AML_EMBEDDING_FACTORY = None
+AML_RUNTIME_CONFIG: Dict[str, Any] = {"profile": "legacy-bge"}
+_OUTCOMES: Dict[str, int] = {}
+_OUTCOMES_LOCK = threading.Lock()
+# Local candidate only: a versioned launcher must explicitly supply a recorder.
+AML_SEARCH_TRACE = None
+
+
+class RetrievalUnavailable(RuntimeError):
+    """Sanitized transient failure; never pass model payloads to clients."""
+
+
+class SensitiveSearchRejected(RetrievalUnavailable):
+    """The strict remote profile rejects a probable credential before recall."""
+
+
+# Shared exception keeps service transaction failures visible as the same 503.
+StorageIdentityConflict = service.StorageIdentityConflict
+
+
+class EmbeddingCapacityExceeded(RuntimeError):
+    """A read-only capacity snapshot proves this request exceeds its batch cap."""
+
+
+def _outcome(name: str) -> None:
+    with _OUTCOMES_LOCK:
+        _OUTCOMES[name] = _OUTCOMES.get(name, 0) + 1
+
 AML_PROFILE = "lexical"          # retrieval profile: lexical | passages | legacy
 AML_ADJACENT = 2                 # recorded_at neighbours appended per direct hit (0=off)
 AML_RECENCY_BOOST = True         # in-memory date-term injection + micro recency tie-break
@@ -60,6 +96,7 @@ AML_TOP_K_MAX = 100              # official evaluation top_k; larger requests cl
 AML_VIEW = "current"             # memory view: current | history | both
 AML_OPTIONS_AS_QUERY_TERMS = True  # choice-question options join the recall query (never replace it)
 AML_MAX_REQUEST_BYTES = 32 * 1024 * 1024
+AML_ADD_LOCK_TIMEOUT_SECONDS = 5.0
 AML_SOURCE = "aml"
 
 # Optional hybrid recall (plm-aml 1.1.0). ``local`` adds the search module's
@@ -276,6 +313,8 @@ def validate_model_config() -> List[str]:
             % (fact_prefix, fact_prefix)
             + "serving without projections")
     for name, value in (("AML_EMBEDDING", AML_EMBEDDING), ("AML_RERANKER", AML_RERANKER)):
+        if name == "AML_EMBEDDING" and value == "remote-v4" and callable(AML_EMBEDDING_FACTORY):
+            continue
         if value not in _MODEL_SWITCHES:
             raise ValueError("%s must be one of %s, got %r" % (name, sorted(_MODEL_SWITCHES), value))
         if value == "local":
@@ -290,14 +329,17 @@ def validate_model_config() -> List[str]:
     return warnings_out
 
 
-def _model_provider(role: str) -> Any:
-    """Build the optional local model once; any failure degrades to ``None``.
+def _model_provider(role: str, user_id: str = "") -> Any:
+    """Build a user-scoped remote provider or the legacy local singleton.
 
-    ``None`` means the search call runs the pure lexical configuration — the
-    deterministic competition safety floor. Build problems (missing directory,
-    missing optional dependency, unloadable weights) never propagate.
+    Legacy local build failures degrade to None. The explicit remote profile
+    propagates failures so its strict caller can report 503 instead of fallback.
     """
     switch = AML_EMBEDDING if role == "embedding" else AML_RERANKER
+    if switch == "remote-v4" and role == "embedding":
+        if not user_id or not callable(AML_EMBEDDING_FACTORY):
+            raise RetrievalUnavailable("embedding configuration unavailable")
+        return AML_EMBEDDING_FACTORY(user_id)
     if switch != "local":
         return None
     if role in _MODEL_SINGLETONS:
@@ -407,6 +449,9 @@ def model_status() -> Dict[str, Any]:
                                          if AML_QUERY_REWRITE == "llm" else False}
     for role, switch in (("embedding", AML_EMBEDDING), ("reranker", AML_RERANKER)):
         entry: Dict[str, Any] = {"switch": switch}
+        if switch == "remote-v4":
+            entry.update(model_id="text-embedding-v4", configured=callable(AML_EMBEDDING_FACTORY),
+                         readiness="not_probed", failure_policy="503_no_fallback")
         if switch == "local":
             provider = _model_provider(role)
             entry["active"] = provider is not None
@@ -532,6 +577,85 @@ def ensure_user_storage(user_id: str) -> Path:
     return path
 
 
+def _storage_identity_preflight(user_id: str) -> Path:
+    """Read-only containment for stable AML directory and catalog routing.
+
+    A new Add has already created its marker. Search never creates a directory.
+    This check does not migrate old projects or bind later service transactions.
+    """
+    from . import database
+
+    try:
+        directory = user_storage_dir(user_id)
+        expected_root = canonical_root(directory)
+        exists = directory.exists()
+        if exists:
+            if not directory.is_dir() or service.find_project_root(directory) != expected_root:
+                raise StorageIdentityConflict()
+        else:
+            ancestor = directory.parent
+            while not ancestor.exists():
+                if ancestor == ancestor.parent:
+                    raise StorageIdentityConflict()
+                ancestor = ancestor.parent
+            if not ancestor.is_dir():
+                raise StorageIdentityConflict()
+            # Unlike an existing user directory, this path has no marker yet.
+            # Only the common Git branch applies; after a new Add creates the
+            # marker, the no-Git fallback must be the user's own directory.
+            git_root = service._git_project_root(canonical_root(ancestor))
+            if git_root is not None and git_root != expected_root:
+                raise StorageIdentityConflict()
+
+        catalog = database.db_path()
+        if not catalog.exists():
+            return expected_root
+        if not catalog.is_file():
+            raise StorageIdentityConflict()
+        expected_id = project_id_for_root(expected_root)
+        conn = database.connect_readonly()
+        try:
+            alias = conn.execute(
+                "SELECT project_id FROM project_aliases WHERE alias_path=? AND active=1",
+                (str(expected_root),),
+            ).fetchone()
+            project = conn.execute(
+                "SELECT project_id,canonical_root,folder_name FROM projects WHERE project_id=?",
+                (expected_id,),
+            ).fetchone()
+            if not exists and (alias is not None or project is not None):
+                raise StorageIdentityConflict()
+            if alias is not None and (alias["project_id"] != expected_id or project is None):
+                raise StorageIdentityConflict()
+            if project is not None and (
+                project["canonical_root"] != str(expected_root)
+                or project["folder_name"] != display_slug(expected_root)
+            ):
+                raise StorageIdentityConflict()
+        finally:
+            conn.close()
+        return expected_root
+    except (StorageIdentityConflict, RequestCancelled):
+        raise
+    except Exception:
+        raise StorageIdentityConflict() from None
+
+
+def _assert_written_identity(event: Any, root: Path, user_id: str) -> None:
+    """Reject a wrong routed/replayed event before projection or embedding use."""
+    try:
+        metadata = event.metadata
+        if (metadata["project_id"] != project_id_for_root(root)
+                or metadata["project_root"] != str(root)
+                or metadata["scope"] != "session"
+                or metadata["scope_id"] != user_id):
+            raise StorageIdentityConflict()
+    except (StorageIdentityConflict, RequestCancelled):
+        raise
+    except Exception:
+        raise StorageIdentityConflict() from None
+
+
 def _validate_add(payload: Any) -> Tuple[str, str, str, List[Dict[str, Any]]]:
     if not isinstance(payload, dict):
         raise ContractError("request body must be a JSON object")
@@ -555,6 +679,21 @@ def _validate_add(payload: Any) -> Tuple[str, str, str, List[Dict[str, Any]]]:
     return request_id, user_id, session_id, validated
 
 
+def _message_fields(message, user_id, session_id):
+    stamp = _iso_from_ms(message["timestamp"])
+    tags = [AML_SOURCE]
+    if AML_SESSION_VIEWS or AML_SESSION_RRF:
+        tags.append(_session_tag(user_id, session_id))
+    if AML_NARRATIVE_TIME:
+        tags += mentioned_date_tags(message["content"])
+    return stamp, "%s · %s" % (message["role"], stamp[:10] if stamp else "undated"), tags
+
+
+def _embedding_document(title, tags, body):
+    from .database import searchable_tags
+    return "\n".join([title.strip(), " ".join(searchable_tags(service._tags(tags))), body.strip()])
+
+
 def add(request: Any) -> Dict[str, Any]:
     """Synchronously persist one platform chunk; returns only after searchable.
 
@@ -565,22 +704,56 @@ def add(request: Any) -> Dict[str, Any]:
     Any genuine write failure propagates so the transport answers non-200:
     Add's 200 is the promise that the memories are durable and searchable.
     """
+    request_budget.check("add-validation")
     request_id, user_id, session_id, messages = _validate_add(request)
-    root = ensure_user_storage(user_id)
+    ensure_user_storage(user_id)
+    root = _storage_identity_preflight(user_id)
+    guard = (add_admission_lock(root, AML_ADD_LOCK_TIMEOUT_SECONDS)
+             if AML_EMBEDDING == "remote-v4" else nullcontext())
+    with guard:
+        # Revalidate after waiting. The captured lock target cannot authorize
+        # a different root or catalog route.
+        if _storage_identity_preflight(user_id) != root:
+            raise StorageIdentityConflict()
+        embedding_provider, embedding_texts = _add_records(
+            root, request_id, user_id, session_id, messages)
+    # No admission, maintenance or project lock spans remote transmission.
+    if embedding_texts:
+        request_budget.check("embedding-admission")
+        embedding_provider.embed(embedding_texts)
+    request_budget.check("add-complete")
+    _outcome("add_success")
+    return {"success": True, "request_id": request_id, "user_id": user_id, "session_id": session_id}
+
+
+def _add_records(root, request_id, user_id, session_id, messages):
+    identity = service.ExpectedIdentity(root, "session", user_id)
+    embedding_provider = None
+    if AML_EMBEDDING == "remote-v4":
+        planned_texts = []
+        for index, message in enumerate(messages):
+            request_budget.check("preview")
+            previous = service.preview_event_for_idempotency(root,
+                "aml:%s:%s:%d" % (user_id, request_id, index), expected_identity=identity)
+            if previous is not None:
+                _assert_written_identity(previous, root, user_id)
+                planned_texts.append(_embedding_document(previous.metadata["title"],
+                    previous.metadata.get("tags", []), previous.body))
+            else:
+                _stamp, title, tags = _message_fields(message, user_id, session_id)
+                planned_texts.append(_embedding_document(title, tags, message["content"]))
+        embedding_provider = _model_provider("embedding", user_id)
+        if not embedding_provider.plan(planned_texts)["within_request_batch_limit"]:
+            raise EmbeddingCapacityExceeded("embedding request capacity exceeded")
     projector = _fact_projector_singleton()
+    embedding_texts = []
     for index, message in enumerate(messages):
-        stamp = _iso_from_ms(message["timestamp"])
-        day = stamp[:10] if stamp else "undated"
+        request_budget.check("source")
+        stamp, title, tags = _message_fields(message, user_id, session_id)
         entities = _extract_entities(message["content"]) if AML_ENTITY_EXTRACTION else None
-        tags = [AML_SOURCE]
-        if AML_SESSION_VIEWS or AML_SESSION_RRF:
-            tags.append(_session_tag(user_id, session_id))
-        if AML_NARRATIVE_TIME:
-            # Write-side narrative-time tags: metadata only, body untouched.
-            tags += mentioned_date_tags(message["content"])
         event = service.write_event(
             root,
-            "%s · %s" % (message["role"], day),
+            title,
             message["content"],
             tags=tags,
             kind="episode",
@@ -592,7 +765,15 @@ def add(request: Any) -> Dict[str, Any]:
             created_by="aml-adapter",
             idempotency_key="aml:%s:%s:%d" % (user_id, request_id, index),
             extra={"entities": entities} if entities else None,
+            expected_identity=identity,
         )
+        _assert_written_identity(event, root, user_id)
+        if AML_EMBEDDING == "remote-v4":
+            # Match the stable Search document exactly. The open-source profile
+            # disables time-text injection and projections; retries use the
+            # persisted first-write event, never the replay's changed payload.
+            embedding_texts.append(_embedding_document(event.metadata["title"],
+                event.metadata.get("tags", []), event.body))
         if projector is not None:
             try:
                 facts = projector.project(message["content"], message["role"], stamp)
@@ -613,7 +794,7 @@ def add(request: Any) -> Dict[str, Any]:
                 # Add's hard contract covers durable original evidence; a
                 # candidate projection must never make that evidence fail.
                 pass
-    return {"success": True, "request_id": request_id, "user_id": user_id, "session_id": session_id}
+    return embedding_provider, embedding_texts
 
 
 def _validate_search(payload: Any) -> Tuple[str, str, int, List[str]]:
@@ -635,22 +816,75 @@ def _validate_search(payload: Any) -> Tuple[str, str, int, List[str]]:
 
 
 def search(request: Any) -> Dict[str, Any]:
+    """Observe the adapter boundary only when a launcher explicitly opts in."""
+    recorder = AML_SEARCH_TRACE
+    if recorder is None:
+        return _search(request)
+    with recorder.capture() as event:
+        try:
+            event["runtime_config_sha256"] = hashlib.sha256(json.dumps(
+                AML_RUNTIME_CONFIG, sort_keys=True, separators=(",", ":"),
+                ensure_ascii=False).encode("utf-8")).hexdigest()
+        except Exception:
+            event["diagnostic_incomplete"] = True
+        try:
+            response = _search(request)
+        except Exception as exc:
+            # Never include exception messages, model payloads or request text.
+            event["reason"] = (
+                "invalid_request" if isinstance(exc, ContractError) else
+                "sensitive_rejected" if isinstance(exc, SensitiveSearchRejected) else
+                "identity_conflict" if isinstance(exc, StorageIdentityConflict) else
+                "cancelled" if isinstance(exc, RequestCancelled) else
+                "retrieval_unavailable" if isinstance(exc, RetrievalUnavailable) else
+                "internal_error"
+            )
+            raise
+        event["adapter_completed"] = True
+        try:
+            recorder.result(event, response)
+        except Exception:
+            event["diagnostic_incomplete"] = True
+        return response
+
+
+def _search(request: Any) -> Dict[str, Any]:
     """Return ranked original evidence for exactly one user; never an answer.
 
-    Retrieval failures degrade to ``200 {"data": []}`` — a contract failure
-    costs the whole evaluation stage, while an empty result costs one
-    question. Validation errors still raise ContractError (HTTP 422).
+    Legacy retrieval failures retain the historical empty-200 behavior.
+    The explicit open-source profile raises RetrievalUnavailable (HTTP 503)
+    for failed retrieval or embedding. Validation errors remain HTTP 422.
     """
+    request_budget.check("search-validation")
     query, user_id, top_k, options = _validate_search(request)
-    if top_k == 0 or not user_storage_dir(user_id).is_dir():
-        return {"data": []}
     recall_query = query
     if AML_OPTIONS_AS_QUERY_TERMS and options:
         recall_query = query + "\n" + "\n".join(options)
+    if AML_STRICT_RETRIEVAL and AML_EMBEDDING == "remote-v4":
+        try:
+            assert_no_secrets([recall_query])
+        except SecretDetected:
+            _outcome("search_sensitive_rejected")
+            raise SensitiveSearchRejected("sensitive query rejected") from None
+    aml_search_trace.note(inputs=(recall_query, user_id, top_k, options))
+    root = _storage_identity_preflight(user_id)
+    aml_search_trace.note(storage_root=root)
+    if top_k == 0:
+        request_budget.check("search-empty")
+        _outcome("search_empty")
+        _outcome("search_empty_top_k_zero")
+        aml_search_trace.note("top_k_zero")
+        return {"data": []}
+    if not root.is_dir():
+        request_budget.check("search-empty")
+        _outcome("search_empty")
+        _outcome("search_empty_storage_missing")
+        aml_search_trace.note("storage_missing")
+        return {"data": []}
     try:
         diagnostics: Dict[str, Any] = {}
         _project, results = service.context_data(
-            user_storage_dir(user_id),
+            root,
             recall_query,
             # Fact projections can dereference to the same source event. Ask
             # for a bounded wider candidate set, then deduplicate source ids
@@ -659,6 +893,7 @@ def search(request: Any) -> Dict[str, Any]:
             view=AML_VIEW,
             scope="session",
             scope_id=user_id,
+            expected_identity=service.ExpectedIdentity(root, "session", user_id),
             retrieval_profile=AML_PROFILE,
             adjacent=AML_ADJACENT,
             recency_boost=AML_RECENCY_BOOST,
@@ -671,10 +906,16 @@ def search(request: Any) -> Dict[str, Any]:
             session_views=AML_SESSION_VIEWS,
             session_rrf=AML_SESSION_RRF,
             diagnostics=diagnostics,
-            embedding_provider=_model_provider("embedding"),
+            embedding_provider=_model_provider("embedding", user_id),
             reranker=_model_provider("reranker"),
             query_provider=_query_provider_singleton(),
         )
+        aml_search_trace.note(diagnostics=diagnostics, project=_project)
+        request_budget.check("search-result")
+        if AML_STRICT_RETRIEVAL and diagnostics.get("embedding", {}).get("status") not in {
+            "ready", "skipped-no-eligible-records"
+        }:
+            raise RetrievalUnavailable("embedding unavailable")
         if AML_FACT_PROJECTION != "llm":
             # Preserve the frozen 1.2.0 payload exactly when the optional fact
             # projection candidate is disabled, including independently-created Facts.
@@ -706,10 +947,23 @@ def search(request: Any) -> Dict[str, Any]:
             # Explicit abstention signal: evidence withheld for insufficient
             # relevance (also covers "nothing matched at all"). Non-standard
             # observability key; the platform ignores undeclared fields.
+            _outcome("search_empty")
+            _outcome("search_empty_abstained")
+            aml_search_trace.note("abstained")
             return {"data": [], "plm_abstained": True,
                     "plm_abstain": dict(diagnostics.get("abstain", {}))}
+    except (StorageIdentityConflict, RequestCancelled):
+        raise
     except Exception:
+        request_budget.check("search-failure")
+        _outcome("search_failure")
+        if AML_STRICT_RETRIEVAL:
+            raise RetrievalUnavailable("retrieval temporarily unavailable") from None
+        aml_search_trace.note("legacy_failure_empty")
         return {"data": []}
+    request_budget.check("search-complete")
+    _outcome("search_success" if data else "search_empty")
+    aml_search_trace.note("results" if data else "retrieved_empty")
     if AML_TEMPORAL_INTENT:
         intent_info = diagnostics.get("temporal_intent", {})
         if intent_info.get("has_temporal_intent"):
@@ -732,7 +986,7 @@ def _auth_token() -> str:
     return os.environ.get("AML_API_KEY", "")
 
 
-class AMLRequestHandler(BaseHTTPRequestHandler):
+class AMLRequestHandler(RequestLifecycle, BaseHTTPRequestHandler):
     server_version = "plm-aml/" + AML_ADAPTER_VERSION
     protocol_version = "HTTP/1.1"
 
@@ -742,12 +996,18 @@ class AMLRequestHandler(BaseHTTPRequestHandler):
 
     # -- helpers ---------------------------------------------------------
     def _send_json(self, status: int, payload: Dict[str, Any]) -> None:
+        if status == 200:
+            self._business_completed = True
+        self._io_stage("write")
         body = json.dumps(payload, ensure_ascii=False).encode("utf-8")
         self.send_response(status)
         self.send_header("Content-Type", "application/json; charset=utf-8")
         self.send_header("Content-Length", str(len(body)))
+        if self.close_connection:
+            self.send_header("Connection", "close")
         self.end_headers()
         self.wfile.write(body)
+        self._response_delivered = True
 
     def _authorized(self) -> bool:
         token = _auth_token()
@@ -771,6 +1031,9 @@ class AMLRequestHandler(BaseHTTPRequestHandler):
         if length > AML_MAX_REQUEST_BYTES:
             raise ContractError("request body too large")
         raw = self.rfile.read(length)
+        if len(raw) != length:
+            self.close_connection = True
+            raise ContractError("request body length does not match Content-Length")
         try:
             return json.loads(raw.decode("utf-8"))
         except (UnicodeDecodeError, ValueError) as exc:
@@ -778,9 +1041,21 @@ class AMLRequestHandler(BaseHTTPRequestHandler):
 
     # -- routes ----------------------------------------------------------
     def do_GET(self) -> None:  # noqa: N802 - stdlib signature
+        self._io_stage("business")
         path = self.path.split("?", 1)[0]
         if path in ("/health", "/"):
             self._send_json(200, {"status": "ok", "version": AML_ADAPTER_VERSION})
+        elif path == "/status":
+            if not _auth_token() or not self._authorized():
+                self._send_json(401, {"detail": {"reason": "unauthorized"}})
+                return
+            with _OUTCOMES_LOCK:
+                counts = dict(_OUTCOMES)
+            payload = {"config": AML_RUNTIME_CONFIG, "models": model_status(),
+                       "outcomes": counts}
+            if AML_SEARCH_TRACE is not None:
+                payload["search_trace"] = AML_SEARCH_TRACE.snapshot()
+            self._send_json(200, payload)
         else:
             self._send_json(404, {"detail": {"reason": "not found"}})
 
@@ -794,6 +1069,7 @@ class AMLRequestHandler(BaseHTTPRequestHandler):
             return
         try:
             payload = self._read_json()
+            self._io_stage("business")
         except ContractError as exc:
             self._send_json(400, {"detail": {"reason": str(exc)}})
             return
@@ -803,7 +1079,30 @@ class AMLRequestHandler(BaseHTTPRequestHandler):
             except ContractError as exc:
                 self._send_json(422, {"detail": {"reason": str(exc)}})
                 return
+            except StorageIdentityConflict:
+                _outcome("add_failure")
+                self._send_json(503, {"detail": {"reason": "storage_identity_conflict"}})
+                return
+            except SourceRecoveryError as exc:
+                _outcome("add_failure")
+                self._send_json(409, {"detail": {"reason": str(exc)}})
+                return
+            except AddLockUnavailable:
+                _outcome("add_lock_unavailable")
+                self._send_json(503, {"detail": {"reason": "add admission unavailable"}})
+                return
+            except AddBusy:
+                _outcome("add_busy")
+                self._send_json(503, {"detail": {"reason": "add temporarily busy"}})
+                return
+            except EmbeddingCapacityExceeded:
+                _outcome("add_capacity_rejected")
+                self._send_json(503, {"detail": {"reason": "embedding request capacity exceeded"}})
+                return
+            except RequestCancelled:
+                raise
             except Exception:
+                _outcome("add_failure")
                 # A durable-write failure must not answer 200: the platform
                 # retries 5xx with backoff, and a false success would let it
                 # search memories that do not exist yet.
@@ -816,6 +1115,16 @@ class AMLRequestHandler(BaseHTTPRequestHandler):
         except ContractError as exc:
             self._send_json(422, {"detail": {"reason": str(exc)}})
             return
+        except StorageIdentityConflict:
+            _outcome("search_failure")
+            self._send_json(503, {"detail": {"reason": "storage_identity_conflict"}})
+            return
+        except SensitiveSearchRejected:
+            self._send_json(503, {"detail": {"reason": "sensitive query rejected"}})
+            return
+        except RetrievalUnavailable:
+            self._send_json(503, {"detail": {"reason": "retrieval temporarily unavailable"}})
+            return
         self._send_json(200, result)
 
     def do_PUT(self) -> None:  # noqa: N802
@@ -825,9 +1134,53 @@ class AMLRequestHandler(BaseHTTPRequestHandler):
         self._send_json(405, {"detail": {"reason": "method not allowed"}})
 
 
-def make_server(host: str, port: int) -> ThreadingHTTPServer:
-    server = ThreadingHTTPServer((host, port), AMLRequestHandler)
-    server.daemon_threads = True
+class AMLHTTPServer(ThreadingHTTPServer):
+    # Supported Python versions default to only five pending connections. A burst
+    # from the platform's workers can fill that queue before accept() runs,
+    # causing resets even though request handling itself is threaded. Set
+    # this before construction calls listen(); changing it afterwards has
+    # no effect. The OS may cap the requested backlog.
+    request_queue_size = 128
+    daemon_threads = True
+
+    def process_request(self, request, client_address):
+        slots = getattr(self, "_connection_slots", None)
+        if slots is not None and not slots.acquire(blocking=False):
+            self.shutdown_request(request)
+            return
+        try:
+            super().process_request(request, client_address)
+        except BaseException:
+            if slots is not None:
+                slots.release()
+            raise
+
+    def process_request_thread(self, request, client_address):
+        try:
+            super().process_request_thread(request, client_address)
+        finally:
+            slots = getattr(self, "_connection_slots", None)
+            if slots is not None:
+                slots.release()
+
+
+def make_server(host: str, port: int, *, request_timeout=None, max_connections=None,
+                allow_test_deadline=False, request_observer=None) -> ThreadingHTTPServer:
+    # No production duration is inferred. Until P0 + integrated gates are done,
+    # only explicit synthetic loopback callers may exercise request deadlines.
+    if request_timeout is not None:
+        if not allow_test_deadline or host not in {"127.0.0.1", "::1"}:
+            raise ValueError("request deadline is not enabled for deployment")
+        request_budget.RequestBudget(request_timeout)
+        if max_connections is None:
+            raise ValueError("deadline requires an explicit connection limit")
+    if max_connections is not None and (type(max_connections) is not int or max_connections <= 0):
+        raise ValueError("invalid connection limit")
+    server = AMLHTTPServer((host, port), AMLRequestHandler)
+    server.request_timeout = request_timeout
+    server.request_observer = request_observer
+    server._connection_slots = (threading.BoundedSemaphore(max_connections)
+                                if max_connections is not None else None)
     return server
 
 

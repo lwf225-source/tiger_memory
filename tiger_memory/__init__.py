@@ -1,3 +1,3 @@
 """Project Long Memory v2."""
 
-__version__ = "2.2.0a4"
+__version__ = "2.2.0a5"

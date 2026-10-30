@@ -22,7 +22,8 @@ from . import __version__
 ROOT = Path(__file__).resolve().parent.parent
 NOTICES = ("THIRD_PARTY.md", "LICENSE", "LICENSE.md", "LICENSE.txt", "NOTICE")
 SDIST_PUBLIC_FILES = (
-    "pyproject.toml", "README.md", "docs/CODEGRAPH.md", "docs/AML_SUBMISSION.md", *NOTICES,
+    "pyproject.toml", "README.md", "docs/CODEGRAPH.md", "docs/AML_SUBMISSION.md",
+    "docs/OPEN_SOURCE_PREP.md", "repro/aml-open-source.env.example", *NOTICES,
     "repro/model-requirements.lock", "repro/linux-cpu-requirements.lock",
     "repro/bge-small-en-v1.5.json",
     "scripts/tiger_memory.py", "scripts/verify_install.py", "scripts/verify_codegraph.py",
@@ -33,14 +34,21 @@ SDIST_PUBLIC_FILES = (
     "skill/SKILL.md", "skill/agents/openai.yaml",
     "skill/legacy/memory_context_v1.py", "skill/legacy/memory_write_v1.py",
     "skill/references/task-workflow.md",
-    "scripts/aml_preflight.py", "scripts/audit_batch3.py",
+    "scripts/aml_preflight.py", "scripts/aml_smoke.py", "scripts/audit_batch3.py",
     "scripts/prepare_longmemeval.py", "scripts/prepare_qa_audit.py",
-    "scripts/verify_release.py",
+    "scripts/verify_release.py", "scripts/inspect_aml_diagnostic.py",
+    "scripts/resolve_aml_search_trace.py", "scripts/demo_active_memory_task.py",
+    "scripts/verify_active_memory.py", "docs/ACTIVE_MEMORY.md",
+    "docs/AML_SEARCH_DIAGNOSTICS.md", "docs/EXPERIMENTAL_PROJECT_FTS.md",
+    "docs/GITHUB_SYNC_20261030.md",
+    "scripts/aml_reference_README.md", "scripts/aml_reference.env.example",
+    "scripts/aml_reference_manifest.json", "scripts/aml_candidate_decision.json",
 )
 
 # Narrow public roots only: never sweep evaluation reports, model assets,
 # local worktrees or user-created scripts into a distribution.
 PUBLIC_TREES = {
+    "examples/active_memory": {".json", ".py", ".md"},
     "tests": {".py"},
     "evaluation/synthetic-v1": {".json", ".py", ".md"},
     "evaluation/project-docs-v1": {".json", ".py", ".md"},

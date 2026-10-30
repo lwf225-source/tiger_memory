@@ -6,6 +6,8 @@ import os
 import re
 import uuid
 from dataclasses import dataclass, field
+from contextlib import contextmanager
+from contextvars import ContextVar
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional
@@ -17,6 +19,24 @@ SCOPES = {"global", "project", "agent", "session", "shared"}
 VISIBILITIES = {"private", "local", "shared"}
 FACT_STATUSES = {"active", "superseded", "retracted", "expired"}
 NAMESPACE = uuid.UUID("f10d42a8-b6cb-4f06-a034-a17f29009ee1")
+_MEMORY_BASE_OVERRIDE = ContextVar("tiger_memory_base_override", default=None)
+
+
+@contextmanager
+def scoped_memory_base(path: Path):
+    """Bind synchronous native operations to one explicit request-local store.
+
+    No environment mutation or subprocess propagation. Callers must finish all
+    native operations before leaving the scope; do not escape lazy work.
+    """
+    path = Path(path)
+    if not path.is_absolute():
+        raise PLMError("explicit memory base must be absolute")
+    token = _MEMORY_BASE_OVERRIDE.set(path)
+    try:
+        yield path
+    finally:
+        _MEMORY_BASE_OVERRIDE.reset(token)
 
 
 class PLMError(RuntimeError):
@@ -46,6 +66,9 @@ def parse_time(value: Optional[str]) -> str:
 
 
 def memory_base() -> Path:
+    override = _MEMORY_BASE_OVERRIDE.get()
+    if override is not None:
+        return override
     configured = os.environ.get("TIGER_MEMORY_DIR") or os.environ.get("PROJECT_LONG_MEMORY_DIR")
     return Path(configured).expanduser().resolve() if configured else Path.home() / ".codex" / "project-memory"
 

@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from . import request_budget, request_waits
+
 import hashlib
 import json
 import math
@@ -13,6 +15,7 @@ import time
 import uuid
 from contextvars import ContextVar
 from contextlib import contextmanager
+from dataclasses import dataclass
 from collections import Counter, defaultdict
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
@@ -25,7 +28,7 @@ from .context_pack import pack_context
 from .database import add_entities, connect, connect_readonly, event_for_idempotency, index_event, integrity, project_for_alias, register_project
 from .events import atomic_write, event_relative_path, maintenance_lock, parse_event, parse_event_text, parse_legacy_note, project_lock, serialize_event
 from .model import (
-    EVENT_KINDS, FACT_STATUSES, PLMError, SCHEMA_VERSION, SCOPES, Event, SearchResult,
+    EVENT_KINDS, FACT_STATUSES, NAMESPACE, PLMError, SCHEMA_VERSION, SCOPES, Event, SearchResult,
     canonical_root, display_slug, json_compact, memory_base, parse_time,
     project_id_for_root, sha256_bytes, stable_event_id, utc_now, v2_root,
 )
@@ -33,6 +36,7 @@ from .search import _eligible_records, search, startup_context
 from .passages import expand_passage, locate_passage
 from .security import SecretDetected, assert_no_secrets, assert_safe_path, ensure_private_dir
 from .vector import cosine_blob, encode_vector
+from .reliability import find_orphan, reference_errors
 
 
 INDICATOR_FILES = (
@@ -155,18 +159,36 @@ def _index_validated_write(conn, event, project, batch=None):
         batch["events"][event.event_id] = event
 
 
-def find_project_root(cwd: Path) -> Path:
-    cwd = canonical_root(cwd)
+def _git_project_root(cwd: Path) -> Optional[Path]:
+    """Use the existing native Git probe; callers retain their fallback policy."""
+    import subprocess
+    if request_budget.current_request_budget() is not None:
+        try:
+            output = request_waits.git_root(cwd)
+        except subprocess.CalledProcessError:
+            return None
+        # Cancellation and launch/reap failures must not become a non-Git
+        # identity observation. The adapter maps them to a closed failure.
+        return canonical_root(Path(output.strip())) if output.strip() else None
     try:
-        import subprocess
         result = subprocess.run(
             ["git", "-C", str(cwd), "rev-parse", "--show-toplevel"],
             check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL,
         )
         if result.stdout.strip():
             return canonical_root(Path(result.stdout.strip()))
+    except request_budget.RequestCancelled:
+        raise
     except Exception:
         pass
+    return None
+
+
+def find_project_root(cwd: Path) -> Path:
+    cwd = canonical_root(cwd)
+    git_root = _git_project_root(cwd)
+    if git_root is not None:
+        return git_root
     home = Path.home().resolve()
     for path in [cwd, *cwd.parents]:
         if path == home.parent:
@@ -263,6 +285,246 @@ def _tags(tags: Any) -> List[str]:
     return result
 
 
+class StorageIdentityConflict(PLMError):
+    """A fixed caller identity conflicts with observed storage routing."""
+
+    def __init__(self):
+        super().__init__("storage_identity_conflict")
+
+
+@dataclass(frozen=True)
+class ExpectedIdentity:
+    """Opt-in fixed target. CLI callers may omit it to retain alias discovery."""
+
+    root: Path
+    scope: str
+    scope_id: str
+
+    def __post_init__(self):
+        if not Path(self.root).is_absolute() or self.scope not in SCOPES or not self.scope_id:
+            raise StorageIdentityConflict()
+        object.__setattr__(self, "root", canonical_root(Path(self.root)))
+
+    @property
+    def project_id(self) -> str:
+        # root was canonicalized at construction. Never rediscover a target here.
+        return str(uuid.uuid5(NAMESPACE, "project:" + str(self.root)))
+
+
+def _expected_project(identity: ExpectedIdentity) -> Dict[str, str]:
+    # Same display_slug formula, applied to the captured root without resolving
+    # it again: even a later filesystem change cannot redirect the chosen path.
+    slug = re.sub(r"[^A-Za-z0-9\u4e00-\u9fff._-]+", "-", identity.root.name or "root").strip("-._")
+    return {"project_id": identity.project_id, "canonical_root": str(identity.root),
+            "display_name": identity.root.name or "root",
+            "folder_name": (slug[:60] or "project") + "--" + identity.project_id.replace("-", "")[:12]}
+
+
+def _register_expected_project(conn, project):
+    """Publish only the captured target, never a newly resolved alias/root."""
+    register_project(conn, project["project_id"], project["canonical_root"],
+                     project["display_name"], project["folder_name"])
+    path = v2_root() / "projects" / project["folder_name"] / "manifest.json"
+    if not path.exists():
+        atomic_write(path, json.dumps({"schema_version": 2, **project,
+            "aliases": [project["canonical_root"]], "created_at": utc_now()},
+            ensure_ascii=False, indent=2, sort_keys=True) + "\n")
+
+
+def _validate_expected_call(cwd, scope, scope_id, identity):
+    if (not isinstance(identity, ExpectedIdentity) or canonical_root(cwd) != identity.root
+            or (scope, scope_id) != (identity.scope, identity.scope_id)):
+        raise StorageIdentityConflict()
+
+
+def _validate_expected_project(conn, identity):
+    """Validate, never reroute. Caller owns its SQL snapshot/transaction.
+
+    Git/filesystem writers do not obey SQLite or flock. A final observation
+    cannot fence arbitrary later topology changes; metadata and paths stay fixed.
+    """
+    if canonical_root(identity.root) != identity.root or find_project_root(identity.root) != identity.root:
+        raise StorageIdentityConflict()
+    expected = _expected_project(identity)
+    if conn is not None:
+        alias = conn.execute("SELECT project_id FROM project_aliases WHERE alias_path=? AND active=1",
+                             (str(identity.root),)).fetchone()
+        row = conn.execute("SELECT * FROM projects WHERE project_id=?", (identity.project_id,)).fetchone()
+        if alias is not None and (alias["project_id"] != identity.project_id or row is None):
+            raise StorageIdentityConflict()
+        if row is not None and any(row[key] != expected[key] for key in ("project_id", "canonical_root", "folder_name")):
+            raise StorageIdentityConflict()
+    return expected
+
+
+def _validate_expected_event(event, identity, key, project, row=None):
+    meta = event.metadata
+    if (meta.get("project_id"), meta.get("project_root"), meta.get("scope"),
+            meta.get("scope_id"), meta.get("idempotency_key")) != (
+            identity.project_id, str(identity.root), identity.scope, identity.scope_id, key):
+        raise StorageIdentityConflict()
+    wanted = v2_root() / event_relative_path(project["folder_name"], event.event_id, meta["recorded_at"])
+    if event.path != wanted:
+        raise StorageIdentityConflict()
+    assert_safe_path(wanted, v2_root())
+    if row is not None and (
+            (row["project_id"], row["scope"], row["scope_id"], row["event_id"], row["source_path"])
+            != (identity.project_id, identity.scope, identity.scope_id, event.event_id, str(wanted))):
+        raise StorageIdentityConflict()
+
+
+def _read_expected_indexed_event(row, identity, key, project):
+    # Validate catalog ownership and containment before opening a source path.
+    wanted = v2_root() / event_relative_path(project["folder_name"], row["event_id"], row["recorded_at"])
+    if (row["project_id"], row["scope"], row["scope_id"], row["idempotency_key"], row["source_path"]) != (
+            identity.project_id, identity.scope, identity.scope_id, key, str(wanted)):
+        raise StorageIdentityConflict()
+    assert_safe_path(wanted, v2_root())
+    event = parse_event(wanted)
+    _validate_expected_event(event, identity, key, project, row)
+    return event
+
+
+def _prepare_write_event(project, title, content, tags, kind, scope, scope_id,
+                         observed_at, source, visibility, created_by, idempotency_key,
+                         event_id, recorded_at, source_hash, source_legacy_path, extra, batch=None):
+    recorded = parse_time(recorded_at)
+    observed = parse_time(observed_at or recorded)
+    event_id = event_id or str(uuid.uuid4())
+    meta: Dict[str, Any] = {
+        "schema_version": SCHEMA_VERSION, "id": event_id,
+        "project_id": project["project_id"], "project_root": project["canonical_root"],
+        "scope": scope, "scope_id": scope_id or (project["project_id"] if scope == "project" else scope),
+        "kind": kind, "title": title, "tags": tags, "observed_at": observed,
+        "recorded_at": recorded, "source": source,
+        "source_hash": source_hash or sha256_bytes(content.encode("utf-8")),
+        "visibility": visibility, "created_by": created_by, "idempotency_key": idempotency_key,
+    }
+    if source_legacy_path:
+        meta["source_legacy_path"] = source_legacy_path
+    if batch:
+        meta["batch_id"] = batch["id"]
+    if extra:
+        unknown_extra = set(extra) - EXTRA_FIELDS
+        if unknown_extra:
+            raise PLMError("protected or unknown event fields: %s" % ", ".join(sorted(unknown_extra)))
+        meta.update(extra)
+    assert_no_secrets([content, json_compact(meta)])
+    path = v2_root() / event_relative_path(project["folder_name"], event_id, recorded)
+    return Event(meta, content, path)
+
+
+def _write_expected_event(cwd, identity, options):
+    """Maintenance SH -> fixed project EX -> SQLite IMMEDIATE, no network.
+
+    No unlocked idempotent fast return is used. Registration, replay, recovery
+    and publication all share this transaction. Correctly owned files left by a
+    crash after publication remain recoverable; SQL rollback cannot erase them.
+    """
+    _validate_expected_call(cwd, options["scope"], options["scope_id"], identity)
+    if _WRITE_BATCH.get() is not None:
+        raise PLMError("expected identity writes cannot use event_batch")
+    _validate_expected_project(None, identity)
+    key = options["idempotency_key"]
+    with maintenance_lock():
+        with project_lock(identity.project_id):
+            conn = connect()
+            try:
+                conn.execute("BEGIN IMMEDIATE")
+                project = _validate_expected_project(conn, identity)
+                # All routing is checked before manifest/registration side effects.
+                _register_expected_project(conn, project)
+                existing = event_for_idempotency(conn, identity.project_id, key) if key else None
+                if existing:
+                    event = _read_expected_indexed_event(existing, identity, key, project)
+                    _validate_expected_project(conn, identity)
+                    conn.commit()
+                    return event
+                event = _prepare_write_event(project, **options)
+                if key:
+                    from .privacy import deleted_event_ids
+                    orphan = find_orphan(project, key, batch_committed, deleted_event_ids())
+                    if orphan is not None:
+                        _validate_expected_event(orphan, identity, key, project)
+                        _validate_expected_project(conn, identity)
+                        _index_validated_write(conn, orphan, project)
+                        _validate_expected_project(conn, identity)
+                        conn.commit()
+                        return orphan
+                existing_id = conn.execute("SELECT * FROM events WHERE event_id=?", (event.event_id,)).fetchone()
+                if existing_id:
+                    previous = _read_expected_indexed_event(existing_id, identity, key, project)
+                    if previous.metadata != event.metadata or previous.body != event.body:
+                        raise PLMError("event id already exists with different content")
+                    _validate_expected_project(conn, identity)
+                    conn.commit()
+                    return previous
+                if event.path.exists():
+                    previous = parse_event(event.path)
+                    if previous.metadata != event.metadata or previous.body != event.body:
+                        raise PLMError("event path already exists with different content")
+                duplicates = [p for p in (v2_root() / "projects" / project["folder_name"] / "events").glob(
+                    "*/*/*_" + event.event_id + ".md") if p != event.path]
+                if duplicates:
+                    raise PLMError("event id already exists at another source path")
+                _validate_expected_event(event, identity, key, project)
+                serialized = serialize_event(event.metadata, event.body)
+                _index_validated_write(conn, event, project)
+                _validate_expected_project(conn, identity)
+                with request_budget.safe_boundary("source-publish"):
+                    if not event.path.exists():
+                        atomic_write(event.path, serialized)
+                    conn.commit()
+            except BaseException:
+                conn.rollback()
+                raise
+            finally:
+                conn.close()
+    if options["source"] != "legacy_import":
+        try:
+            record_usage(identity.project_id, "write", options["created_by"], "", 1, True)
+        except Exception:
+            pass
+    return event
+
+
+def preview_event_for_idempotency(cwd: Path, idempotency_key: str, *,
+                                  expected_identity: ExpectedIdentity) -> Optional[Event]:
+    """Read an existing first-write event or valid orphan without importing it.
+
+    Uses the same fixed-target checks and lock order as writes. Only lock files
+    may be created; source/catalog/manifest data is not written. The returned
+    snapshot does not reserve a key or guarantee cache/capacity at a later write.
+    """
+    identity = expected_identity
+    if not isinstance(identity, ExpectedIdentity):
+        raise StorageIdentityConflict()
+    _validate_expected_call(cwd, identity.scope, identity.scope_id, identity)
+    _validate_expected_project(None, identity)
+    if not isinstance(idempotency_key, str) or not idempotency_key:
+        raise PLMError("preview requires an idempotency key")
+    with maintenance_lock():
+        with project_lock(identity.project_id):
+            conn = connect_readonly() if database.db_path().is_file() else None
+            try:
+                if conn is not None:
+                    conn.execute("BEGIN")
+                project = _validate_expected_project(conn, identity)
+                existing = event_for_idempotency(conn, identity.project_id, idempotency_key) if conn is not None else None
+                if existing:
+                    event = _read_expected_indexed_event(existing, identity, idempotency_key, project)
+                else:
+                    from .privacy import deleted_event_ids
+                    event = find_orphan(project, idempotency_key, batch_committed, deleted_event_ids())
+                    if event is not None:
+                        _validate_expected_event(event, identity, idempotency_key, project)
+                _validate_expected_project(conn, identity)
+                return event
+            finally:
+                if conn is not None:
+                    conn.close()
+
+
 def write_event(
     cwd: Path,
     title: str,
@@ -281,6 +543,7 @@ def write_event(
     source_hash: str = "",
     source_legacy_path: str = "",
     extra: Optional[Dict[str, Any]] = None,
+    *, expected_identity: Optional[ExpectedIdentity] = None,
 ) -> Event:
     if kind not in EVENT_KINDS:
         raise PLMError("invalid kind")
@@ -290,6 +553,12 @@ def write_event(
         raise PLMError("title and content are required")
     tag_list = _tags(tags or [])
     assert_no_secrets([title, content, " ".join(tag_list), source])
+    options = dict(title=title, content=content, tags=tag_list, kind=kind, scope=scope, scope_id=scope_id,
+                   observed_at=observed_at, source=source, visibility=visibility, created_by=created_by,
+                   idempotency_key=idempotency_key, event_id=event_id, recorded_at=recorded_at,
+                   source_hash=source_hash, source_legacy_path=source_legacy_path, extra=extra)
+    if expected_identity is not None:
+        return _write_expected_event(cwd, expected_identity, options)
     root = find_project_root(cwd)
     batch = _WRITE_BATCH.get()
     conn = batch["conn"] if batch else connect()
@@ -309,41 +578,8 @@ def write_event(
     if not batch:
         conn.close()
 
-    recorded = parse_time(recorded_at)
-    observed = parse_time(observed_at or recorded)
-    event_id = event_id or str(uuid.uuid4())
-    meta: Dict[str, Any] = {
-        "schema_version": SCHEMA_VERSION,
-        "id": event_id,
-        "project_id": project["project_id"],
-        "project_root": project["canonical_root"],
-        "scope": scope,
-        "scope_id": scope_id or (project["project_id"] if scope == "project" else scope),
-        "kind": kind,
-        "title": title,
-        "tags": tag_list,
-        "observed_at": observed,
-        "recorded_at": recorded,
-        "source": source,
-        "source_hash": source_hash or sha256_bytes(content.encode("utf-8")),
-        "visibility": visibility,
-        "created_by": created_by,
-        "idempotency_key": idempotency_key,
-    }
-    if source_legacy_path:
-        meta["source_legacy_path"] = source_legacy_path
-    if batch:
-        meta["batch_id"] = batch["id"]
-    if extra:
-        unknown_extra = set(extra) - EXTRA_FIELDS
-        if unknown_extra:
-            raise PLMError("protected or unknown event fields: %s" % ", ".join(sorted(unknown_extra)))
-        meta.update(extra)
-    assert_no_secrets([content, json_compact(meta)])
-    relative = event_relative_path(project["folder_name"], event_id, recorded)
-    path = v2_root() / relative
-    event = Event(meta, content, path)
-
+    event = _prepare_write_event(project, **options, batch=batch)
+    meta, path, event_id = event.metadata, event.path, event.event_id
     serialized = serialize_event(meta, content)
     if batch:
         _index_validated_write(batch["conn"], event, project, batch)
@@ -356,6 +592,20 @@ def write_event(
                 if existing:
                     conn.close()
                     return parse_event(Path(existing["source_path"]))
+            if idempotency_key:
+                try:
+                    from .privacy import deleted_event_ids
+                    orphan = find_orphan(project, idempotency_key, batch_committed, deleted_event_ids())
+                    if orphan is not None:
+                        conn.execute("BEGIN IMMEDIATE")
+                        _index_validated_write(conn, orphan, project)
+                        conn.commit()
+                        conn.close()
+                        return orphan
+                except BaseException:
+                    conn.rollback()
+                    conn.close()
+                    raise
             existing_id = conn.execute("SELECT source_path FROM events WHERE event_id=?", (event_id,)).fetchone()
             if existing_id:
                 existing_event = parse_event(Path(existing_id["source_path"]))
@@ -485,10 +735,23 @@ def context_data(
     session_views: bool = False,
     session_rrf: bool = False,
     query_provider: Any = None,
+    *, fts_statistics_scope: str = "global",
+    fts_statistics_max_rows: int = 100000,
+    fts_statistics_max_bytes: int = 64 * 1024 * 1024,
+    expected_identity: Optional[ExpectedIdentity] = None,
 ) -> Tuple[Dict[str, str], List[SearchResult]]:
     if retrieval_profile not in {"lexical", "passages"}:
         raise PLMError("invalid retrieval profile")
-    root = find_project_root(cwd)
+    if fts_statistics_scope not in {"global", "project"}:
+        raise PLMError("invalid FTS statistics scope")
+    if fts_statistics_scope == "project" and retrieval_profile != "lexical":
+        raise PLMError("project FTS statistics require lexical profile")
+    if expected_identity is not None:
+        _validate_expected_call(cwd, scope, scope_id, expected_identity)
+        _validate_expected_project(None, expected_identity)
+        root = expected_identity.root
+    else:
+        root = find_project_root(cwd)
     if scope in {"agent", "session"} and not scope_id:
         raise PLMError("scope-id is required for agent and session scope")
     project = {
@@ -497,18 +760,29 @@ def context_data(
         "display_name": root.name or "root",
         "folder_name": display_slug(root),
     }
+    if expected_identity is not None:
+        project = _expected_project(expected_identity)
     if not database.db_path().is_file():
         return project, []
     conn = connect_readonly()
     try:
-        existing = project_for_alias(conn, str(root))
-        if existing:
-            project = dict(existing)
-        else:
-            existing = conn.execute("SELECT * FROM projects WHERE project_id=?", (project["project_id"],)).fetchone()
-            if not existing:
+        if expected_identity is not None:
+            # A consistent read snapshot pins the fixed project and scope before
+            # retrieval/provider invocation. No maintenance/project lock is held
+            # across providers, and a later alias change cannot reroute this read.
+            conn.execute("BEGIN")
+            project = _validate_expected_project(conn, expected_identity)
+            if conn.execute("SELECT 1 FROM projects WHERE project_id=?", (project["project_id"],)).fetchone() is None:
                 return project, []
-            project = dict(existing)
+        else:
+            existing = project_for_alias(conn, str(root))
+            if existing:
+                project = dict(existing)
+            else:
+                existing = conn.execute("SELECT * FROM projects WHERE project_id=?", (project["project_id"],)).fetchone()
+                if not existing:
+                    return project, []
+                project = dict(existing)
         if query.strip():
             results = search(conn, project["project_id"], query, limit, view, scope, scope_id,
                              profile=retrieval_profile, adjacent=adjacent, recency_boost=recency_boost,
@@ -520,7 +794,10 @@ def context_data(
                              window_reserve=window_reserve, coverage_rerank=coverage_rerank,
                              session_views=session_views,
                              session_rrf=session_rrf,
-                             query_provider=query_provider)
+                             query_provider=query_provider,
+                             fts_statistics_scope=fts_statistics_scope,
+                             fts_statistics_max_rows=fts_statistics_max_rows,
+                             fts_statistics_max_bytes=fts_statistics_max_bytes)
         else:
             results = startup_context(conn, project["project_id"], limit, view, scope, scope_id,
                                       valid_at=valid_at, known_at=known_at, soft_supersede=soft_supersede)
@@ -840,6 +1117,7 @@ def rebuild_index() -> Dict[str, Any]:
 
                 parsed: List[Event] = []
                 seen_ids: Dict[str, str] = {}
+                seen_keys = {}
                 disk_batches = set()
                 for event_path in sorted((v2_root() / "projects").glob("*/events/*/*/*.md")):
                     try:
@@ -854,9 +1132,22 @@ def rebuild_index() -> Dict[str, Any]:
                         seen_ids[event.event_id] = str(event_path)
                         if not conn.execute("SELECT 1 FROM projects WHERE project_id=?", (event.project_id,)).fetchone():
                             raise PLMError("event project manifest is missing")
+                        key = event.metadata.get("idempotency_key", "")
+                        identity = (event.project_id, key)
+                        if key and identity in seen_keys:
+                            errors.append({"code": "SOURCE_RECOVERY_AMBIGUOUS",
+                                           "path": str(event_path), "other_path": seen_keys[identity]})
+                        elif key:
+                            seen_keys[identity] = str(event_path)
                         parsed.append(event)
                     except Exception as exc:
                         errors.append({"path": str(event_path), "error": str(exc)})
+
+                # Reject source ambiguity before replay or privacy side effects.
+                if errors:
+                    report = integrity(conn)
+                    report.update({"indexed": 0, "errors": errors, "backup": "", "swapped": False})
+                    return report
 
                 assertions = sorted(
                     (event for event in parsed if not event.metadata.get("operation")),
@@ -928,6 +1219,7 @@ def rebuild_index() -> Dict[str, Any]:
                     apply_deletions(conn, read_ledger(ledger_path()))
                 conn.commit()
                 report = integrity(conn)
+                errors.extend(reference_errors(conn))
                 if errors or report["integrity"] != "ok":
                     report.update({"indexed": indexed, "errors": errors, "backup": "", "swapped": False})
                     return report

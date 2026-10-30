@@ -7,6 +7,8 @@ import time
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional, Sequence, Tuple
 
+from . import request_budget
+from .request_waits import DeadlineConnection
 from .model import Event, PLMError, json_compact, utc_now, v2_root
 from .security import ensure_private_dir
 from .vector import encode_vector
@@ -173,45 +175,52 @@ def db_path() -> Path:
 def connect(path: Optional[Path] = None) -> sqlite3.Connection:
     target = path or db_path()
     ensure_private_dir(target.parent)
-    conn = sqlite3.connect(str(target), timeout=30.0)
-    conn.row_factory = sqlite3.Row
-    # Switching a fresh catalog into WAL needs an exclusive moment; racing
-    # connections (threaded servers, parallel CLI processes) can hold the
-    # database right then, and the busy handler does not cover the journal
-    # mode transition. Retry briefly before giving up.
-    for attempt in range(100):
-        try:
-            conn.execute("PRAGMA journal_mode=WAL")
-            break
-        except sqlite3.OperationalError as exc:
-            if "locked" not in str(exc).lower() or attempt == 99:
-                conn.close()
-                raise
-            time.sleep(0.05)
-    conn.execute("PRAGMA synchronous=FULL")
-    conn.execute("PRAGMA foreign_keys=ON")
-    conn.execute("PRAGMA busy_timeout=30000")
-    conn.executescript(SCHEMA)
-    columns = {row[1] for row in conn.execute("PRAGMA table_info(events)")}
-    if "source_event_id" not in columns:
-        try:
-            conn.execute("ALTER TABLE events ADD COLUMN source_event_id TEXT NOT NULL DEFAULT ''")
-        except sqlite3.OperationalError:
-            # On a fresh database, concurrent connect() calls (multi-threaded
-            # servers, parallel CLI processes) can both observe the column as
-            # missing; one wins the ALTER and the other must re-verify instead
-            # of failing the whole connection.
-            columns = {row[1] for row in conn.execute("PRAGMA table_info(events)")}
-            if "source_event_id" not in columns:
-                raise
-    conn.execute("CREATE INDEX IF NOT EXISTS events_source ON events(source_event_id)")
-    conn.execute("INSERT OR REPLACE INTO metadata(key,value) VALUES('database_version',?)", (str(DATABASE_VERSION),))
-    conn.commit()
+    request_budget.check("catalog-open")
+    factory = DeadlineConnection if request_budget.current_request_budget() else sqlite3.Connection
+    conn = sqlite3.connect(str(target), timeout=request_budget.timeout(30.0), factory=factory)
     try:
-        os.chmod(str(target), 0o600)
-    except OSError:
-        pass
-    return conn
+        conn.row_factory = sqlite3.Row
+        # Switching a fresh catalog into WAL needs an exclusive moment; racing
+        # connections (threaded servers, parallel CLI processes) can hold the
+        # database right then, and the busy handler does not cover the journal
+        # mode transition. Retry briefly before giving up.
+        for attempt in range(100):
+            try:
+                conn.execute("PRAGMA journal_mode=WAL")
+                break
+            except sqlite3.OperationalError as exc:
+                if "locked" not in str(exc).lower() or attempt == 99:
+                    conn.close()
+                    raise
+                request_budget.wait(0.05, "catalog-wal")
+        conn.execute("PRAGMA synchronous=FULL")
+        conn.execute("PRAGMA foreign_keys=ON")
+        conn.execute("PRAGMA busy_timeout=30000")
+        conn.executescript(SCHEMA)
+        columns = {row[1] for row in conn.execute("PRAGMA table_info(events)")}
+        if "source_event_id" not in columns:
+            try:
+                conn.execute("ALTER TABLE events ADD COLUMN source_event_id TEXT NOT NULL DEFAULT ''")
+            except sqlite3.OperationalError:
+                # On a fresh database, concurrent connect() calls (multi-threaded
+                # servers, parallel CLI processes) can both observe the column as
+                # missing; one wins the ALTER and the other must re-verify instead
+                # of failing the whole connection.
+                columns = {row[1] for row in conn.execute("PRAGMA table_info(events)")}
+                if "source_event_id" not in columns:
+                    raise
+        conn.execute("CREATE INDEX IF NOT EXISTS events_source ON events(source_event_id)")
+        conn.execute("INSERT OR REPLACE INTO metadata(key,value) VALUES('database_version',?)", (str(DATABASE_VERSION),))
+        conn.commit()
+        try:
+            os.chmod(str(target), 0o600)
+        except OSError:
+            pass
+        return conn
+    except BaseException:
+        conn.close()
+        raise
+
 
 
 def connect_readonly(path: Optional[Path] = None) -> sqlite3.Connection:
@@ -219,12 +228,20 @@ def connect_readonly(path: Optional[Path] = None) -> sqlite3.Connection:
     target = (path or db_path()).expanduser().resolve(strict=False)
     if not target.is_file():
         raise PLMError("memory index does not exist: %s" % target)
-    conn = sqlite3.connect(target.as_uri() + "?mode=ro", uri=True, timeout=30.0)
-    conn.row_factory = sqlite3.Row
-    conn.execute("PRAGMA query_only=ON")
-    conn.execute("PRAGMA foreign_keys=ON")
-    conn.execute("PRAGMA busy_timeout=30000")
-    return conn
+    request_budget.check("catalog-open")
+    factory = DeadlineConnection if request_budget.current_request_budget() else sqlite3.Connection
+    conn = sqlite3.connect(target.as_uri() + "?mode=ro", uri=True,
+                           timeout=request_budget.timeout(30.0), factory=factory)
+    try:
+        conn.row_factory = sqlite3.Row
+        conn.execute("PRAGMA query_only=ON")
+        conn.execute("PRAGMA foreign_keys=ON")
+        conn.execute("PRAGMA busy_timeout=30000")
+        return conn
+    except BaseException:
+        conn.close()
+        raise
+
 
 
 def register_project(conn: sqlite3.Connection, project_id: str, canonical_root: str, display_name: str, folder_name: str) -> None:
