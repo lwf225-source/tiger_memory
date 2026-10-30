@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "verification_date": "2026-10-30",
-  "runtime_version": "dmx-network-recovery-20261030",
+  "runtime_version": "add-performance-20261030",
   "synthetic_transport_tests": {
     "run": 5,
     "passed": 5,
@@ -22,5 +22,22 @@
   },
   "credential_pattern_hits": 0,
   "official_evaluation_run": false,
-  "deployment_performed": false
+  "deployment_performed": false,
+  "performance_checks": {
+    "local_regressions_passed": 80,
+    "long_message_add_count": 300,
+    "concurrent_add_count": 48,
+    "fixed_parity_samples": 23,
+    "source_index_vector_retrieval_parity": true,
+    "real_model_calls": 0,
+    "scope": "local synthetic transport and storage; production throughput and official quality not inferred"
+  },
+  "portable_update_rechecked": true,
+  "portable_update_checks": {
+    "check_config": true,
+    "check_startup": true,
+    "remote_probe": false,
+    "synthetic_placeholder_credentials_only": true,
+    "synthetic_transport_rerun_passed": 5
+  }
 }

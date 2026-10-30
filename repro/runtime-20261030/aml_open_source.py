@@ -74,7 +74,7 @@ def configuration(environ=None):
         issues.append("dedicated_absolute_store_required")
     manifest = {
         "profile": PROFILE, "core_version": __version__,
-        "reliability_revision": "dmx-network-recovery-20261030",
+        "reliability_revision": "add-performance-20261030",
         "adapter_version": aml_adapter.AML_ADAPTER_VERSION,
         "embedding": {"model": "text-embedding-v4", "dimensions": 1024,
                       "endpoint_sha256": hashlib.sha256(endpoint.encode()).hexdigest(),

@@ -19,6 +19,7 @@ def install():
     load('tiger_memory.database','database.py')
     load('tiger_memory.events','events.py')
     load('tiger_memory.search','search.py')
+    load('tiger_memory.reliability','reliability.py')
     load('tiger_memory.service','service.py')
     aml_adapter=load('tiger_memory.aml_adapter','aml_adapter.py')
     config=load('tiger_memory.aml_open_source','aml_open_source.py')

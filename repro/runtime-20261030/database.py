@@ -265,7 +265,7 @@ def project_for_alias(conn: sqlite3.Connection, path: str) -> Optional[sqlite3.R
 def event_for_idempotency(conn: sqlite3.Connection, project_id: str, key: str) -> Optional[sqlite3.Row]:
     if not key:
         return None
-    return conn.execute("SELECT * FROM events WHERE project_id=? AND idempotency_key=?", (project_id, key)).fetchone()
+    return conn.execute("SELECT * FROM events WHERE project_id=? AND idempotency_key=? AND idempotency_key <> ''", (project_id, key)).fetchone()
 
 
 def _remove_search_record(conn: sqlite3.Connection, record_type: str, ref_id: str) -> None:

@@ -61,3 +61,18 @@ reliability and six diagnostics test passes are not claimed for this revision;
 obsolete copies of those tests are not included here. See `VERIFICATION.json`
 for the checks actually performed on this snapshot. These are local regression
 checks, not live provider tests or official AML evaluations.
+
+## Add performance source update (2026-10-30)
+
+This source revision adds an explicit non-null idempotency-key predicate so the
+existing partial index can be selected. Recovery keeps a bounded process-local
+cache of verified file metadata; it still enumerates and stats source files,
+re-reads changed/new files, and re-reads recovered content before using it.
+It does not cache negative lookups, directory membership, deletion decisions,
+or transaction decisions. This preserves the recovery checks rather than
+skipping them; an O(N) metadata pass remains.
+
+The runtime revision is `add-performance-20261030`. Embedding model, retrieval
+settings and transport retry policy retain the preceding snapshot configuration.
+Local verification is recorded in `VERIFICATION.json`; synthetic measurements
+do not establish production speedup or official evaluation quality.
