@@ -4,6 +4,8 @@ and search-layer integration (extra channels, byte-identical fallback)."""
 
 from __future__ import annotations
 
+from contextlib import closing
+
 import json
 import os
 import unittest
@@ -220,7 +222,8 @@ class SearchIntegrationTests(MemoryTestCase):
     def test_failing_provider_is_byte_identical_to_baseline(self):
         self._write("记录甲", "苹果 香蕉 橙子。")
         self._write("记录乙", "预算 季度 计划。")
-        project_id = connect().execute("SELECT project_id FROM projects").fetchone()["project_id"]
+        with closing(connect()) as conn:
+            project_id = conn.execute("SELECT project_id FROM projects").fetchone()["project_id"]
         diagnostics_off = {}
         baseline = self._search(project_id, "预算", diagnostics=diagnostics_off)
         diagnostics_fail = {}
@@ -258,7 +261,8 @@ class SearchIntegrationTests(MemoryTestCase):
 
     def test_legacy_profile_ignores_query_provider(self):
         self._write("legacy记录", "legacy 哨兵正文。")
-        project_id = connect().execute("SELECT project_id FROM projects").fetchone()["project_id"]
+        with closing(connect()) as conn:
+            project_id = conn.execute("SELECT project_id FROM projects").fetchone()["project_id"]
         provider = _StaticRewriteProvider(expansions=["anything else"])
         diagnostics = {}
         results = self._search(project_id, "legacy", profile="legacy",

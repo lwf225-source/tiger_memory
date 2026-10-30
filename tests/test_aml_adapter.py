@@ -69,6 +69,34 @@ class AMLServerCase(MemoryTestCase):
         return self.request("POST", "/search", payload)
 
 
+class TestHTTPTransport(unittest.TestCase):
+    def test_pending_connection_burst_is_served_after_accept_resumes(self):
+        server = aml_adapter.make_server("127.0.0.1", 0)
+        connections = []
+        thread = None
+        try:
+            # Deliberately pause accept(), as can happen during scheduling
+            # under load. This isolates TCP queue capacity from Add/storage.
+            for _ in range(16):
+                conn = http.client.HTTPConnection(
+                    "127.0.0.1", server.server_address[1], timeout=2)
+                connections.append(conn)
+                conn.request("GET", "/health")
+            thread = threading.Thread(target=server.serve_forever, daemon=True)
+            thread.start()
+            for conn in connections:
+                response = conn.getresponse()
+                self.assertEqual(response.status, 200)
+                self.assertEqual(json.loads(response.read())["status"], "ok")
+        finally:
+            for conn in connections:
+                conn.close()
+            if thread is not None:
+                server.shutdown()
+                thread.join(timeout=5)
+            server.server_close()
+
+
 class TestContract(AMLServerCase):
     def test_health_is_unauthenticated(self):
         status, body = self.request("GET", "/health")
@@ -291,9 +319,11 @@ class TestAddSearchFlow(AMLServerCase):
 
     def test_concurrent_adds_from_platform_workers(self):
         errors = []
+        start = threading.Barrier(8)
 
         def worker(index):
             try:
+                start.wait(timeout=10)
                 status, _ = self.add("req-c%d" % index, "user-c", "s-%d" % index,
                                      ["concurrency token ggg-%d" % index])
                 if status != 200:
@@ -306,6 +336,7 @@ class TestAddSearchFlow(AMLServerCase):
             thread.start()
         for thread in threads:
             thread.join(timeout=60)
+        self.assertFalse(any(thread.is_alive() for thread in threads))
         self.assertEqual(errors, [])
         _, body = self.search("concurrency token", "user-c")
         found = {item["content"] for item in body["data"]}

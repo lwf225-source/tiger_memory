@@ -61,16 +61,21 @@ class ModelConfigCase(MemoryTestCase):
             )
         }
         self._saved_singletons = dict(aml_adapter._MODEL_SINGLETONS)
+        # Subclasses may fail while opening their HTTP fixture. unittest does
+        # not run tearDown after a failed setUp, but always runs cleanups.
+        self.addCleanup(self._restore_model_state)
         aml_adapter._MODEL_SINGLETONS.clear()
         # Model tests isolate reranker/embedding behavior from the separately
         # verified 1.3.0 session-RRF default.
         aml_adapter.AML_SESSION_RRF = False
 
-    def tearDown(self):
+    def _restore_model_state(self):
         for name, value in self._saved.items():
             setattr(aml_adapter, name, value)
         aml_adapter._MODEL_SINGLETONS.clear()
         aml_adapter._MODEL_SINGLETONS.update(self._saved_singletons)
+
+    def tearDown(self):
         import os
         os.environ.pop("PLM_AML_EMBEDDING_MODEL_DIR", None)
         super().tearDown()
@@ -86,9 +91,9 @@ class ModelConfigCase(MemoryTestCase):
 
 
 class TestVersionAndValidation(ModelConfigCase):
-    def test_adapter_version_is_1_3_4(self):
-        self.assertEqual(aml_adapter.AML_ADAPTER_VERSION, "1.3.4")
-        self.assertIn("1.3.4", aml_adapter.AMLRequestHandler.server_version)
+    def test_adapter_version_is_1_4_0(self):
+        self.assertEqual(aml_adapter.AML_ADAPTER_VERSION, "1.4.0")
+        self.assertIn("1.4.0", aml_adapter.AMLRequestHandler.server_version)
 
     def test_embedding_freeze_defaults(self):
         # The retained BGE hybrid defaults: embedding on, reranker off.
@@ -242,7 +247,7 @@ class TestHybridOverHTTP(ModelConfigCase):
         finally:
             conn.close()
 
-    def test_health_reports_1_3_4(self):
+    def test_health_reports_1_4_0(self):
         conn = http.client.HTTPConnection("127.0.0.1", self.port, timeout=30)
         try:
             conn.request("GET", "/health")
@@ -251,7 +256,7 @@ class TestHybridOverHTTP(ModelConfigCase):
         finally:
             conn.close()
         self.assertEqual(response.status, 200)
-        self.assertEqual(body["version"], "1.3.4")
+        self.assertEqual(body["version"], "1.4.0")
 
     def test_degraded_hybrid_serves_lexical_results_over_http(self):
         aml_adapter.AML_EMBEDDING = "local"
@@ -267,6 +272,46 @@ class TestHybridOverHTTP(ModelConfigCase):
         self.assertEqual(status, 200)
         self.assertEqual(len(body["data"]), 1)
         self.assertIn("zqvx-http", body["data"][0]["content"])
+
+
+class TestModelFixtureCleanup(unittest.TestCase):
+    def test_failed_http_setup_restores_model_state(self):
+        import os
+        from unittest.mock import patch
+
+        # Independent safety snapshot: a failing regression must not itself
+        # contaminate the tests that follow it.
+        original = {name: value for name, value in vars(aml_adapter).items()
+                    if name.startswith("AML_")}
+        singletons = dict(aml_adapter._MODEL_SINGLETONS)
+        fixture = TestHybridOverHTTP("test_health_reports_1_4_0")
+        result = unittest.TestResult()
+        sentinel = object()
+        try:
+            aml_adapter.AML_SESSION_RRF = True
+            aml_adapter._MODEL_SINGLETONS["cleanup-sentinel"] = sentinel
+            expected = {name: getattr(aml_adapter, name) for name in original}
+            expected_singletons = dict(aml_adapter._MODEL_SINGLETONS)
+            # No socket is opened. unittest deliberately skips tearDown when
+            # setUp fails, but must still invoke registered cleanups.
+            with patch.dict(os.environ), patch.object(
+                    aml_adapter, "make_server",
+                    side_effect=PermissionError("fixture-cleanup-injected-bind-failure")):
+                fixture.run(result)
+            self.assertEqual(len(result.errors), 1)
+            self.assertFalse(result.failures)
+            self.assertIn("fixture-cleanup-injected-bind-failure", result.errors[0][1])
+            self.assertEqual({name: getattr(aml_adapter, name) for name in original}, expected)
+            self.assertEqual(set(aml_adapter._MODEL_SINGLETONS), set(expected_singletons))
+            for key, value in expected_singletons.items():
+                self.assertIs(aml_adapter._MODEL_SINGLETONS[key], value)
+        finally:
+            for name, value in original.items():
+                setattr(aml_adapter, name, value)
+            aml_adapter._MODEL_SINGLETONS.clear()
+            aml_adapter._MODEL_SINGLETONS.update(singletons)
+            if hasattr(fixture, "temp"):
+                fixture.temp.cleanup()
 
 
 if __name__ == "__main__":
