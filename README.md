@@ -18,8 +18,8 @@ synthetic verification and the limits of logical forgetting.
 
 **Current source snapshot:** the development package is **2.2.0a5 (preview)**.
 A self-contained runtime snapshot is available in
-[`repro/runtime-20261030`](repro/runtime-20261030/README.md), with isolated base
-modules, an environment-based entry point and synthetic transport tests.
+[`repro/runtime-20261031`](repro/runtime-20261031/README.md), with isolated base
+modules, an environment-based entry point and synthetic regression tests.
 The root `python -m tiger_memory.aml_open_source` entry retains its earlier
 budget-bound candidate behavior; the separate runtime uses a different policy.
 
@@ -27,7 +27,9 @@ The separate runtime uses `text-embedding-v4` at 1024 dimensions, durable
 per-user caches, credential redaction and bounded diagnostic output. Transient
 network/provider failures retry with backoff; authentication, TLS and invalid
 response failures remain errors. Model calls may incur provider charges.
-See [source scope and verification](docs/GITHUB_SYNC_20261030.md).
+The latest runtime revision is `search-runtime-repair-20261031`; see its
+[source identity](repro/runtime-20261031/SOURCE_IDENTITY.json) and
+[verification](repro/runtime-20261031/VERIFICATION.json).
 
 Keep the AML store **outside every Git checkout**, separate from the source tree
 and your daily memory. Before configuring credentials or starting a listener,
