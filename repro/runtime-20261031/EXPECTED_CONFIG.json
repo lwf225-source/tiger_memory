@@ -1,0 +1,59 @@
+{
+  "profile": "aml-open-source-v4-1",
+  "core_version": "2.2.0a5",
+  "reliability_revision": "search-runtime-repair-20261031",
+  "adapter_version": "1.4.0",
+  "embedding": {
+    "model": "text-embedding-v4",
+    "dimensions": 1024,
+    "endpoint_sha256": "08a9597a7e2a348fa177c0492e2e23e9962acd992f4a8da5ed65d87a8810844d",
+    "batch_rows": 10,
+    "chunk_utf8_bytes": 8192,
+    "chunk_pooling": "mean_l2",
+    "timeout_seconds": null,
+    "max_request_batches": null,
+    "max_elapsed_seconds": null,
+    "elapsed_budget_policy": "none-user-authorized",
+    "add_capacity_policy": "cache-reuse-unlimited-batches-v1",
+    "cache_scope": "user_id",
+    "work_retry_policy": "cache-reuse-no-financial-claims",
+    "claims_version": null,
+    "provider": "dmxapi",
+    "transport_retry_policy": "transient-backoff-no-attempt-cap",
+    "binding_expiry_policy": "none-user-authorized",
+    "checkpoint_lock_policy": "exclusive-until-drained-then-input-stripes-v1",
+    "error_diagnostics": "nonblocking-bounded-allowlist-v1"
+  },
+  "retrieval": {
+    "profile": "lexical",
+    "session_rrf": true,
+    "session_rrf_k": 30,
+    "query_rewrite": "off",
+    "recency_boost": false,
+    "fact_projection": "off",
+    "reranker": "off",
+    "failure_policy": "503_no_fallback"
+  },
+  "request_policy": {
+    "deadline_policy": "removed",
+    "deadline_deployment_enabled": false,
+    "short_body": "400-close-before-json",
+    "socket_idle_timeout_seconds": null,
+    "error_connection_policy": "close-on-error",
+    "add_admission_lock": "per-user-flock-release-before-embed-v1",
+    "add_lock_timeout_seconds": null,
+    "storage_identity": "fixed-root-project-scope-v1",
+    "sensitive_search": "actual-query-before-provider-503-v1"
+  },
+  "source_recovery": {
+    "policy": "local-inotify-capacity-accounted-v3",
+    "periodic_full_verification_seconds": 60
+  },
+  "observability": {
+    "policy": "fixed-stage-operation-split-v3"
+  },
+  "generated_answers": false,
+  "embedding_budget": null,
+  "financial_limits": "removed-user-authorized",
+  "config_sha256": "3bbc4e2bde0a415ef76f55c276ea3132819d3432d5ae8d80613644a1c49e4a4a"
+}

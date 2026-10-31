@@ -1,0 +1,36 @@
+{
+  "schema": 1,
+  "verification_date": "2026-10-31",
+  "runtime_version": "search-runtime-repair-20261031",
+  "publication_regression": {
+    "tests_run": 223,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 34,
+    "passed": true,
+    "tests_passed": 189,
+    "platform": "Darwin",
+    "python": "3.13.15",
+    "command": "python3 -B repro/runtime-20261031/regression.py",
+    "scope": "Temporary synthetic stores and local sockets only; Linux inotify cases skipped on macOS."
+  },
+  "source_hashes": {
+    "base_modules_verified": 43,
+    "unchanged_release_modules_verified": 15,
+    "privacy_wrapper_verified": true
+  },
+  "portable_entry": {
+    "passed": true,
+    "configuration_sha256": "3bbc4e2bde0a415ef76f55c276ea3132819d3432d5ae8d80613644a1c49e4a4a",
+    "sigusr1_handler_verified": true,
+    "default_parallel_enabled": false,
+    "provider_requests": 0
+  },
+  "publication_scan": {
+    "credential_pattern_hits": 0,
+    "explicit_synthetic_credential_fixture_hits": 1,
+    "private_absolute_path_hits": 0
+  },
+  "deployment_performed": false,
+  "official_evaluation_run": false
+}
